@@ -32,7 +32,7 @@ export default function BlogSection() {
           {posts.map((post, index) => (
             <div
               key={index}
-              className="bg-white rounded-sm overflow-hidden shadow-sm"
+              className="bg-white rounded-lg overflow-hidden shadow-sm"
             >
               <div className="h-56 w-full overflow-hidden">
                 <img
@@ -70,7 +70,7 @@ export default function BlogSection() {
 
         <div className="flex justify-center mt-12">
           <Link to="/blog">
-            <button className="bg-[#f47a4d] hover:bg-[#e06a40] text-white px-8 py-3 rounded-sm transition-colors">
+            <button className="bg-[#f47a4d] hover:bg-[#e06a40] text-white px-8 py-3 rounded-lg transition-colors">
               See More
             </button>
           </Link>

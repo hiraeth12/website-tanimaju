@@ -1,16 +1,15 @@
 import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import ImageCarousel from "@/components/ImageCarousel";
 
 export default function ParallaxImageSection() {
   const sectionRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end end"],
-  });
 
-  // Gambar kanan bergerak naik - efek parallax
-  const y = useTransform(scrollYProgress, [0, 1], [0, 0]);
-
+  const images = [
+    { src: "/images/carousel-placeholder-1.jpg", alt: "Slide 1" },
+    { src: "/images/carousel-placeholder-2.jpg", alt: "Slide 2" },
+    { src: "/images/carousel-placeholder-3.jpg", alt: "Slide 3" },
+    { src: "/images/carousel-placeholder-4.jpg", alt: "Slide 4" },
+  ];
 
   return (
     <section
@@ -20,20 +19,15 @@ export default function ParallaxImageSection() {
       {/* Gambar Kiri */}
       <div className="w-1/2 flex items-center justify-center bg-[#2a4d3e]">
         <img
-          src="../images/parallax-placeholder-1.jpg"
+          src="/images/parallax-placeholder-1.jpg"
           alt="Left"
           className="h-[34vh] w-auto object-cover"
         />
       </div>
 
-      {/* Gambar Kanan - Diperbesar untuk efek parallax */}
-      <div className="w-1/2 h-full overflow-hidden relative">
-        <motion.img
-          style={{ y }}
-          src="../images/parallax-placeholder-2.jpg"
-          alt="Right"
-          className="absolute top-0 left-0 w-full h-full object-cover scale "
-        />
+      {/* Carousel di Kanan */}
+      <div className="w-1/2 flex items-center justify-center bg-white">
+        <ImageCarousel images={images} />
       </div>
     </section>
   );
