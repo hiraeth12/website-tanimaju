@@ -83,7 +83,7 @@ const Home = () => {
           >
             <Link
               to="/order"
-              className="bg-white text-[#2A4D3E] px-6 py-3 rounded hover:bg-[#FF8C42] hover:text-white transition-colors font-medium"
+              className="bg-white text-[#2A4D3E] px-6 py-3 rounded-2xl hover:bg-[#FF8C42] hover:text-white transition-colors font-medium"
             >
               Order Online
             </Link>

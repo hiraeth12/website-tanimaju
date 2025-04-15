@@ -114,14 +114,13 @@ const Home = () => {
             }`}
           >
             <h2 className="text-3xl md:text-4xl font-bold text-[#2A4D3E] mb-2">
-              Support Sustainable Farming
+              Tentang Kami
             </h2>
             <div className="w-14 h-0.5 bg-[#2A4D3E] mb-6" />
-            <p className="text-gray-700 text-base md:text-lg mb-8 leading-relaxed">
-              TaniMaju mendukung pertanian berkelanjutan dengan menghubungkan
-              langsung hasil bumi dari petani ke rumah Anda. Kami percaya bahwa
-              makanan segar dan sehat berasal dari proses yang adil dan ramah
-              lingkungan.
+            <p className="text-gray-700 text-base md:text-lg mb-8 leading-relaxed text-justify">
+            Website manajemen hasil panen yang dirancang untuk mendukung para petani di Desa Sukamaju, 
+            Bandung, Jawa Barat sebagai solusi lengkap dalam mengelola data pertanian dengan 
+            lebih efisien dan akurat.
             </p>
             <Link
               to="/about"

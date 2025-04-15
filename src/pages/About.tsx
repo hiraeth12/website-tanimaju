@@ -1,161 +1,94 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import Navbar from "../components/NavBar";
-import { AnimatePresence, motion } from "framer-motion";
-import { useInView } from "../hooks/useInView";
-import ProductShowcase from "../components/ProductShowcase";
-import ParallaxImageSection from "@/components/demo/ImageParallax";
-import BlogSection from "@/components/demo/BlogSection";
 import Footer from "@/components/demo/Footer";
+import AboutParallax from "@/components/demo/AboutParallax";
+import { useInView } from "../hooks/useInView";
+import ImageCarousel from "@/components/ImageCarousel";
+import { useEffect } from "react";
 
-const images = [
-  "/images/placeholder-1.jpg",
-  "/images/placeholder-2.jpg",
-  "/images/placeholder-3.jpg",
-  "/images/placeholder-4.png",
-];
-
-const Home = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % images.length);
-    }, 10000);
-
-    return () => clearInterval(timer);
-  }, []);
-
+const About = () => {
   const textInView = useInView();
   const imageInView = useInView();
+
+  const images = [
+    { src: "../images/carousel-placeholder-1.jpg", alt: "Slide 1" },
+    { src: "../images/carousel-placeholder-2.jpg", alt: "Slide 2" },
+    { src: "../images/carousel-placeholder-3.jpg", alt: "Slide 3" },
+    { src: "../images/carousel-placeholder-4.jpg", alt: "Slide 4" },
+  ];
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <>
       <Navbar />
-
-      <section className="relative w-full h-[calc(100vh-80px)] overflow-hidden">
-        {/* Image Wrapper */}
-        <div className="absolute inset-0">
-          <AnimatePresence mode="wait">
-            <motion.img
-              key={images[currentIndex]}
-              src={images[currentIndex]}
-              alt="Hero Background"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="w-full h-full object-cover absolute inset-0"
-            />
-          </AnimatePresence>
+      <div className="fade">
+        {/* Hero Section */}
+        <AboutParallax />
+      </div>
+      {/* Section 1 */}
+      <section className="relative py-20 px-4 md:px-24 overflow-hidden">
+        {/* Background belah 2 */}
+        <div className="absolute inset-0 flex">
+          <div className="w-1/2 bg-[#FFFCF7]" />
+          <div className="w-1/2 bg-[#2a4d3e]" />
         </div>
 
-        {/* Overlay Konten */}
-        <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center text-center px-4 z-10">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="text-white text-5xl md:text-7xl font-bold mb-4"
-          >
-            Fresh Produce
-          </motion.h2>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="text-white text-3xl md:text-7xl font-bold mb-8"
-          >
-            Delivery
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.7 }}
-            className="text-white text-xl md:text-2xl mb-8"
-          >
-            From Our Farm to Your Doorstep
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 1 }}
-          >
-            <Link
-              to="/order"
-              className="bg-white text-[#2A4D3E] px-6 py-3 rounded hover:bg-[#FF8C42] hover:text-white transition-colors font-medium"
-            >
-              Order Online
-            </Link>
-          </motion.div>
-        </div>
-
-        {/* Pagination Dots */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
-          {images.map((_, index) => (
-            <span
-              key={index}
-              className={`h-2 w-2 rounded-full bg-white transition-all duration-300 cursor-pointer ${
-                currentIndex === index ? "opacity-100 scale-110" : "opacity-50"
-              } hover:scale-125 transition-transform`}
-              onClick={() => setCurrentIndex(index)}
-            ></span>
-          ))}
-        </div>
-      </section>
-
-      {/* Konten Lain */}
-      <section className="bg-[#FFFCF7] py-20 px-4 md:px-24">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between md:gap-32 gap-24">
+        {/* Konten utama */}
+        <div className="relative max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between md:gap-32 gap-24">
+          {/* Teks */}
           <div
             ref={textInView.ref}
-            className={`md:w-1/2 text-left fade-in-left ${
+            className={`md:w-1/2 text-left fade-in-left z-10 ${
               textInView.isVisible ? "fade-in-show" : ""
             }`}
           >
             <h2 className="text-3xl md:text-4xl font-bold text-[#2A4D3E] mb-2">
-              Support Sustainable Farming
+              Tentang Kami
             </h2>
             <div className="w-14 h-0.5 bg-[#2A4D3E] mb-6" />
-            <p className="text-gray-700 text-base md:text-lg mb-8 leading-relaxed">
-              TaniMaju mendukung pertanian berkelanjutan dengan menghubungkan
-              langsung hasil bumi dari petani ke rumah Anda. Kami percaya bahwa
-              makanan segar dan sehat berasal dari proses yang adil dan ramah
-              lingkungan.
+            <p className="text-gray-700 text-base md:text-lg mb-8 leading-relaxed text-justify">
+              <span className="font-bold">TaniMaju</span> adalah sebuah aplikasi
+              manajemen hasil panen yang dirancang untuk meningkatkan efisiensi
+              dan produktivitas pertanian di Desa Sukamaju, Bandung, Jawa Barat.
+              Nama <span className="font-bold">TaniMaju</span> sendiri merupakan
+              gabungan dari kata <span className="font-bold">Tani</span> yang
+              berarti pertanian dan <span className="font-bold">Maju</span> yang
+              mencerminkan kemajuan. </p>
+              <p className="text-gray-700 text-base md:text-lg mb-8 leading-relaxed text-justify">
+              Nama ini mencerminkan visi utama aplikasi,
+              yaitu memajukan sektor pertanian lokal melalui pemanfaatan
+              teknologi. Dengan menghadirkan inovasi digital ke tengah-tengah
+              kehidupan petani, TaniMaju berkomitmen untuk memberdayakan
+              komunitas tani di Desa Sukamaju agar lebih mandiri, modern, dan
+              siap menghadapi tantangan pertanian di era digital.
             </p>
-            <Link
-              to="/about"
-              className="inline-block bg-[#FF8C42] text-white px-6 py-3 rounded hover:bg-[#2A4D3E] transition-colors font-medium"
-            >
-              See More
-            </Link>
           </div>
 
           {/* Gambar */}
           <div
             ref={imageInView.ref}
-            className={`md:w-1/2 fade-in-right ${
+            className={`md:w-1/2 flex items-center fade-in-right z-10 ${
               imageInView.isVisible ? "fade-in-show" : ""
             }`}
           >
             <img
-              src="../images/placeholder-5.jpg"
+              src="/images/about-placeholder-2.jpg"
               alt="Farm Illustration"
               className="w-full h-auto object-contain"
             />
           </div>
         </div>
       </section>
-      {/* Another Section */}
-      <ProductShowcase />
-      {/* Another Section */}
-      <ParallaxImageSection />
-      {/* Another Section */}
-      <BlogSection />
+      {/* Carousel */}
+      <section className="flex justify-center items-center min-h-screen bg-[#e0d2c5]">
+        <ImageCarousel images={images} />
+      </section>
       {/* Footer */}
       <Footer></Footer>
     </>
   );
 };
 
-export default Home;
+export default About;
