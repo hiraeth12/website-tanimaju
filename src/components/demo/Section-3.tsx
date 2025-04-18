@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import ImageCarousel from "@/components/ImageCarousel";
 
-export default function ParallaxImageSection() {
+export default function Section3() {
   const sectionRef = useRef(null);
 
   const images = [

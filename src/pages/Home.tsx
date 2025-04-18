@@ -4,7 +4,7 @@ import Navbar from "../components/NavBar";
 import { AnimatePresence, motion } from "framer-motion";
 import { useInView } from "../hooks/useInView";
 import ProductShowcase from "../components/ProductShowcase";
-import ParallaxImageSection from "@/components/demo/ImageParallax";
+import Section3 from "@/components/demo/Section-3";
 import BlogSection from "@/components/demo/BlogSection";
 import Footer from "@/components/demo/Footer";
 
@@ -118,9 +118,10 @@ const Home = () => {
             </h2>
             <div className="w-14 h-0.5 bg-[#2A4D3E] mb-6" />
             <p className="text-gray-700 text-base md:text-lg mb-8 leading-relaxed text-justify">
-            Website manajemen hasil panen yang dirancang untuk mendukung para petani di Desa Sukamaju, 
-            Bandung, Jawa Barat sebagai solusi lengkap dalam mengelola data pertanian dengan 
-            lebih efisien dan akurat.
+              Website manajemen hasil panen yang dirancang untuk mendukung para
+              petani di Desa Sukamaju, Bandung, Jawa Barat sebagai solusi
+              lengkap dalam mengelola data pertanian dengan lebih efisien dan
+              akurat.
             </p>
             <Link
               to="/about"
@@ -148,9 +149,23 @@ const Home = () => {
       {/* Another Section */}
       <ProductShowcase />
       {/* Another Section */}
-      <ParallaxImageSection />
-      {/* Another Section */}
-      <BlogSection />
+      <Section3 />
+      {/* Blog Section */}
+      <section className="py-16 bg-[#e8e0d4]">
+        <h2 className="text-3xl font-semibold text-[#3a4a3c] text-center mb-4">
+          From Our Articles
+        </h2>
+        <div className="w-12 h-0.5 bg-[#3a4a3c] mx-auto mb-12"></div>
+        <BlogSection limit={3} />
+        <div className="flex justify-center mt-12">
+          <Link to="/blog">
+            <button className="bg-[#f47a4d] hover:bg-[#e06a40] text-white px-8 py-3 rounded-lg transition-colors">
+              See More
+            </button>
+          </Link>
+        </div>
+      </section>
+
       {/* Footer */}
       <Footer></Footer>
     </>
