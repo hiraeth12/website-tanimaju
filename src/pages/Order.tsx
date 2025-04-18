@@ -1,161 +1,136 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "../components/NavBar";
-import { AnimatePresence, motion } from "framer-motion";
-import { useInView } from "../hooks/useInView";
-import ProductShowcase from "../components/ProductShowcase";
-import ParallaxImageSection from "@/components/demo/ImageParallax";
-import BlogSection from "@/components/demo/BlogSection";
+import { ProductCard } from "@/components/ProductCard";
 import Footer from "@/components/demo/Footer";
 
-const images = [
-  "/images/placeholder-1.jpg",
-  "/images/placeholder-2.jpg",
-  "/images/placeholder-3.jpg",
-  "/images/placeholder-4.png",
-];
+const Order = () => {
+  const [showMore, setShowMore] = useState(false);
 
-const Home = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const handleLoadMore = () => {
+    setShowMore(true);
+  };
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % images.length);
-    }, 10000);
-
-    return () => clearInterval(timer);
+    window.scrollTo(0, 0);
   }, []);
-
-  const textInView = useInView();
-  const imageInView = useInView();
 
   return (
     <>
       <Navbar />
 
-      <section className="relative w-full h-[calc(100vh-80px)] overflow-hidden">
-        {/* Image Wrapper */}
-        <div className="absolute inset-0">
-          <AnimatePresence mode="wait">
-            <motion.img
-              key={images[currentIndex]}
-              src={images[currentIndex]}
-              alt="Hero Background"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="w-full h-full object-cover absolute inset-0"
-            />
-          </AnimatePresence>
-        </div>
-
-        {/* Overlay Konten */}
-        <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center text-center px-4 z-10">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="text-white text-5xl md:text-7xl font-bold mb-4"
-          >
-            Fresh Produce
-          </motion.h2>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="text-white text-3xl md:text-7xl font-bold mb-8"
-          >
-            Delivery
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.7 }}
-            className="text-white text-xl md:text-2xl mb-8"
-          >
-            From Our Farm to Your Doorstep
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 1 }}
-          >
-            <Link
-              to="/order"
-              className="bg-white text-[#2A4D3E] px-6 py-3 rounded hover:bg-[#FF8C42] hover:text-white transition-colors font-medium"
-            >
-              Order Online
-            </Link>
-          </motion.div>
-        </div>
-
-        {/* Pagination Dots */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
-          {images.map((_, index) => (
-            <span
-              key={index}
-              className={`h-2 w-2 rounded-full bg-white transition-all duration-300 cursor-pointer ${
-                currentIndex === index ? "opacity-100 scale-110" : "opacity-50"
-              } hover:scale-125 transition-transform`}
-              onClick={() => setCurrentIndex(index)}
-            ></span>
-          ))}
-        </div>
-      </section>
-
-      {/* Konten Lain */}
-      <section className="bg-[#FFFCF7] py-20 px-4 md:px-24">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between md:gap-32 gap-24">
-          <div
-            ref={textInView.ref}
-            className={`md:w-1/2 text-left fade-in-left ${
-              textInView.isVisible ? "fade-in-show" : ""
-            }`}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-[#2A4D3E] mb-2">
-              Support Sustainable Farming
-            </h2>
-            <div className="w-14 h-0.5 bg-[#2A4D3E] mb-6" />
-            <p className="text-gray-700 text-base md:text-lg mb-8 leading-relaxed">
-              TaniMaju mendukung pertanian berkelanjutan dengan menghubungkan
-              langsung hasil bumi dari petani ke rumah Anda. Kami percaya bahwa
-              makanan segar dan sehat berasal dari proses yang adil dan ramah
-              lingkungan.
-            </p>
-            <Link
-              to="/about"
-              className="inline-block bg-[#FF8C42] text-white px-6 py-3 rounded hover:bg-[#2A4D3E] transition-colors font-medium"
-            >
-              See More
-            </Link>
+      {/* ✅ Fade in wrapper */}
+      <motion.div
+        className="flex flex-col min-h-screen"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }} // optional, for exit transition
+        transition={{ duration: 0.3 }}
+      >
+        <main className="flex-grow">
+          {/* Header */}
+          <div className="bg-[#2d4134] text-white py-16 text-center">
+            <h1 className="text-3xl font-bold">Order Online</h1>
+            <div className="w-12 h-0.5 bg-[#3a4a3c] mx-auto mt-5"></div>
+            <p className="mt-3">Fresh Produce Delivered Weekly</p>
           </div>
 
-          {/* Gambar */}
-          <div
-            ref={imageInView.ref}
-            className={`md:w-1/2 fade-in-right ${
-              imageInView.isVisible ? "fade-in-show" : ""
-            }`}
-          >
-            <img
-              src="../images/placeholder-5.jpg"
-              alt="Farm Illustration"
-              className="w-full h-auto object-contain"
-            />
+          {/* Content */}
+          <div className="bg-[#e8e0d3] py-8 px-4 md:px-8 lg:px-16">
+            <div className="max-w-6xl mx-auto">
+              {/* Top row - Baskets */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6 }}
+                >
+                  <ProductCard
+                    title="Classic Basket"
+                    price={15.0}
+                    imageSrc="/images/product-placeholder-1.jpg"
+                    ViewProduct={true}
+                  />
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                >
+                  <ProductCard
+                    title="Mixed Basket"
+                    price={25.0}
+                    imageSrc="/images/product-placeholder-2.jpg"
+                    ViewProduct={true}
+                  />
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                >
+                  <ProductCard
+                    title="Wholesome Family Basket"
+                    price={45.0}
+                    imageSrc="/images/product-placeholder-3.jpg"
+                    ViewProduct={true}
+                  />
+                </motion.div>
+              </div>
+
+              {/* Bottom row - Individual products */}
+              <AnimatePresence>
+                {showMore && (
+                  <motion.div
+                    className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.6 }}
+                  >
+                    <ProductCard
+                      title="I'm a product"
+                      price={2.0}
+                      imageSrc="/images/product-placeholder-4.jpg"
+                      ViewProduct={true}
+                    />
+                    <ProductCard
+                      title="I'm a product"
+                      price={2.0}
+                      imageSrc="/images/product-placeholder-5.jpg"
+                      ViewProduct={true}
+                    />
+                    <ProductCard
+                      title="I'm a product"
+                      price={2.0}
+                      imageSrc="/images/product-placeholder-6.jpg"
+                      ViewProduct={true}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Load More Button */}
+              {!showMore && (
+                <div className="text-center mt-8">
+                  <button
+                    onClick={handleLoadMore}
+                    className="px-6 py-3 border border-[#2d4134] text-[#2d4134] hover:bg-[#2d4134] hover:text-white transition-colors rounded"
+                  >
+                    Load More
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      </section>
-      {/* Another Section */}
-      <ProductShowcase />
-      {/* Another Section */}
-      <ParallaxImageSection />
-      {/* Another Section */}
-      <BlogSection />
-      {/* Footer */}
-      <Footer></Footer>
+        </main>
+
+        <Footer />
+      </motion.div>
     </>
   );
 };
 
-export default Home;
+export default Order;
