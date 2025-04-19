@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Navbar from "../components/NavBar";
-import { ProductCard } from "@/components/ProductCard";
-import Footer from "@/components/demo/Footer";
+import Navbar from "../../components/NavBar";
+import { ProductCard } from "@/pages/order/ProductCard";
+import Footer from "@/components/Footer";
 
 const Order = () => {
   const [showMore, setShowMore] = useState(false);

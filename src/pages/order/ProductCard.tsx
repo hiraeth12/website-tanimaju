@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card"; // Sesuaikan path
-import ProductDialog from "@/components/ProductDialog"; // Sesuaikan path
+import ProductDialog from "@/pages/order/ProductDialog"; // Sesuaikan path
 import { useNavigate } from "react-router-dom"; // Import useNavigate dari react-router-dom
 
 interface ProductCardProps {

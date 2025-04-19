@@ -1,7 +1,7 @@
-import Navbar from "../components/NavBar";
-import Footer from "@/components/demo/Footer";
-import AboutParallax from "@/components/demo/AboutParallax";
-import { useInView } from "../hooks/useInView";
+import Navbar from "../../components/NavBar";
+import Footer from "@/components/Footer";
+import AboutParallax from "@/pages/about/AboutParallax";
+import { useInView } from "../../hooks/useInView";
 import ImageCarousel from "@/components/ImageCarousel";
 import { useEffect } from "react";
 

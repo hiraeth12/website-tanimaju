@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import Navbar from "../components/NavBar";
+import Navbar from "../../components/NavBar";
 import { AnimatePresence, motion } from "framer-motion";
-import { useInView } from "../hooks/useInView";
-import ProductShowcase from "../components/ProductShowcase";
-import Section3 from "@/components/demo/Section-3";
-import BlogSection from "@/components/demo/BlogSection";
-import Footer from "@/components/demo/Footer";
+import { useInView } from "../../hooks/useInView";
+import ProductShowcase from "./ProductShowcase";
+import Section3 from "@/pages/home/Section-3";
+import BlogSection from "@/pages/blog/BlogSection";
+import Footer from "@/components/Footer";
 
 const images = [
   "/images/placeholder-1.jpg",

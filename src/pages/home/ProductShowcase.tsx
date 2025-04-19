@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { CarouselDemo } from "./demo/CarouselDemo";
+import { CarouselDemo } from "./CarouselDemo";
 
 export default function ProductShowcase() {
   return (

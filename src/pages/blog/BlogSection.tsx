@@ -1,4 +1,4 @@
-import BlogCard from "@/components/BlogCard";
+import BlogCard from "@/pages/blog/BlogCard";
 
 interface BlogSectionProps {
   limit?: number;

@@ -2,14 +2,13 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Search, X } from "lucide-react";
 
-import Navbar from "../components/NavBar";
-import Footer from "@/components/demo/Footer";
-import BlogSection from "@/components/demo/BlogSection";
+import Navbar from "../../components/NavBar";
+import Footer from "@/components/Footer";
+import BlogSection from "@/pages/blog/BlogSection";
 
 const Blog = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [query, setQuery] = useState("");
-  
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -19,8 +18,8 @@ const Blog = () => {
     <>
       <Navbar />
       <div className="min-h-screen bg-[#e8e0d4]">
-        <section className="bg-[#1e3329] text-white py-8 px-4">
-          <div className="container mx-auto">
+        <section className=" text-slate-600 py-8 px-4">
+          <div className="max-w-6xl mx-auto px-4">
             <div className="mb-12">
               <h1 className="text-4xl font-bold mb-2">Our Blog</h1>
               <div className="w-12 h-0.5 bg-[#3a4a3c]"></div>
@@ -28,16 +27,16 @@ const Blog = () => {
 
             <div className="flex justify-between items-center relative">
               <nav className="flex space-x-8">
-                <Link to="#" className="text-orange-400 hover:text-orange-300">
+                <Link to="#" className="text-slate-600 hover:text-orange-400">
                   All Posts
                 </Link>
-                <Link to="#" className="text-white hover:text-gray-300">
+                <Link to="#" className="text-slate-600 hover:text-orange-400">
                   News
                 </Link>
-                <Link to="#" className="text-white hover:text-gray-300">
+                <Link to="#" className="text-slate-600 hover:text-orange-400">
                   Recipes
                 </Link>
-                <Link to="#" className="text-white hover:text-gray-300">
+                <Link to="#" className="text-slate-600 hover:text-orange-400">
                   Events
                 </Link>
               </nav>
@@ -46,7 +45,7 @@ const Blog = () => {
                 {!showSearch ? (
                   <button
                     aria-label="Search"
-                    className="text-white"
+                    className="text-slate-600"
                     onClick={() => setShowSearch(true)}
                   >
                     <Search size={20} />
