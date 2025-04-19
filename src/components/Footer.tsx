@@ -1,6 +1,6 @@
 import { Mail, Phone, MapPin } from "lucide-react";
-import sea from "../../assets/sealogo.png";
-import sukamaju from "../../assets/sukamajulogo.png";
+import sea from "../assets/sealogo.png";
+import sukamaju from "../assets/sukamajulogo.png";
 
 export default function Footer() {
   return (
