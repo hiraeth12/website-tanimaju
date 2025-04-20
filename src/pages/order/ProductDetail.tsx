@@ -1,10 +1,10 @@
 //import { useParams } from "react-router-dom";
 import { ChevronLeft, ChevronRight, Facebook, Twitter } from "lucide-react";
-import ProductInfo from "@/components/ProductInfo";
-import ReturnPolicy from "@/components/ReturnPolicy";
-import ShippingInfo from "@/components/ShippingInfo";
+import ProductInfo from "@/pages/order/ProductInfo";
+import ReturnPolicy from "@/pages/order/ReturnPolicy";
+import ShippingInfo from "@/pages/order/ShippingInfo";
 import Navbar from "@/components/NavBar";
-import Footer from "@/components/demo/Footer";
+import Footer from "@/components/Footer";
 import { useEffect } from "react";
 
 export default function ProductDetail() {

@@ -35,7 +35,7 @@ export default function BlogCard({ title, image, date, slug }: BlogCardProps) {
             </p>
           </div>
         </div>
-        <h3 className="text-xl font-medium text-[#3a4a3c] mb-6 hover:underline hover:text-[#f47a4d] cursor-pointer">
+        <h3 className="text-xl font-medium text-[#3a4a3c] mb-6 hover:underline hover:text-[#00A9FF] cursor-pointer">
           <Link to={`/blog/${slug}`} onClick={handleTitleClick}>
             {title}
           </Link>

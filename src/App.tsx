@@ -1,10 +1,10 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import About from "./pages/About";
-import Order from "./pages/Order";
-import Blog from "./pages/Blog";
-import ProductDetail from "./pages/ProductDetail";
-import BlogPost from "@/pages/BlogPost";
+import Home from "./pages/home/Home";
+import About from "./pages/about/About";
+import Order from "./pages/order/Order";
+import Blog from "./pages/blog/Blog";
+import ProductDetail from "./pages/order/ProductDetail";
+import BlogPost from "@/pages/blog/BlogPost";
 
 function App() {
   return (
