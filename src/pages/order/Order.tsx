@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "../../components/NavBar";
 import { ProductCard } from "@/pages/order/ProductCard";
 import Footer from "@/components/Footer";
+import LoadMoreButton from "@/components/LoadButton";
 
 const Order = () => {
   const [showMore, setShowMore] = useState(false);
@@ -29,10 +30,10 @@ const Order = () => {
       >
         <main className="flex-grow">
           {/* Header */}
-          <div className="bg-[#2d4134] text-white py-16 text-center">
+          <div className="bg-[#e8e0d3] text-slate-800 py-16 text-center font-title font-semibold">
             <h1 className="text-3xl font-bold">Order Online</h1>
             <div className="w-12 h-0.5 bg-[#3a4a3c] mx-auto mt-5"></div>
-            <p className="mt-3">Fresh Produce Delivered Weekly</p>
+            <p className="mt-3 font-body">Fresh Produce Delivered Weekly</p>
           </div>
 
           {/* Content */}
@@ -115,12 +116,7 @@ const Order = () => {
               {/* Load More Button */}
               {!showMore && (
                 <div className="text-center mt-8">
-                  <button
-                    onClick={handleLoadMore}
-                    className="px-6 py-3 border border-[#2d4134] text-[#2d4134] hover:bg-[#2d4134] hover:text-white transition-colors rounded"
-                  >
-                    Load More
-                  </button>
+                  <LoadMoreButton onClick={handleLoadMore} />
                 </div>
               )}
             </div>
