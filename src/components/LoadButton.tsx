@@ -31,7 +31,7 @@ export default function LoadMoreButton({ to }: LoadMoreButtonProps) {
         "bg-gradient-to-r from-[#00A9FF] to-[#0066FF] hover:from-[#0095E0] hover:to-[#0052CC]",
       )}
     >
-      <span className="relative z-10 flex items-center justify-center gap-2">
+      <span className="relative z-10 flex items-center justify-center gap-2 font-body">
         {isLoading ? (
           <>
             <Loader2 className="w-5 h-5 animate-spin" />

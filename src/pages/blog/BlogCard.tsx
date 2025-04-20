@@ -17,7 +17,7 @@ export default function BlogCard({ title, image, date, slug }: BlogCardProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg overflow-hidden shadow-sm">
+    <div className="bg-white rounded-lg overflow-hidden shadow-sm font-body">
       <div className="h-56 w-full overflow-hidden">
         <img
           src={image}

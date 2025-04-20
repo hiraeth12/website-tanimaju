@@ -34,7 +34,8 @@ const Home = () => {
     <>
       <Navbar />
 
-      <section className="relative w-full h-[calc(100vh-80px)] overflow-hidden">
+      <section className="relative w-full h-[calc(100vh-80px)] overflow-hidden opacity-95">
+        <div className="absolute inset-0 bg-black bg-opacity-40 z-10"></div>
         {/* Image Wrapper */}
         <div className="absolute inset-0">
           <AnimatePresence mode="wait">
@@ -52,7 +53,7 @@ const Home = () => {
         </div>
 
         {/* Overlay Konten */}
-        <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center text-center px-4 z-10">
+        <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center text-center px-4 z-10 font-title">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -111,11 +112,11 @@ const Home = () => {
               textInView.isVisible ? "fade-in-show" : ""
             }`}
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-2">
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-2 font-title">
               Tentang Kami
             </h2>
             <div className="w-14 h-0.5 bg-[#2A4D3E] mb-6" />
-            <p className="text-slate-700 text-base md:text-lg mb-8 leading-relaxed text-justify">
+            <p className="text-slate-700 text-base md:text-lg mb-8 leading-relaxed text-justify font-body">
               Website manajemen hasil panen yang dirancang untuk mendukung para
               petani di Desa Sukamaju, Bandung, Jawa Barat sebagai solusi
               lengkap dalam mengelola data pertanian dengan lebih efisien dan
@@ -134,7 +135,7 @@ const Home = () => {
             <img
               src="../images/placeholder-5.jpg"
               alt="Farm Illustration"
-              className="w-full h-auto object-contain"
+              className="w-full h-auto object-contain rounded-2xl"
             />
           </div>
         </div>
@@ -145,8 +146,8 @@ const Home = () => {
       {/* <Section3 /> */}
       {/* Blog Section */}
       <section className="py-16 bg-[#F5ECE0]">
-        <h2 className="text-3xl font-semibold text-slate-800 text-center mb-4">
-          From Our Articles
+        <h2 className="text-3xl font-semibold text-slate-800 text-center mb-4 font-title">
+          Artikel
         </h2>
         <div className="w-12 h-0.5 bg-[#3a4a3c] mx-auto mb-4"></div>
         <BlogSection limit={3} />

@@ -31,8 +31,9 @@ const About = () => {
       <section className="relative py-20 px-4 md:px-24 overflow-hidden">
         {/* Background belah 2 */}
         <div className="absolute inset-0 flex">
-          <div className="w-1/2 bg-[#FFFCF7]" />
-          <div className="w-1/2 bg-[#2a4d3e]" />
+          <div className="w-1/2 bg-[#F6F4EB]" />
+          <div className="w-1/2 bg-gradient-to-l from-[#0096E0] to-[#F6F4EB]" />
+
         </div>
 
         {/* Konten utama */}
@@ -44,23 +45,23 @@ const About = () => {
               textInView.isVisible ? "fade-in-show" : ""
             }`}
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-[#2A4D3E] mb-2">
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-2 font-title">
               Tentang Kami
             </h2>
             <div className="w-14 h-0.5 bg-[#2A4D3E] mb-6" />
-            <p className="text-gray-700 text-base md:text-lg mb-8 leading-relaxed text-justify">
-              <span className="font-bold">TaniMaju</span> adalah sebuah aplikasi
+            <p className="text-slate-700 text-base md:text-lg mb-8 leading-relaxed text-justify font-body">
+              <span className="font-bold text-black">TaniMaju</span> adalah sebuah aplikasi
               manajemen hasil panen yang dirancang untuk meningkatkan efisiensi
               dan produktivitas pertanian di Desa Sukamaju, Bandung, Jawa Barat.
-              Nama <span className="font-bold">TaniMaju</span> sendiri merupakan
-              gabungan dari kata <span className="font-bold">Tani</span> yang
-              berarti pertanian dan <span className="font-bold">Maju</span> yang
+              Nama <span className="font-bold text-black">TaniMaju</span> sendiri merupakan
+              gabungan dari kata <span className="font-bold text-black">Tani</span> yang
+              berarti pertanian dan <span className="font-bold text-black">Maju</span> yang
               mencerminkan kemajuan. </p>
-              <p className="text-gray-700 text-base md:text-lg mb-8 leading-relaxed text-justify">
+              <p className="text-slate-700 text-base md:text-lg mb-8 leading-relaxed text-justify font-body">
               Nama ini mencerminkan visi utama aplikasi,
               yaitu memajukan sektor pertanian lokal melalui pemanfaatan
               teknologi. Dengan menghadirkan inovasi digital ke tengah-tengah
-              kehidupan petani, TaniMaju berkomitmen untuk memberdayakan
+              kehidupan petani, <span className="font-bold text-black">TaniMaju</span> berkomitmen untuk memberdayakan
               komunitas tani di Desa Sukamaju agar lebih mandiri, modern, dan
               siap menghadapi tantangan pertanian di era digital.
             </p>
@@ -76,13 +77,13 @@ const About = () => {
             <img
               src="/images/about-placeholder-2.jpg"
               alt="Farm Illustration"
-              className="w-full h-auto object-contain"
+              className="w-full h-auto object-contain rounded-2xl"
             />
           </div>
         </div>
       </section>
       {/* Carousel */}
-      <section className="flex justify-center items-center min-h-screen bg-[#e0d2c5]">
+      <section className="flex justify-center items-center min-h-screen bg-[#f3f0e2]">
         <ImageCarousel images={images} />
       </section>
       {/* Footer */}
