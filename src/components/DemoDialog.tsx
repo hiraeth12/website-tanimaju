@@ -1,8 +1,5 @@
-import { useState } from "react";
 import { X } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import CoolButton from "./ShopButton";
 
 interface ProductDialogProps {
@@ -12,6 +9,7 @@ interface ProductDialogProps {
   price: number;
   sku: string;
   imageSrc: string;
+  description: string; // deskripsi singkat produk
 }
 
 export function DemoDialog({
@@ -21,13 +19,13 @@ export function DemoDialog({
   price,
   sku,
   imageSrc,
+  description,
 }: ProductDialogProps) {
-  const [quantity, setQuantity] = useState(1);
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="p-0 overflow-hidden max-w-3xl border-none rounded-xl shadow-lg">
+      <DialogContent className="p-0 overflow-hidden max-w-3xl border-none rounded-xl shadow-lg font-body">
         <div className="grid grid-cols-1 md:grid-cols-2">
+          {/* Gambar Produk */}
           <div className="relative aspect-square overflow-hidden">
             <img
               src={imageSrc}
@@ -36,6 +34,7 @@ export function DemoDialog({
             />
           </div>
 
+          {/* Detail Produk */}
           <div className="p-6 md:p-8 flex flex-col relative">
             <button
               onClick={() => onOpenChange(false)}
@@ -48,42 +47,9 @@ export function DemoDialog({
             <div className="space-y-6 flex-1">
               <div>
                 <h2 className="text-2xl font-medium tracking-tight">{title}</h2>
-                <p className="text-2xl font-bold mt-1">${price.toFixed(2)}</p>
+                <p className="text-2xl font-semibold mt-1">Rp. {price}</p>
                 <p className="text-sm text-gray-500 mt-1">SKU: {sku}</p>
-              </div>
-
-              <div className="space-y-2">
-                <label htmlFor="quantity" className="text-sm font-medium">
-                  Quantity
-                </label>
-                <div className="flex items-center w-24">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-9 w-9 rounded-r-none"
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  >
-                    -
-                  </Button>
-                  <Input
-                    id="quantity"
-                    type="number"
-                    min={1}
-                    value={quantity}
-                    onChange={(e) =>
-                      setQuantity(Number.parseInt(e.target.value) || 1)
-                    }
-                    className="h-9 rounded-none text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                  />
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-9 w-9 rounded-l-none"
-                    onClick={() => setQuantity(quantity + 1)}
-                  >
-                    +
-                  </Button>
-                </div>
+                <p className="text-sm text-gray-700 mt-4">{description}</p>
               </div>
             </div>
 

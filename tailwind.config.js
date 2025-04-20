@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const defaultTheme = require('tailwindcss/defaultTheme');
+
 export default {
   darkMode: ["class"],
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
@@ -16,6 +18,12 @@ export default {
           "100%": { opacity: 1, transform: "translateY(0)" },
         },
       },
+
+      fontFamily: {
+        title: ['"Yeseva One"', ...defaultTheme.fontFamily.sans],
+        body: ['Poppins', ...defaultTheme.fontFamily.sans],
+      },
+
       animation: {
         "fade-in": "fade-in 0.3s ease-out forwards",
       },

@@ -6,7 +6,7 @@ const Navbar = () => {
   const activeStyle = "text-[#A0E9FF] font-semibold";
 
   return (
-    <header className="bg-[#00A9FF] relative flex items-center justify-between px-6 py-4 md:px-12 h-20">
+    <header className="bg-[#0096E0] relative flex items-center justify-between px-6 py-4 md:px-12 h-20">
       {/* Logo */}
       <div className="flex items-center space-x-3 h-full overflow-hidden">
         <div className="h-14 w-12">
@@ -15,7 +15,7 @@ const Navbar = () => {
       </div>
 
       {/* Navigasi di Tengah */}
-      <nav className="hidden md:flex items-center space-x-6 absolute left-1/2 transform -translate-x-1/2">
+      <nav className="hidden md:flex items-center space-x-6 absolute left-1/2 transform -translate-x-1/2 font-body">
         <NavLink
           to="/"
           className={({ isActive }) => (isActive ? activeStyle : linkStyle)}
