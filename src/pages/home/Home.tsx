@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import Navbar from "../../components/NavBar";
 import { AnimatePresence, motion } from "framer-motion";
 import { useInView } from "../../hooks/useInView";
 import ProductShowcase from "./ProductShowcase";
-import Section3 from "@/pages/home/Section-3";
+//import Section3 from "@/pages/home/Section-3";
 import BlogSection from "@/pages/blog/BlogSection";
 import Footer from "@/components/Footer";
+import CoolButton from "@/components/ShopButton";
+import LoadMoreButton from "@/components/LoadButton";
 
 const images = [
   "/images/placeholder-1.jpg",
@@ -81,12 +82,9 @@ const Home = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 1 }}
           >
-            <Link
-              to="/order"
-              className="bg-white text-[#2A4D3E] px-6 py-3 rounded hover:bg-[#FF8C42] hover:text-white transition-colors font-medium"
-            >
-              Order Online
-            </Link>
+            <div className="flex justify-center items-center space-x-4">
+              <CoolButton />
+            </div>
           </motion.div>
         </div>
 
@@ -105,7 +103,7 @@ const Home = () => {
       </section>
 
       {/* Konten Lain */}
-      <section className="bg-[#FFFCF7] py-20 px-4 md:px-24">
+      <section className="bg-[#F6F4EB] py-20 px-4 md:px-24">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between md:gap-32 gap-24">
           <div
             ref={textInView.ref}
@@ -113,22 +111,17 @@ const Home = () => {
               textInView.isVisible ? "fade-in-show" : ""
             }`}
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-[#2A4D3E] mb-2">
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-2">
               Tentang Kami
             </h2>
             <div className="w-14 h-0.5 bg-[#2A4D3E] mb-6" />
-            <p className="text-gray-700 text-base md:text-lg mb-8 leading-relaxed text-justify">
+            <p className="text-slate-700 text-base md:text-lg mb-8 leading-relaxed text-justify">
               Website manajemen hasil panen yang dirancang untuk mendukung para
               petani di Desa Sukamaju, Bandung, Jawa Barat sebagai solusi
               lengkap dalam mengelola data pertanian dengan lebih efisien dan
               akurat.
             </p>
-            <Link
-              to="/about"
-              className="inline-block bg-[#FF8C42] text-white px-6 py-3 rounded hover:bg-[#2A4D3E] transition-colors font-medium"
-            >
-              See More
-            </Link>
+            <LoadMoreButton to="/about" />
           </div>
 
           {/* Gambar */}
@@ -148,21 +141,17 @@ const Home = () => {
       </section>
       {/* Another Section */}
       <ProductShowcase />
-      {/* Another Section */}
-      <Section3 />
+      {/* Carousel Section */}
+      {/* <Section3 /> */}
       {/* Blog Section */}
-      <section className="py-16 bg-[#e8e0d4]">
-        <h2 className="text-3xl font-semibold text-[#3a4a3c] text-center mb-4">
+      <section className="py-16 bg-[#F5ECE0]">
+        <h2 className="text-3xl font-semibold text-slate-800 text-center mb-4">
           From Our Articles
         </h2>
-        <div className="w-12 h-0.5 bg-[#3a4a3c] mx-auto mb-12"></div>
+        <div className="w-12 h-0.5 bg-[#3a4a3c] mx-auto mb-4"></div>
         <BlogSection limit={3} />
-        <div className="flex justify-center mt-12">
-          <Link to="/blog">
-            <button className="bg-[#f47a4d] hover:bg-[#e06a40] text-white px-8 py-3 rounded-lg transition-colors">
-              See More
-            </button>
-          </Link>
+        <div className="flex justify-center">
+          <LoadMoreButton to="/blog" />
         </div>
       </section>
 

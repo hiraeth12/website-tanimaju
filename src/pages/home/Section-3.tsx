@@ -14,10 +14,10 @@ export default function Section3() {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full h-[70vh] flex overflow-hidden"
+      className="relative w-full h-[70vh] flex overflow-hidden bg-gradient-to-r from-[#00A9FF] via-[#65CFFF] to-[#F5EEDC]"
     >
       {/* Gambar Kiri */}
-      <div className="w-1/2 flex items-center justify-center bg-[#2a4d3e]">
+      <div className="w-1/2 flex items-center justify-center bg-transparent">
         <img
           src="/images/parallax-placeholder-1.jpg"
           alt="Left"
@@ -25,8 +25,8 @@ export default function Section3() {
         />
       </div>
 
-      {/* Carousel di Kanan */}
-      <div className="w-1/2 flex items-center justify-center bg-white">
+      {/* Carousel Kanan */}
+      <div className="w-1/2 flex items-center justify-center bg-transparent">
         <ImageCarousel images={images} />
       </div>
     </section>

@@ -85,7 +85,7 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
       </div>
 
       {/* Main carousel container */}
-      <div className="relative h-[500px] overflow-hidden rounded-none bg-white">
+      <div className="relative h-[500px] overflow-hidden rounded-3xl bg-white">
         {/* Left Arrow */}
         <div className="absolute left-4 top-1/2 z-10 -translate-y-1/2 cursor-pointer text-white">
           <ChevronLeft

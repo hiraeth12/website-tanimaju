@@ -32,8 +32,7 @@ export default function Footer() {
               technology.
             </p>
           </div>
-
-          {/* Pages (centered) */}
+          
           {/* Pages (centered) */}
           <div className="space-y-4 text-center mx-auto">
             <h4 className="text-sm font-medium uppercase tracking-wider text-gray-400">
