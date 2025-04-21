@@ -22,7 +22,7 @@ export default function LoadMoreButton({ to, onClick }: LoadMoreButtonProps) {
       } else if (onClick) {
         onClick();
       }
-    }, 1000);
+    }, 500);
   };
 
   return (
@@ -44,7 +44,7 @@ export default function LoadMoreButton({ to, onClick }: LoadMoreButtonProps) {
           </>
         ) : (
           <>
-            <MoreHorizontal className="w-5 h-5 transition-all duration-500 group-hover:animate-pulse" />
+            <MoreHorizontal className="w-5 h-5 transition-all duration-100 group-hover:animate-pulse" />
             <span className="transition-transform group-hover:translate-x-1">
               Load More
             </span>
