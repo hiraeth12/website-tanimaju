@@ -1,4 +1,40 @@
-# React + TypeScript + Vite
+# Website TaniMaju
+
+**Tutorial Instalasi**
+
+- Pastikan Git sudah terinstall di PC (buka cmd lalu ketikkan)
+```bash
+git --version
+```
+
+- Pastikan NodeJs(NPM) sudah terinstall di PC (buka cmd lalu ketik)
+```bash
+node -v
+```
+
+- Clone Repository ini 
+```bash
+git clone https://github.com/hiraeth12/website-tanimaju
+```
+
+- Pindah Folder hasil clone repo
+```bash
+cd website-tanimaju
+```
+
+
+- Jalanakan npm install 
+```bash
+npm install
+```
+
+- Jalankan local server vite react
+```bash
+npm run dev
+```
+
+
+## React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
