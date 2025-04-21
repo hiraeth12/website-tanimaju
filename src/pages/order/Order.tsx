@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "../../components/NavBar";
-import { ProductCard } from "@/pages/order/ProductCard";
+import ProductCard from "./ProductCard";
 import Footer from "@/components/Footer";
 import LoadMoreButton from "@/components/LoadButton";
 
@@ -11,6 +11,54 @@ const Order = () => {
   const handleLoadMore = () => {
     setShowMore(true);
   };
+
+  const products = [
+    {
+      title: "Padi",
+      price: 6500,
+      imageSrc: "/images/shop-placeholder-1.jpg",
+      sku: "0001",
+      description: "Padi berkualitas untuk hasil panen terbaik.",
+    },
+    {
+      title: "Bawang Merah",
+      price: 60000,
+      imageSrc: "/images/shop-placeholder-2.jpg",
+      sku: "0002",
+      description: "A selection of seasonal fruits and vegetables.",
+    },
+    {
+      title: "Jagung Manis",
+      price: 17000,
+      imageSrc: "/images/shop-placeholder-3.jpg",
+      sku: "0003",
+      description: "A selection of seasonal fruits and vegetables.",
+    },
+  ];
+
+  const moreProducts = [
+    {
+      title: "Sawi",
+      price: 7000,
+      imageSrc: "/images/shop-placeholder-4.jpg",
+      sku: "001",
+      description: "A selection of seasonal fruits and vegetables.",
+    },
+    {
+      title: "Kentang",
+      price: 7000,
+      imageSrc: "/images/shop-placeholder-5.jpg",
+      sku: "001",
+      description: "A selection of seasonal fruits and vegetables.",
+    },
+    {
+      title: "Umbi Ungu",
+      price: 7000,
+      imageSrc: "/images/shop-placeholder-6.jpg",
+      sku: "001",
+      description: "A selection of seasonal fruits and vegetables.",
+    },
+  ];
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -30,7 +78,7 @@ const Order = () => {
       >
         <main className="flex-grow">
           {/* Header */}
-          <div className="bg-[#e8e0d3] text-slate-800 py-16 text-center font-title font-semibold">
+          <div className="bg-gradient-to-b from-[#F6F4EB] to-[#e8e0d3] text-slate-800 py-16 text-center font-title font-semibold">
             <h1 className="text-3xl font-bold">Order Online</h1>
             <div className="w-12 h-0.5 bg-[#3a4a3c] mx-auto mt-5"></div>
             <p className="mt-3 font-body">Fresh Produce Delivered Weekly</p>
@@ -41,44 +89,16 @@ const Order = () => {
             <div className="max-w-6xl mx-auto">
               {/* Top row - Baskets */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6 }}
-                >
-                  <ProductCard
-                    title="Classic Basket"
-                    price={15.0}
-                    imageSrc="/images/product-placeholder-1.jpg"
-                    ViewProduct={true}
-                  />
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                >
-                  <ProductCard
-                    title="Mixed Basket"
-                    price={25.0}
-                    imageSrc="/images/product-placeholder-2.jpg"
-                    ViewProduct={true}
-                  />
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                >
-                  <ProductCard
-                    title="Wholesome Family Basket"
-                    price={45.0}
-                    imageSrc="/images/product-placeholder-3.jpg"
-                    ViewProduct={true}
-                  />
-                </motion.div>
+                {products.map((product, index) => (
+                  <motion.div
+                    key={product.title}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: index * 0.2 }}
+                  >
+                    <ProductCard {...product} ViewProduct={true} />
+                  </motion.div>
+                ))}
               </div>
 
               {/* Bottom row - Individual products */}
@@ -91,24 +111,13 @@ const Order = () => {
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.6 }}
                   >
-                    <ProductCard
-                      title="I'm a product"
-                      price={2.0}
-                      imageSrc="/images/product-placeholder-4.jpg"
-                      ViewProduct={true}
-                    />
-                    <ProductCard
-                      title="I'm a product"
-                      price={2.0}
-                      imageSrc="/images/product-placeholder-5.jpg"
-                      ViewProduct={true}
-                    />
-                    <ProductCard
-                      title="I'm a product"
-                      price={2.0}
-                      imageSrc="/images/product-placeholder-6.jpg"
-                      ViewProduct={true}
-                    />
+                    {moreProducts.map((product, index) => (
+                      <ProductCard
+                        key={index}
+                        {...product}
+                        ViewProduct={true}
+                      />
+                    ))}
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -122,7 +131,6 @@ const Order = () => {
             </div>
           </div>
         </main>
-
         <Footer />
       </motion.div>
     </>
