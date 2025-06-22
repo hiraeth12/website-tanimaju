@@ -60,10 +60,18 @@ export function CarouselDemo() {
         <div className="hidden md:flex absolute inset-y-0 left-0 items-center">
           <CarouselPrevious />
         </div>
-        <div className="hidden md:flex absolute inset-y-0 right-0 items-center">
+        <div className="hidden md:flex absolute inset-y-0 right-0 items-center animate-arrow-bounce">
           <CarouselNext />
         </div>
       </Carousel>
+
+      {/* Reminder swipe di mobile */}
+      <div className="md:hidden mt-3 text-center text-sm text-slate-800">
+        <span className="inline-flex items-center gap-1 font-body">
+          <span>Swipe untuk melihat produk lainnya</span>
+          <span className="animate-bounce-right">→</span>
+        </span>
+      </div>
     </div>
   );
 }

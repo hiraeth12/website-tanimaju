@@ -7,7 +7,7 @@ import {
   Phone,
   Mail,
 } from "lucide-react";
-import sea from "../assets/sealogo.png";
+import sea from "../assets/sealogo.png"; // Pastikan path logo ini benar
 
 export default function Footer() {
   return (
@@ -16,16 +16,19 @@ export default function Footer() {
       <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-70"></div>
 
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 items-start">
+        {/* Mengubah `gap-10` menjadi `gap-12 md:gap-10` untuk spasi mobile yang lebih baik */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-10 items-start">
+          
           {/* Brand */}
-          <div className="space-y-4">
+          {/* ✅ Dibuat rata tengah di mobile, dan rata kiri di desktop */}
+          <div className="space-y-4 flex flex-col items-center text-center md:items-start md:text-left">
             <div className="flex items-center space-x-2">
               <img
                 src={sea}
                 alt="sealogo"
                 className="w-20 h-20 object-contain"
               />
-              <h3 className="text-xl font-light tracking-wider">Sea</h3>
+              {/* <h3 className="text-xl font-light tracking-wider"></h3> */}
             </div>
             <p className="text-gray-400 text-sm max-w-xs">
               Creating the future through minimalist design and cutting-edge
@@ -33,7 +36,7 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Pages (centered) */}
+          {/* Pages (centered) - Tidak perlu banyak perubahan karena sudah rata tengah */}
           <div className="space-y-4 text-center mx-auto">
             <h4 className="text-sm font-medium uppercase tracking-wider text-gray-400">
               Pages
@@ -59,16 +62,16 @@ export default function Footer() {
           </div>
 
           {/* Contact */}
-          <div className="space-y-4 md:col-start-3 md:items-end text-right">
+          <div className="space-y-4 flex flex-col items-center text-center md:items-end md:text-right">
             <h4 className="text-sm font-medium uppercase tracking-wider text-gray-400">
               Contact
             </h4>
             <div className="space-y-2 text-gray-300 text-sm">
-              <div className="flex justify-end items-center space-x-2">
+              <div className="flex justify-center md:justify-end items-center space-x-2">
                 <Mail className="w-4 h-4 text-cyan-400" />
                 <span>sealaboratory@365.telkomuniversity.ac.id</span>
               </div>
-              <div className="flex justify-end items-center space-x-2">
+              <div className="flex justify-center md:justify-end items-center space-x-2">
                 <Phone className="w-4 h-4 text-cyan-400" />
                 <span>+62 877-4758-3087</span>
               </div>
@@ -76,9 +79,8 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom Section */}
+        {/* Bottom Section (Tidak ada perubahan, sudah responsif) */}
         <div className="mt-12 pt-8 border-t border-gray-800 flex flex-col items-center space-y-6">
-          {/* Social icons */}
           <div className="flex space-x-4">
             {[Instagram, Github, Linkedin].map((Icon, idx) => (
               <Link
@@ -91,8 +93,6 @@ export default function Footer() {
               </Link>
             ))}
           </div>
-
-          {/* Credit */}
           <p className="text-gray-500 text-xs text-center">
             © {new Date().getFullYear()} SEA Laboratory. All rights reserved.
           </p>
