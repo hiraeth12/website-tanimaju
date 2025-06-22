@@ -17,6 +17,16 @@ export default {
           "0%": { opacity: 0, transform: "translateY(-5px)" },
           "100%": { opacity: 1, transform: "translateY(0)" },
         },
+
+        'arrow-bounce': {
+          '0%, 100%': { transform: 'translateX(0)' },
+          '50%': { transform: 'translateX(5px)' },
+        },
+        
+        'bounce-right': {
+          '0%, 100%': { transform: 'translateX(0)' },
+          '50%': { transform: 'translateX(5px)' },
+        },
       },
 
       fontFamily: {
@@ -27,6 +37,8 @@ export default {
 
       animation: {
         "fade-in": "fade-in 0.3s ease-out forwards",
+        'arrow-bounce': 'arrow-bounce 1s infinite',
+        'bounce-right': 'bounce-right 1s infinite',
       },
       colors: {
         background: "hsl(var(--background))",

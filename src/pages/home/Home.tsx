@@ -162,14 +162,14 @@ const Home = () => {
           Artikel
         </h2>
         <div className="w-12 h-0.5 bg-[#3a4a3c] mx-auto mb-4"></div>
-        <BlogSection limit={3} />
+        <BlogSection isHome limit={3} />
         <div className="flex justify-center">
           <LoadMoreButton to="/blog" />
         </div>
       </section>
 
       {/* Footer */}
-      <Footer></Footer>
+      <Footer/>
     </>
   );
 };

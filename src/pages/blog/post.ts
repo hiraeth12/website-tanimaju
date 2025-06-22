@@ -43,4 +43,15 @@ export const blogPosts: Post[] = [
     ],
     tags: ["Herbs", "Gardening"],
   },
+  {
+    title: "Creamy Pumpkin Soup",
+    image: "/images/blog-placeholder-3.jpg",
+    date: "Nov 13, 2024",
+    category: "Recipes",
+    content: [
+      "Learn how to grow fresh herbs in your garden with these simple tips.",
+      "Your kitchen will never be the same!",
+    ],
+    tags: ["Herbs", "Gardening"],
+  },
 ];
