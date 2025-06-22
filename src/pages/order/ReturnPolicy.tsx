@@ -2,8 +2,19 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
-export default function ReturnPolicy() {
+interface ReturnPolicyProps {
+  whatsappNumber: string;
+  productTitle: string;
+}
+
+export default function ReturnPolicy({
+  whatsappNumber,
+  productTitle,
+}: ReturnPolicyProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const waLink = `https://wa.me/${whatsappNumber}?text=Halo%20saya%20tertarik%20dengan%20produk%20${encodeURIComponent(
+    productTitle
+  )}%20anda.%20Bolehkah%20saya%20mendapatkan%20informasi%20lebih%20lanjut?`;
 
   return (
     <div className="border-t border-[#e0d9d0] py-4">
@@ -11,7 +22,7 @@ export default function ReturnPolicy() {
         onClick={() => setIsOpen(!isOpen)}
         className="flex justify-between items-center w-full text-[#5d534a]"
       >
-        <span className="font-medium">RETRUN POLICY</span>
+        <span className="font-medium">CONTACT SELLER</span>
         <Plus
           className={`h-4 w-4 transform transition-transform duration-300 ${
             isOpen ? "rotate-45" : ""
@@ -29,10 +40,14 @@ export default function ReturnPolicy() {
             className="overflow-hidden"
           >
             <div className="mt-4 text-[#5d534a] text-sm">
-              <p>
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Mollitia quasi suscipit eius tempore ut adipisci consequuntur nulla facilis iusto optio. Sint, 
-                ut hic incidunt veniam minus magnam quas harum, totam voluptates, praesentium nihil alias ab!
-              </p>
+              <a
+                href={waLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors duration-300"
+              >
+                Hubungi via WhatsApp
+              </a>
             </div>
           </motion.div>
         )}

@@ -22,6 +22,7 @@ export default {
       fontFamily: {
         title: ['"Yeseva One"', ...defaultTheme.fontFamily.sans],
         body: ['Poppins', ...defaultTheme.fontFamily.sans],
+        cascadia: ['"Cascadia Code"', 'monospace'],
       },
 
       animation: {

@@ -7,88 +7,63 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { DemoDialog } from "@/components/DemoDialog"; // pastikan nama import sama
-// Jangan lupa DemoDialog menerima prop `description`
-
-const products = [
-  {
-    id: 1,
-    name: "Padi",
-    price: 6500,
-    sku: "0001",
-    image: "/images/shop-placeholder-1.jpg",
-    description: "Padi berkualitas untuk hasil panen terbaik.",
-  },
-  {
-    id: 2,
-    name: "Bawang Merah",
-    price: 60000,
-    sku: "0002",
-    image: "/images/shop-placeholder-2.jpg",
-    description: "Bawang merah segar dari petani lokal.",
-  },
-  {
-    id: 3,
-    name: "Jagung Manis",
-    price: 17000,
-    sku: "0003",
-    image: "/images/shop-placeholder-3.jpg",
-    description: "Jagung manis siap konsumsi dengan rasa alami.",
-  },
-  {
-    id: 4,
-    name: "Sawi",
-    price: 10000,
-    sku: "0004",
-    image: "/images/shop-placeholder-4.jpg",
-    description: "Sayur sawi segar cocok untuk berbagai masakan.",
-  },
-];
+import { DemoDialog } from "@/components/DemoDialog";
+import { products } from "../order/ProductData";
 
 export function CarouselDemo() {
-  const [openDialogId, setOpenDialogId] = useState<number | null>(null);
+  const [openDialogId, setOpenDialogId] = useState<string | null>(null);
 
   return (
-    <Carousel className="w-full max-w-10xl">
-      <CarouselContent>
-        {products.map((product) => (
-          <CarouselItem key={product.id} className="md:basis-1/2 lg:basis-1/3">
-            <div className="p-4">
-              <DemoDialog
-                open={openDialogId === product.id}
-                onOpenChange={(open) =>
-                  setOpenDialogId(open ? product.id : null)
-                }
-                title={product.name}
-                price={product.price}
-                sku={product.sku}
-                imageSrc={product.image}
-                description={product.description} // <-- ini penting
-              />
+    <div className="relative w-full max-w-10xl mx-auto">
+      <Carousel className="w-full touch-pan-x">
+        <CarouselContent>
+          {products.map((product) => (
+            <CarouselItem
+              key={product.id}
+              className="basis-full sm:basis-1/2 lg:basis-1/3"
+            >
+              <div className="p-4">
+                <DemoDialog
+                  open={openDialogId === product.id}
+                  onOpenChange={(open) =>
+                    setOpenDialogId(open ? product.id : null)
+                  }
+                  title={product.title}
+                  price={product.price}
+                  sku={product.sku}
+                  imageSrc={product.imageSrc}
+                  description={product.description}
+                />
+                <Card
+                  onClick={() => setOpenDialogId(product.id)}
+                  className="overflow-hidden group relative cursor-pointer"
+                >
+                  <CardContent className="p-0 relative">
+                    <img
+                      src={product.imageSrc}
+                      alt={product.title}
+                      className="w-full h-full object-cover aspect-square transition-transform duration-500 ease-in-out group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <span className="text-white text-lg font-semibold font-body">
+                        Quick View
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
 
-              <Card
-                onClick={() => setOpenDialogId(product.id)}
-                className="overflow-hidden group relative cursor-pointer"
-              >
-                <CardContent className="p-0 relative">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-full object-cover aspect-square transition-transform duration-500 ease-in-out group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <span className="text-white text-lg font-semibold font-body">
-                      Quick View
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
-    </Carousel>
+        {/* Panah hanya tampil di desktop */}
+        <div className="hidden md:flex absolute inset-y-0 left-0 items-center">
+          <CarouselPrevious />
+        </div>
+        <div className="hidden md:flex absolute inset-y-0 right-0 items-center">
+          <CarouselNext />
+        </div>
+      </Carousel>
+    </div>
   );
 }
