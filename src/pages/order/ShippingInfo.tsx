@@ -11,7 +11,7 @@ export default function ShippingInfo() {
         onClick={() => setIsOpen(!isOpen)}
         className="flex justify-between items-center w-full text-[#5d534a]"
       >
-        <span className="font-medium">SHIPPING INFO</span>
+        <span className="font-medium">PETUNJUK PEMESANAN</span>
         <Plus
           className={`h-4 w-4 transform transition-transform duration-300 ${
             isOpen ? "rotate-45" : ""
@@ -28,11 +28,14 @@ export default function ShippingInfo() {
             transition={{ duration: 0.3 }}
             className="overflow-hidden"
           >
-            <div className="mt-4 text-[#5d534a] text-sm">
-              <p>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quis tempora, sit obcaecati voluptatum doloremque nesciunt praesentium? 
-                Tempore aspernatur vel voluptates eveniet culpa quis unde perspiciatis, necessitatibus iste non neque aut.
-              </p>
+            <div className="mt-4 text-[#5d534a] text-sm space-y-2">
+              <ol className="list-decimal list-inside">
+                <li>Klik tombol WhatsApp di atas untuk menghubungi penjual.</li>
+                <li>Sebutkan produk dan jumlah yang ingin dipesan.</li>
+                <li>Tunggu konfirmasi harga dan ketersediaan dari penjual.</li>
+                <li>Selesaikan pembayaran sesuai instruksi penjual.</li>
+                <li>Produk dikirim sesuai kesepakatan.</li>
+              </ol>
             </div>
           </motion.div>
         )}

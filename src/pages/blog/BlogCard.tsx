@@ -31,7 +31,7 @@ export default function BlogCard({ title, image, date, slug }: BlogCardProps) {
           <div>
             <p className="text-sm font-medium">Admin</p>
             <p className="text-xs text-gray-500">
-              {date} · 1 min read
+              {date}
             </p>
           </div>
         </div>

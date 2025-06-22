@@ -2,7 +2,11 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
-export default function ProductInfo() {
+interface ProductInfoProps {
+  info: string;
+}
+
+export default function ProductInfo({ info }: ProductInfoProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -28,11 +32,8 @@ export default function ProductInfo() {
             transition={{ duration: 0.3 }}
             className="overflow-hidden"
           >
-            <div className="mt-4 text-[#5d534a] text-sm">
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero asperiores quis natus doloremque fugit itaque est nam saepe alias 
-                consequuntur ea numquam veniam aspernatur recusandae minima quibusdam laboriosam, tempora ut.
-              </p>
+            <div className="mt-4 text-[#5d534a] text-sm text-justify">
+              <p>{info}</p>
             </div>
           </motion.div>
         )}

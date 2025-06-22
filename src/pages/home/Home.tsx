@@ -3,7 +3,6 @@ import Navbar from "../../components/NavBar";
 import { AnimatePresence, motion } from "framer-motion";
 import { useInView } from "../../hooks/useInView";
 import ProductShowcase from "./ProductShowcase";
-//import Section3 from "@/pages/home/Section-3";
 import BlogSection from "@/pages/blog/BlogSection";
 import Footer from "@/components/Footer";
 import CoolButton from "@/components/ShopButton";
@@ -104,16 +103,30 @@ const Home = () => {
       </section>
 
       {/* Konten Lain */}
-      <section className="bg-[#F6F4EB] py-20 px-4 md:px-24">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between md:gap-32 gap-24">
+      <section className="bg-[#F6F4EB] py-20 px-4 md:px-24 relative overflow-hidden">
+        <div className="absolute top-0 left-0 -translate-x-1/4 -translate-y-1/4 opacity-30">
+          <svg
+            width="400"
+            height="400"
+            viewBox="0 0 200 200"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill="#E8E0D3"
+              d="M49.5,-55.8C62.8,-42.6,71.4,-21.3,74.5,1.7C77.6,24.7,75.2,49.3,61.2,63.9C47.2,78.5,21.6,83.1,-4.2,85.2C-30,87.2,-60,86.7,-71,72.4C-81.9,58.1,-73.8,29.1,-67.2,7.7C-60.7,-13.7,-55.7,-27.4,-46.2,-41.4C-36.7,-55.4,-22.7,-69.8,-5.5,-73.1C11.8,-76.4,23.5,-69,49.5,-55.8Z"
+              transform="translate(100 100)"
+            />
+          </svg>
+        </div>
+        <div className="relative max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between md:gap-32 gap-24">
           <div
             ref={textInView.ref}
-            className={`md:w-1/2 text-left fade-in-left ${
+            className={`md:w-1/2 text-left fade-in-left z-10 ${
               textInView.isVisible ? "fade-in-show" : ""
             }`}
           >
             <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-2 font-title">
-              Tentang Kami
+              <span className="text-cyan-600">Tentang</span> Kami
             </h2>
             <div className="w-14 h-0.5 bg-[#2A4D3E] mb-6" />
             <p className="text-slate-700 text-base md:text-lg mb-8 leading-relaxed text-justify font-body">
@@ -128,14 +141,14 @@ const Home = () => {
           {/* Gambar */}
           <div
             ref={imageInView.ref}
-            className={`md:w-1/2 fade-in-right ${
+            className={`md:w-1/2 fade-in-right z-10 ${
               imageInView.isVisible ? "fade-in-show" : ""
             }`}
           >
             <img
               src="../images/placeholder-5.jpg"
               alt="Farm Illustration"
-              className="w-full h-auto object-contain rounded-2xl"
+              className="w-full h-auto object-contain rounded-2xl shadow-xl"
             />
           </div>
         </div>
@@ -143,7 +156,6 @@ const Home = () => {
       {/* Another Section */}
       <ProductShowcase />
       {/* Carousel Section */}
-      {/* <Section3 /> */}
       {/* Blog Section */}
       <section className="py-16 bg-[#F5ECE0]">
         <h2 className="text-3xl font-semibold text-slate-800 text-center mb-4 font-title">
