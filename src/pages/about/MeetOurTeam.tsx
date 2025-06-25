@@ -11,7 +11,7 @@ export default function MeetOurTeam() {
       name: "Sahrul Ridho Firdaus",
       role: "Frontend Engineer",
       bio: "Passionate about creating products that make a difference in people's lives.",
-      image: "images/placeholder-team-1.jpg",
+      image: "images/about/card-1.jpg",
       social: {
         Instagram: "https://instagram.com/sahrulfirdaus",
         linkedin: "https://linkedin.com/in/sahrulfirdaus/",
@@ -22,7 +22,7 @@ export default function MeetOurTeam() {
       name: "Sam Rivera",
       role: "Backend Engineer",
       bio: "Bringing beautiful, functional designs to life with a focus on user experience.",
-      image: "images/placeholder-team-2.jpg",
+      image: "images/about/card-2.jpg",
       social: {
         Instagram: "https://twitter.com",
         linkedin: "https://linkedin.com",
@@ -33,7 +33,7 @@ export default function MeetOurTeam() {
       name: "Taylor Chen",
       role: "UI/UX Designer",
       bio: "Building robust, scalable solutions with cutting-edge technologies.",
-      image: "images/placeholder-team-3.jpg",
+      image: "images/about/card-3.jpg",
       social: {
         Instagram: "https://twitter.com",
         linkedin: "https://linkedin.com",
@@ -43,10 +43,7 @@ export default function MeetOurTeam() {
   ];
 
   return (
-    <section
-      className="bg-[#E6E1D2]
- py-16 px-4 w-full max-w-7xl mx-auto "
-    >
+    <section className="bg-transparent py-16 px-4 w-full max-w-7xl mx-auto ">
       <div className="text-center mb-16">
         <h2 className="text-3xl font-bold tracking-tight mb-4 font-title text-slate-800">
           Meet Our Team

@@ -6,6 +6,8 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import CoolButton from "./ShopButton";
+import { generateSlug } from "@/lib/utils";
+
 
 interface ProductDialogProps {
   open: boolean;
@@ -64,11 +66,11 @@ export function DemoDialog({
             <div className="space-y-6 flex-1">
               <div>
                 <DialogTitle asChild>
-                  <h2 className="text-2xl font-medium tracking-tight">
+                  <h2 className="text-3xl tracking-tight font-cascadia">
                     {title}
                   </h2>
                 </DialogTitle>
-                <p className="text-2xl font-semibold mt-1">Rp. {price}</p>
+                <p className="text-xl font-semibold mt-1">Rp. {price}</p>
                 {/* <p className="text-sm text-gray-500 mt-1">SKU: {sku}</p> */}
                 <DialogDescription asChild>
                   <p className="text-sm text-gray-700 mt-4">{description}</p>
@@ -77,7 +79,7 @@ export function DemoDialog({
             </div>
 
             <div className="space-y-4 mt-8">
-              <CoolButton />
+              <CoolButton to={`/order/${generateSlug(title)}`} label="View Product" />
             </div>
           </div>
         </div>

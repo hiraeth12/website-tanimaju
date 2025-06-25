@@ -71,22 +71,15 @@ const About = () => {
             }`}
           >
             <img
-              src="/images/about-placeholder-2.jpg"
+              src="/images/about/about-placeholder-2.png"
               alt="Farm Illustration"
               className="w-full h-auto object-contain rounded-2xl"
             />
           </div>
         </div>
       </section>
-      {/* Carousel */}
-      {/* <section className="flex justify-center items-center min-h-screen bg-[#F2EFE7]">
-        <ImageCarousel images={images} />
-      </section> */}
       {/* Meet our Team */}
-      <section
-        className="bg-[#E6E1D2]
- py-16 px-4 w-full"
-      >
+      <section className="bg-gradient-to-r from-[#F6F4EB] to-[#E6E1D2] py-16 px-4 w-full">
         <div className="w-full max-w-7xl mx-auto">
           <MeetOurTeam />
         </div>

@@ -34,7 +34,7 @@ export default function ParallaxHero() {
         <div
           className="absolute inset-0 h-[135%] w-full bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: `url('images/about-placeholder-1.jpg')`,
+            backgroundImage: `url('images/about/about-placeholder-1.jpg')`,
             transform: `translateY(${scrollY * 0.2}px)`,
             top: "-10%",
           }}
