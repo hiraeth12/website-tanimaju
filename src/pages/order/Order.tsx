@@ -40,7 +40,7 @@ const Order = () => {
 
           <div className="bg-[#e8e0d3] py-8 px-4 md:px-8 lg:px-16">
             <div className="max-w-6xl mx-auto">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))] lg:grid-cols-4 gap-4 sm:gap-6">
                 {products.slice(0, visibleProducts).map((product, index) => (
                   <motion.div
                     key={product.id}

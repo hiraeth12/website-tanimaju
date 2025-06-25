@@ -5,7 +5,7 @@ const BlogBreadcrumb = () => {
   const formattedTitle = slug ? slug.replace(/-/g, " ") : "Loading...";
 
   return (
-    <div className="flex justify-between items-center mt-10 mb-6 text-slate-700 font-semibold font-body">
+    <div className="flex justify-between items-center mt-10 mb-6 text-slate-700 font-body">
       <div>
         <Link to="/" className="hover:underline">
           Home

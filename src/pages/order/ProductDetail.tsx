@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ChevronLeft, ChevronRight, Facebook, Twitter } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import Navbar from "@/components/NavBar";
 import Footer from "@/components/Footer";
@@ -52,7 +52,7 @@ export default function ProductDetail() {
         <main className="container mx-auto px-4 py-8 max-w-6xl font-body">
           {/* Breadcrumb Dinamis */}
           <div className="flex justify-between items-center mb-6 text-sm">
-            <div className="text-[#8b7e6d]">
+            <div className="text-slate-700">
               <Link to="/" className="hover:underline">
                 Home
               </Link>{" "}
@@ -104,18 +104,17 @@ export default function ProductDetail() {
                 alt={product.title}
                 className="w-full h-auto rounded-lg shadow-md"
               />
-              <div className="mt-6 text-[#5d534a]">
+              <div className="mt-6 text-black">
                 <p>{product.description}</p>
               </div>
             </div>
 
             {/* Kolom kanan: Detail produk */}
             <div>
-              <h1 className="text-3xl font-medium text-[#5d534a] mb-1 font-cascadia">
+              <h1 className="text-3xl font-medium text-black mb-1 font-cascadia">
                 {product.title}
               </h1>
-              <p className="text-sm text-[#8b7e6d] mb-4">SKU: {product.sku}</p>
-              <p className="text-2xl text-[#5d534a] font-bold mb-6">
+              <p className="text-2xl text-black font-bold mb-6">
                 {formatPrice(product.price)}
               </p>
 
@@ -125,11 +124,6 @@ export default function ProductDetail() {
                 productTitle={product.title}
               />
               <ShippingInfo />
-
-              <div className="flex gap-4 mt-8">
-                <Facebook className="h-5 w-5 text-[#8b7e6d] hover:text-[#5d534a] cursor-pointer" />
-                <Twitter className="h-5 w-5 text-[#8b7e6d] hover:text-[#5d534a] cursor-pointer" />
-              </div>
             </div>
           </div>
         </main>

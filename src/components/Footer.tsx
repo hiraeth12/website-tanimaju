@@ -4,7 +4,6 @@ import {
   Instagram,
   Linkedin,
   ChevronRight,
-  Phone,
   Mail,
 } from "lucide-react";
 import sea from "../assets/sealogo.png"; // Pastikan path logo ini benar
@@ -70,10 +69,6 @@ export default function Footer() {
               <div className="flex justify-center md:justify-end items-center space-x-2">
                 <Mail className="w-4 h-4 text-cyan-400" />
                 <span>sealaboratory@365.telkomuniversity.ac.id</span>
-              </div>
-              <div className="flex justify-center md:justify-end items-center space-x-2">
-                <Phone className="w-4 h-4 text-cyan-400" />
-                <span>+62 877-4758-3087</span>
               </div>
             </div>
           </div>

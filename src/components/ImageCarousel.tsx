@@ -85,26 +85,24 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
       </div>
 
       {/* Main carousel container */}
-      <div className="relative h-[500px] overflow-hidden rounded-3xl bg-white">
+      <div className="relative h-60 sm:h-80 md:h-[500px] overflow-hidden rounded-xl sm:rounded-2xl md:rounded-3xl bg-white">
         {/* Left Arrow */}
-        <div className="absolute left-4 top-1/2 z-10 -translate-y-1/2 cursor-pointer text-white">
+        <div className="absolute left-2 sm:left-4 top-1/2 z-10 -translate-y-1/2 cursor-pointer text-white">
           <ChevronLeft
-            size={36}
             onClick={goToPrevious}
-            className="drop-shadow-[0_2px_3px_rgba(0,0,0,0.4)]"
+            className="w-6 h-6 sm:w-9 sm:h-9 drop-shadow-[0_2px_3px_rgba(0,0,0,0.4)]"
           />
         </div>
 
         {/* Right Arrow */}
-        <div className="absolute right-4 top-1/2 z-10 -translate-y-1/2 cursor-pointer text-white">
+        <div className="absolute right-2 sm:right-4 top-1/2 z-10 -translate-y-1/2 cursor-pointer text-white">
           <ChevronRight
-            size={36}
             onClick={goToNext}
-            className="drop-shadow-[0_2px_3px_rgba(0,0,0,0.4)]"
+            className="w-6 h-6 sm:w-9 sm:h-9 drop-shadow-[0_2px_3px_rgba(0,0,0,0.4)]"
           />
         </div>
 
-        {/* Image */}
+        {/* Image slider */}
         <div className="relative h-full w-full overflow-hidden">
           <div
             className="flex h-full w-full transition-transform duration-700 ease-in-out will-change-transform"
@@ -122,13 +120,13 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
         </div>
       </div>
 
-      {/* Dots/Pagination */}
-      <div className="absolute bottom-4 left-0 right-0 z-10 flex justify-center space-x-2">
+      {/* Dots */}
+      <div className="absolute bottom-2 sm:bottom-4 left-0 right-0 z-10 flex justify-center space-x-1 sm:space-x-2">
         {images.map((_, slideIndex) => (
           <div
             key={slideIndex}
             onClick={() => goToSlide(slideIndex)}
-            className={`h-3 w-3 rounded-full cursor-pointer transition-all duration-300 ${
+            className={`h-2 w-2 sm:h-3 sm:w-3 rounded-full cursor-pointer transition-all duration-300 ${
               slideIndex === currentIndex
                 ? "bg-white scale-75 opacity-100"
                 : "bg-white/50 scale-50 opacity-70"

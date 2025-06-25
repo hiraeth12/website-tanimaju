@@ -26,6 +26,10 @@ const Home = () => {
     return () => clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const textInView = useInView();
   const imageInView = useInView();
 
@@ -169,7 +173,7 @@ const Home = () => {
       </section>
 
       {/* Footer */}
-      <Footer/>
+      <Footer />
     </>
   );
 };

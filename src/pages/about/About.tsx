@@ -2,20 +2,12 @@ import Navbar from "../../components/NavBar";
 import Footer from "@/components/Footer";
 import AboutParallax from "@/pages/about/AboutParallax";
 import { useInView } from "../../hooks/useInView";
-import ImageCarousel from "@/components/ImageCarousel";
 import { useEffect } from "react";
 import MeetOurTeam from "./MeetOurTeam";
 
 const About = () => {
   const textInView = useInView();
   const imageInView = useInView();
-
-  const images = [
-    { src: "../images/carousel-placeholder-1.jpg", alt: "Slide 1" },
-    { src: "../images/carousel-placeholder-2.jpg", alt: "Slide 2" },
-    { src: "../images/carousel-placeholder-3.jpg", alt: "Slide 3" },
-    { src: "../images/carousel-placeholder-4.jpg", alt: "Slide 4" },
-  ];
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -87,9 +79,9 @@ const About = () => {
         </div>
       </section>
       {/* Carousel */}
-      <section className="flex justify-center items-center min-h-screen bg-[#F2EFE7]">
+      {/* <section className="flex justify-center items-center min-h-screen bg-[#F2EFE7]">
         <ImageCarousel images={images} />
-      </section>
+      </section> */}
       {/* Meet our Team */}
       <section
         className="bg-[#E6E1D2]
