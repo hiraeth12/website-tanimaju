@@ -25,7 +25,7 @@ const About = () => {
         {/* Background belah 2 */}
         <div className="absolute inset-0 flex">
           <div className="w-1/2 bg-[#F6F4EB]" />
-          <div className="w-1/2 bg-gradient-to-l from-[#0096E0] to-[#F6F4EB]" />
+          <div className="w-1/2 bg-[#F6F4EB]" />
         </div>
 
         {/* Konten utama */}
@@ -37,11 +37,14 @@ const About = () => {
               textInView.isVisible ? "fade-in-show" : ""
             }`}
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-2 font-title">
-              Tentang Kami
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-800 mb-2 font-cascadia">
+              <span className="bg-gradient-to-r from-cyan-600 to-emerald-600 bg-clip-text text-transparent">
+                Tentang
+              </span>{" "}
+              Kami
             </h2>
             <div className="w-14 h-0.5 bg-[#2A4D3E] mb-6" />
-            <p className="text-slate-700 text-base md:text-lg mb-8 leading-relaxed text-justify font-body">
+            <p className="text-slate-700 text-base md:text-md mb-8 leading-relaxed text-justify font-body">
               <span className="font-bold text-black">TaniMaju</span> adalah
               sebuah aplikasi manajemen hasil panen yang dirancang untuk
               meningkatkan efisiensi dan produktivitas pertanian di Desa
@@ -52,7 +55,7 @@ const About = () => {
               pertanian dan <span className="font-bold text-black">Maju</span>{" "}
               yang mencerminkan kemajuan.{" "}
             </p>
-            <p className="text-slate-700 text-base md:text-lg mb-8 leading-relaxed text-justify font-body">
+            <p className="text-slate-700 text-base md:text-md mb-8 leading-relaxed text-justify font-body">
               Nama ini mencerminkan visi utama aplikasi, yaitu memajukan sektor
               pertanian lokal melalui pemanfaatan teknologi. Dengan menghadirkan
               inovasi digital ke tengah-tengah kehidupan petani,{" "}
@@ -79,7 +82,7 @@ const About = () => {
         </div>
       </section>
       {/* Meet our Team */}
-      <section className="bg-gradient-to-r from-[#F6F4EB] to-[#E6E1D2] py-16 px-4 w-full">
+      <section className="bg-[#F2EFE7] py-16 px-4 w-full">
         <div className="w-full max-w-7xl mx-auto">
           <MeetOurTeam />
         </div>

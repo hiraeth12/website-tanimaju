@@ -30,15 +30,15 @@ const Order = () => {
       >
         <main className="flex-grow">
           {/* Header (Tidak ada perubahan) */}
-          <div className="bg-gradient-to-b from-[#F6F4EB] to-[#e8e0d3] text-slate-800 py-16 text-center font-title font-semibold min-h-[220px] flex flex-col justify-center">
-            <h1 className="text-3xl font-bold">Order Online</h1>
+          <div className="bg-[#F6F4EB] text-slate-800 py-16 text-center font-title font-semibold min-h-[220px] flex flex-col justify-center">
+            <h1 className="text-2xl md:text-3xl font-bold text-slate-800 mb-2 font-cascadia">Order Online</h1>
             <div className="w-12 h-0.5 bg-[#3a4a3c] mx-auto mt-5"></div>
             <p className="mt-3 font-body text-base max-w-xl mx-auto">
               Fresh Produce Delivered Weekly
             </p>
           </div>
 
-          <div className="bg-[#e8e0d3] py-8 px-4 md:px-8 lg:px-16">
+          <div className="bg-[#F6F4EB] py-8 px-4 md:px-8 lg:px-16">
             <div className="max-w-6xl mx-auto">
               <div className="grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))] lg:grid-cols-4 gap-4 sm:gap-6">
                 {products.slice(0, visibleProducts).map((product, index) => (

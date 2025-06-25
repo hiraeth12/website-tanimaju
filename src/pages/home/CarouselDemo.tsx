@@ -14,7 +14,7 @@ export function CarouselDemo() {
   const [openDialogId, setOpenDialogId] = useState<string | null>(null);
 
   return (
-    <div className="relative w-full max-w-10xl mx-auto">
+    <div className="relative w-full mx-auto">
       <Carousel className="w-full touch-pan-x">
         <CarouselContent>
           {products.map((product) => (

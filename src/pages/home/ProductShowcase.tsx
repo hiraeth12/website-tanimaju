@@ -22,14 +22,14 @@ export default function ProductShowcase() {
 
       {/* === KONTEN UTAMA === */}
       <div className="relative z-10">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-slate-800 text-3xl md:text-4xl font-bold text-center mb-4">
-            Produk Pertanian Kami
+        <div className="max-w-6xl mx-auto text-left">
+          <h2 className="text-slate-800 text-2xl md:text-3xl font-bold mb-4 font-cascadia ml-4 md:ml-5">
+            <span className="bg-gradient-to-r from-cyan-600 to-emerald-600 bg-clip-text text-transparent">
+              Produk
+            </span>{" "}
+            Pertanian Kami
           </h2>
-          <div className="flex justify-center mb-10">
-            {/* Warna disesuaikan agar serasi */}
-            <div className="w-12 h-0.5 bg-[#3a4a3c]"></div>
-          </div>
+          <div className="w-12 h-0.5 bg-[#3a4a3c] mb-10 ml-4 md:ml-5"></div>
           <div className="flex items-center justify-center">
             <CarouselDemo />
           </div>

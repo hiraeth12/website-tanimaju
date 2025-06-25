@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { MoreHorizontal } from "lucide-react"; 
+// import { MoreHorizontal } from "lucide-react"; 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -30,12 +30,9 @@ export default function LoadMoreButton({ to, onClick }: LoadMoreButtonProps) {
       )}
     >
       <span className="relative z-10 flex items-center justify-center gap-2 font-body">
-        <MoreHorizontal className="w-5 h-5 transition-all duration-100 group-hover:animate-pulse" />
-        <span className="transition-transform group-hover:translate-x-1">
-          Load More
-        </span>
+        {/* <MoreHorizontal className="w-5 h-5 transition-all duration-100 group-hover:animate-pulse" /> */}
+        <span className="transition-transform group-hover:translate-x-1">Load More</span>
       </span>
-
       <span className="absolute inset-0 w-full h-full bg-white/10 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
       <span className="absolute inset-0 w-full h-full bg-black/5 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 delay-100" />
     </Button>

@@ -17,8 +17,8 @@ export default function BlogCard({ title, image, date, slug }: BlogCardProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg overflow-hidden shadow-sm font-body transition-transform">
-      <div className="aspect-[16/9] w-full overflow-hidden">
+    <div className="bg-white rounded-lg overflow-hidden shadow-sm font-body transition-transform w-full max-w-[800px]">
+      <div className="aspect-square md:h-[230px] md:w-[340px] h-[230px] w-[400px] overflow-hidden">
         <img
           src={image}
           alt={title}
@@ -34,11 +34,20 @@ export default function BlogCard({ title, image, date, slug }: BlogCardProps) {
             <p className="text-xs text-gray-500">{date}</p>
           </div>
         </div>
-        <h3 className="text-xl font-medium text-[#3a4a3c] mb-6 hover:underline hover:text-[#00A9FF] cursor-pointer">
-          <Link to={`/blog/${slug}`} onClick={handleTitleClick}>
-            {title}
+        <h3 className="text-xl font-medium text-[#3a4a3c] mb-6 cursor-pointer">
+          <Link
+            to={`/blog/${slug}`}
+            onClick={handleTitleClick}
+            className="transition-all duration-300"
+          >
+            <span className="relative">
+              <span className="hover:bg-gradient-to-r from-cyan-500 to-emerald-600 hover:bg-clip-text hover:text-transparent">
+                {title}
+              </span>
+            </span>
           </Link>
         </h3>
+
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-1">
