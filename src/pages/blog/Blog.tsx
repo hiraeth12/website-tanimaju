@@ -35,7 +35,7 @@ const Blog = () => {
               <h1 className="text-3xl font-bold">Artikel</h1>
               <div className="w-12 h-0.5 bg-[#3a4a3c] mx-auto mt-5"></div>
               <p className="mt-3 font-body text-base max-w-xl mx-auto">
-                Artikel yang bisa anda baca
+                Lorem ipsum dolor sit amet.
               </p>
             </div>
 

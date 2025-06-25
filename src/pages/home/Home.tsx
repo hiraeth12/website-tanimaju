@@ -9,10 +9,10 @@ import CoolButton from "@/components/ShopButton";
 import LoadMoreButton from "@/components/LoadButton";
 
 const images = [
-  "/images/placeholder-1.jpg",
-  "/images/placeholder-2.jpg",
-  "/images/placeholder-3.jpg",
-  "/images/placeholder-4.png",
+  "/images/home/placeholder-1.jpg",
+  "/images/home/placeholder-2.jpg",
+  "/images/home/placeholder-3.jpg",
+  "/images/home/placeholder-4.jpg",
 ];
 
 const Home = () => {
@@ -87,7 +87,7 @@ const Home = () => {
             transition={{ delay: 1 }}
           >
             <div className="flex justify-center items-center space-x-4">
-              <CoolButton />
+              <CoolButton to="/order" />
             </div>
           </motion.div>
         </div>
@@ -150,7 +150,7 @@ const Home = () => {
             }`}
           >
             <img
-              src="../images/placeholder-5.jpg"
+              src="../images/home/placeholder-hero.png"
               alt="Farm Illustration"
               className="w-full h-auto object-contain rounded-2xl shadow-xl"
             />

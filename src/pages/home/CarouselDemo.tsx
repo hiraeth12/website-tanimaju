@@ -57,21 +57,10 @@ export function CarouselDemo() {
         </CarouselContent>
 
         {/* Panah hanya tampil di desktop */}
-        <div className="flex md:hidden absolute inset-y-0 left-0 items-center animate-arrow-bounce">
-          <CarouselPrevious />
-        </div>
-
         <div className="hidden md:flex absolute inset-y-0 left-0 items-center">
           <CarouselPrevious />
         </div>
-
-        {/* Panah mobile (visible + animasi) */}
-        <div className="flex md:hidden absolute inset-y-0 right-0 items-center animate-arrow-bounce">
-          <CarouselNext />
-        </div>
-
-        {/* Panah desktop (visible tanpa animasi) */}
-        <div className="hidden md:flex absolute inset-y-0 right-0 items-center">
+        <div className="hidden md:flex absolute inset-y-0 right-0 items-center sm:animate-arrow-bounce">
           <CarouselNext />
         </div>
       </Carousel>
