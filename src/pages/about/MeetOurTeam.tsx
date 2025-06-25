@@ -44,12 +44,15 @@ export default function MeetOurTeam() {
 
   return (
     <section className="bg-transparent py-16 px-4 w-full max-w-7xl mx-auto ">
-      <div className="text-center mb-16">
-        <h2 className="text-3xl font-bold tracking-tight mb-4 font-title text-slate-800">
-          Meet Our Team
+      <div className="text-left mb-16 max-w-3xl mx-auto md:mx-0">
+        <h2 className="text-2xl md:text-3xl font-bold text-slate-800 mb-2 font-cascadia">
+          Meet Our{" "}
+          <span className="bg-gradient-to-r from-cyan-600 to-emerald-600 bg-clip-text text-transparent">
+            Team
+          </span>
         </h2>
-        <div className="w-14 h-0.5 bg-slate-800 mb-6 mx-auto" />
-        <p className="text-muted-foreground max-w-2xl mx-auto font-body">
+        <div className="w-14 h-0.5 bg-slate-800 mb-6 md:mx-0" />
+        <p className="text-slate-700 max-w-2xl mx-auto font-body md:mx-0">
           The talented people behind our success, working together to bring our
           vision to life.
         </p>
@@ -71,7 +74,7 @@ export default function MeetOurTeam() {
             transition={{ duration: 0.5, delay: index * 0.2 }}
           >
             <Card
-              className="border-0 shadow-sm transition-all duration-300 hover:shadow-md"
+              className="border-0 shadow-sm transition-all duration-300 hover:shadow-md bg-[#F8F7F2]"
               onMouseEnter={() => setHoveredMember(index)}
               onMouseLeave={() => setHoveredMember(null)}
             >

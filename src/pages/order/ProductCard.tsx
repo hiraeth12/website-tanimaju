@@ -18,9 +18,9 @@ export default function ProductCard({
 
   return (
     <Link to={`/order/${slug}`} className="group block">
-      <div className="relative rounded-lg overflow-hidden bg-white transition-all duration-300 hover:shadow-xl h-full flex flex-col">
+      <div className="relative rounded-lg overflow-hidden bg-white transition-all duration-300 hover:shadow-xl h-full flex flex-col aspect-auto">
         {/* Gambar Produk */}
-        <div className="relative aspect-[3/4] w-full overflow-hidden bg-gray-50 rounded-t-lg">
+        <div className="relative aspect-square w-full overflow-hidden bg-gray-50 rounded-t-lg">
           {imageSrc ? (
             <img
               src={imageSrc}

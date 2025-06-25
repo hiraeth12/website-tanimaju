@@ -26,9 +26,9 @@ const Home = () => {
     return () => clearInterval(timer);
   }, []);
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  // useEffect(() => {
+  //   window.scrollTo(0, 0);
+  // }, []);
 
   const textInView = useInView();
   const imageInView = useInView();
@@ -56,7 +56,7 @@ const Home = () => {
         </div>
 
         {/* Overlay Konten */}
-        <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center text-center px-4 z-10 font-title">
+        <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center text-center px-4 z-10 font-cascadia">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -69,7 +69,7 @@ const Home = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="text-white text-3xl md:text-7xl font-bold mb-8"
+            className="text-white text-5xl md:text-7xl font-bold mb-8"
           >
             Delivery
           </motion.h2>
@@ -129,11 +129,14 @@ const Home = () => {
               textInView.isVisible ? "fade-in-show" : ""
             }`}
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-2 font-title">
-              <span className="text-cyan-600">Tentang</span> Kami
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-800 mb-2 font-cascadia">
+              <span className="bg-gradient-to-r from-cyan-600 to-emerald-600 bg-clip-text text-transparent">
+                Tentang
+              </span>{" "}
+              Kami
             </h2>
             <div className="w-14 h-0.5 bg-[#2A4D3E] mb-6" />
-            <p className="text-slate-700 text-base md:text-lg mb-8 leading-relaxed text-justify font-body">
+            <p className="text-slate-700 text-base md:text-md mb-8 leading-relaxed text-justify font-body">
               Website manajemen hasil panen yang dirancang untuk mendukung para
               petani di Desa Sukamaju, Bandung, Jawa Barat sebagai solusi
               lengkap dalam mengelola data pertanian dengan lebih efisien dan
@@ -161,14 +164,20 @@ const Home = () => {
       <ProductShowcase />
       {/* Carousel Section */}
       {/* Blog Section */}
-      <section className="py-16 bg-[#F5ECE0]">
-        <h2 className="text-3xl font-semibold text-slate-800 text-center mb-4 font-title">
-          Artikel
-        </h2>
-        <div className="w-12 h-0.5 bg-[#3a4a3c] mx-auto mb-4"></div>
-        <BlogSection isHome limit={3} />
-        <div className="flex justify-center">
-          <LoadMoreButton to="/blog" />
+      <section className="py-16 bg-[#F5ECE0] mx-auto">
+        <div className="max-w-6xl mx-auto px-4">
+          <h2 className="text-slate-800 text-2xl md:text-3xl font-bold mb-4 font-cascadia text-left md:ml-9 ml-5">
+            <span className="bg-gradient-to-r from-cyan-600 to-emerald-600 bg-clip-text text-transparent">
+              Artikel
+            </span>{" "}
+            Kami
+          </h2>
+          <div className="w-12 h-0.5 bg-[#3a4a3c] mb-5 md:ml-9 ml-5"></div>
+          <BlogSection isHome limit={3} />
+
+          <div className="flex justify-center mt-8">
+            <LoadMoreButton to="/blog" />
+          </div>
         </div>
       </section>
 

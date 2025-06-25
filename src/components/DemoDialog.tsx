@@ -1,4 +1,4 @@
-import { X, ChevronLeft } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -53,16 +53,6 @@ export function DemoDialog({
 
           {/* Detail Produk */}
           <div className="p-6 md:p-8 flex flex-col relative">
-            {/* Tombol Tutup untuk Desktop */}
-            <button
-              onClick={() => onOpenChange(false)}
-              className="absolute right-4 top-4 text-gray-400 hover:text-gray-900 transition-colors hidden md:block"
-              aria-label="Close"
-            >
-              <X size={20} />
-              <span className="sr-only">Close</span>
-            </button>
-
             <div className="space-y-6 flex-1">
               <div>
                 <DialogTitle asChild>
@@ -71,7 +61,6 @@ export function DemoDialog({
                   </h2>
                 </DialogTitle>
                 <p className="text-xl font-semibold mt-1">Rp. {price}</p>
-                {/* <p className="text-sm text-gray-500 mt-1">SKU: {sku}</p> */}
                 <DialogDescription asChild>
                   <p className="text-sm text-gray-700 mt-4">{description}</p>
                 </DialogDescription>
