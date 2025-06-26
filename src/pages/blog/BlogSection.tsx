@@ -60,6 +60,7 @@ export default function BlogSection({
             image={post.image}
             date={post.date}
             slug={post.slug}
+            authorImage={post.authorImage}
           />
         ))}
         {limitedPosts.length === 0 && (

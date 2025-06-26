@@ -4,10 +4,10 @@ import {
   DialogContent,
   DialogTitle,
   DialogDescription,
+  DialogClose,
 } from "@/components/ui/dialog";
 import CoolButton from "./ShopButton";
 import { generateSlug } from "@/lib/utils";
-
 
 interface ProductDialogProps {
   open: boolean;
@@ -24,13 +24,17 @@ export function DemoDialog({
   onOpenChange,
   title,
   price,
-  // sku,
   imageSrc,
   description,
 }: ProductDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="p-0 overflow-hidden max-w-3xl border-none rounded-xl shadow-lg font-body">
+      <DialogContent
+        className="p-0 overflow-hidden max-w-3xl border-none rounded-xl shadow-lg font-body"
+      >
+        {/* Hapus tombol close default */}
+        <DialogClose className="hidden" />
+
         <div className="grid grid-cols-1 md:grid-cols-2 relative">
           {/* Tombol Kembali untuk Mobile */}
           <button
@@ -56,19 +60,22 @@ export function DemoDialog({
             <div className="space-y-6 flex-1">
               <div>
                 <DialogTitle asChild>
-                  <h2 className="text-3xl tracking-tight font-cascadia">
+                  <h2 className="text-xl tracking-tight font-cascadia">
                     {title}
                   </h2>
                 </DialogTitle>
-                <p className="text-xl font-semibold mt-1">Rp. {price}</p>
                 <DialogDescription asChild>
-                  <p className="text-sm text-gray-700 mt-4">{description}</p>
+                  <p className="text-md text-gray-700 mt-2">{description}</p>
                 </DialogDescription>
+                <p className="text-xl font-semibold mt-2">Rp. {price}</p>
               </div>
             </div>
 
             <div className="space-y-4 mt-8">
-              <CoolButton to={`/order/${generateSlug(title)}`} label="View Product" />
+              <CoolButton
+                to={`/order/${generateSlug(title)}`}
+                label="View Product"
+              />
             </div>
           </div>
         </div>

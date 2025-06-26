@@ -137,3 +137,6 @@ body {
   animation: fade 0.5s ease-out forwards;
 }
 
+[data-radix-dialog-close] {
+  display: none;
+}

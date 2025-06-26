@@ -23,7 +23,7 @@ export default function ProductShowcase() {
       {/* === KONTEN UTAMA === */}
       <div className="relative z-10">
         <div className="max-w-6xl mx-auto text-left">
-          <h2 className="text-slate-800 text-2xl md:text-3xl font-bold mb-4 font-cascadia ml-4 md:ml-5">
+          <h2 className="text-slate-800 text-xl md:text-2xl font-bold mb-4 font-cascadia ml-4 md:ml-5">
             <span className="bg-gradient-to-r from-cyan-600 to-emerald-600 bg-clip-text text-transparent">
               Produk
             </span>{" "}

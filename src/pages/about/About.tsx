@@ -37,14 +37,14 @@ const About = () => {
               textInView.isVisible ? "fade-in-show" : ""
             }`}
           >
-            <h2 className="text-2xl md:text-3xl font-bold text-slate-800 mb-2 font-cascadia">
+            <h2 className="text-xl md:text-2xl font-bold text-slate-800 mb-2 font-cascadia">
               <span className="bg-gradient-to-r from-cyan-600 to-emerald-600 bg-clip-text text-transparent">
                 Tentang
               </span>{" "}
               Kami
             </h2>
             <div className="w-14 h-0.5 bg-[#2A4D3E] mb-6" />
-            <p className="text-slate-700 text-base md:text-md mb-8 leading-relaxed text-justify font-body">
+            <p className="text-slate-700 text-sm md:text-md mb-8 leading-relaxed text-justify font-body">
               <span className="font-bold text-black">TaniMaju</span> adalah
               sebuah aplikasi manajemen hasil panen yang dirancang untuk
               meningkatkan efisiensi dan produktivitas pertanian di Desa
@@ -55,7 +55,7 @@ const About = () => {
               pertanian dan <span className="font-bold text-black">Maju</span>{" "}
               yang mencerminkan kemajuan.{" "}
             </p>
-            <p className="text-slate-700 text-base md:text-md mb-8 leading-relaxed text-justify font-body">
+            <p className="text-slate-700 text-sm md:text-md mb-8 leading-relaxed text-justify font-body">
               Nama ini mencerminkan visi utama aplikasi, yaitu memajukan sektor
               pertanian lokal melalui pemanfaatan teknologi. Dengan menghadirkan
               inovasi digital ke tengah-tengah kehidupan petani,{" "}

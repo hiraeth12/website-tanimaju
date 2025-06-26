@@ -31,11 +31,14 @@ const Blog = () => {
         <section className="text-slate-600 px-4">
           <div className="max-w-6xl w-full mx-auto px-4">
             <div className="bg-[#F6F4EB] text-slate-800 py-8 text-center font-title font-semibold min-h-[180px] flex flex-col justify-center">
-              <h1 className="text-2xl md:text-3xl font-bold text-slate-800 mb-2 font-cascadia">
-                Artikel
-              </h1>
+              <h2 className="text-xl md:text-2xl font-bold text-slate-800 mb-2 font-cascadia">
+                <span className="bg-gradient-to-r from-cyan-600 to-emerald-600 bg-clip-text text-transparent">
+                  Artikel
+                </span>{" "}
+                
+              </h2>
               <div className="w-12 h-0.5 bg-[#3a4a3c] mx-auto mt-4"></div>
-              <p className="mt-3 font-body text-sm sm:text-base max-w-xl mx-auto">
+              <p className="mt-3 font-body text-sm md:text-md max-w-xl mx-auto">
                 Lorem ipsum dolor sit amet.
               </p>
             </div>

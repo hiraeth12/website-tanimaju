@@ -45,14 +45,14 @@ export default function MeetOurTeam() {
   return (
     <section className="bg-transparent py-16 px-4 w-full max-w-7xl mx-auto ">
       <div className="text-left mb-16 max-w-3xl mx-auto md:mx-0">
-        <h2 className="text-2xl md:text-3xl font-bold text-slate-800 mb-2 font-cascadia">
+        <h2 className="text-xl md:text-2xl font-bold text-slate-800 mb-2 font-cascadia">
           Meet Our{" "}
           <span className="bg-gradient-to-r from-cyan-600 to-emerald-600 bg-clip-text text-transparent">
             Team
           </span>
         </h2>
         <div className="w-14 h-0.5 bg-slate-800 mb-6 md:mx-0" />
-        <p className="text-slate-700 max-w-2xl mx-auto font-body md:mx-0">
+        <p className="text-slate-700 max-w-2xl mx-auto font-body md:mx-0 md:text-sm">
           The talented people behind our success, working together to bring our
           vision to life.
         </p>
