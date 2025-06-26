@@ -28,12 +28,17 @@ const Order = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3 }}
       >
-        <main className="flex-grow">
+        <main className="flex-grow bg-[#F6F4EB]">
           {/* Header (Tidak ada perubahan) */}
           <div className="bg-[#F6F4EB] text-slate-800 py-16 text-center font-title font-semibold min-h-[220px] flex flex-col justify-center">
-            <h1 className="text-2xl md:text-3xl font-bold text-slate-800 mb-2 font-cascadia">Order Online</h1>
+            <h2 className="text-xl md:text-2xl font-bold text-slate-800 mb-2 font-cascadia">
+              <span className="bg-gradient-to-r from-cyan-600 to-emerald-600 bg-clip-text text-transparent">
+                Order
+              </span>{" "}
+              Online !
+            </h2>
             <div className="w-12 h-0.5 bg-[#3a4a3c] mx-auto mt-5"></div>
-            <p className="mt-3 font-body text-base max-w-xl mx-auto">
+            <p className="mt-3 font-body text-md max-w-xl mx-auto">
               Fresh Produce Delivered Weekly
             </p>
           </div>

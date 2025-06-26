@@ -18,7 +18,7 @@ export default function ProductCard({
 
   return (
     <Link to={`/order/${slug}`} className="group block">
-      <div className="relative rounded-lg overflow-hidden bg-white transition-all duration-300 hover:shadow-xl h-full flex flex-col aspect-auto">
+      <div className="relative rounded-lg overflow-hidden bg-white transition-all duration-300 hover:shadow-xl h-[320px] sm:h-[360px] flex flex-col aspect-auto">
         {/* Gambar Produk */}
         <div className="relative aspect-square w-full overflow-hidden bg-gray-50 rounded-t-lg">
           {imageSrc ? (
@@ -38,10 +38,10 @@ export default function ProductCard({
 
         {/* Detail Produk */}
         <div className="p-4 flex flex-col flex-grow">
-          <h3 className="text-xl text-gray-800 tracking-tight leading-snug mb-1 font-cascadia">
+          <h3 className="text-lg text-gray-800 tracking-tight leading-snug mb-1 font-cascadia">
             {title}
           </h3>
-          <p className="text-sm text-gray-600 mb-3 line-clamp-2 min-h-[3rem] font-body">
+          <p className="text-sm text-gray-600 mb-3 font-body overflow-hidden line-clamp-2 h-[2.5rem]">
             {description}
           </p>
           <p className="font-body text-lg font-bold text-slate-800 mt-auto pt-2">

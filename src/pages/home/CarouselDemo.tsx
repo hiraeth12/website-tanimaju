@@ -51,6 +51,14 @@ export function CarouselDemo() {
                     </div>
                   </CardContent>
                 </Card>
+                <div className="mt-2 text-center">
+                  <h3 className="text-md font-cascadia text-slate-800 font-semibold">
+                    {product.title}
+                  </h3>
+                  <p className="text-sm font-semibold text-slate-600 font-body">
+                    Rp {product.price.toLocaleString()}
+                  </p>
+                </div>
               </div>
             </CarouselItem>
           ))}

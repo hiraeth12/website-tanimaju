@@ -72,7 +72,7 @@ const BlogPost: React.FC = () => {
                 <p className="text-sm text-gray-600 font-body">{post.date}</p>
               </div>
 
-              <div className="space-y-3 text-gray-700 mb-8 font-body text-sm sm:text-base">
+              <div className="space-y-3 text-gray-700 mb-8 font-body text-sm sm:text-base text-justify">
                 {post.content?.map((para, idx) => (
                   <p key={idx}>{para}</p>
                 ))}

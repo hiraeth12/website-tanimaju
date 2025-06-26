@@ -7,9 +7,10 @@ interface BlogCardProps {
   image: string;
   date: string;
   slug: string;
+  authorImage?: string; // Optional prop for author's image
 }
 
-export default function BlogCard({ title, image, date, slug }: BlogCardProps) {
+export default function BlogCard({ title, image, date, slug,authorImage }: BlogCardProps) {
   const [views, setViews] = useState(0);
 
   const handleTitleClick = () => {
@@ -28,20 +29,29 @@ export default function BlogCard({ title, image, date, slug }: BlogCardProps) {
 
       <div className="p-6">
         <div className="flex items-center mb-4">
-          <div className="w-8 h-8 rounded-full bg-gray-300 mr-3" />
+          {authorImage ? (
+            <img
+              src={authorImage}
+              alt="Admin"
+              className="w-8 h-8 rounded-full object-cover mr-3"
+            />
+          ) : (
+            <div className="w-8 h-8 rounded-full bg-gray-300 mr-3" />
+          )}
           <div>
             <p className="text-sm font-medium">Admin</p>
             <p className="text-xs text-gray-500">{date}</p>
           </div>
         </div>
-        <h3 className="text-xl font-medium text-[#3a4a3c] mb-6 cursor-pointer">
+
+        <h3 className="text-xl font-medium text-slate-800 mb-6 cursor-pointer">
           <Link
             to={`/blog/${slug}`}
             onClick={handleTitleClick}
             className="transition-all duration-300"
           >
             <span className="relative">
-              <span className="hover:bg-gradient-to-r from-cyan-500 to-emerald-600 hover:bg-clip-text hover:text-transparent">
+              <span className="hover:bg-gradient-to-r from-cyan-500 to-emerald-600 hover:bg-clip-text hover:text-transparent text-md md:text-md">
                 {title}
               </span>
             </span>

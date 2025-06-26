@@ -129,14 +129,14 @@ const Home = () => {
               textInView.isVisible ? "fade-in-show" : ""
             }`}
           >
-            <h2 className="text-2xl md:text-3xl font-bold text-slate-800 mb-2 font-cascadia">
+            <h2 className="text-xl md:text-2xl font-bold text-slate-800 mb-2 font-cascadia">
               <span className="bg-gradient-to-r from-cyan-600 to-emerald-600 bg-clip-text text-transparent">
                 Tentang
               </span>{" "}
               Kami
             </h2>
             <div className="w-14 h-0.5 bg-[#2A4D3E] mb-6" />
-            <p className="text-slate-700 text-base md:text-md mb-8 leading-relaxed text-justify font-body">
+            <p className="text-slate-700 text-sm md:text-md mb-8 leading-relaxed text-justify font-body">
               Website manajemen hasil panen yang dirancang untuk mendukung para
               petani di Desa Sukamaju, Bandung, Jawa Barat sebagai solusi
               lengkap dalam mengelola data pertanian dengan lebih efisien dan
@@ -162,11 +162,10 @@ const Home = () => {
       </section>
       {/* Another Section */}
       <ProductShowcase />
-      {/* Carousel Section */}
       {/* Blog Section */}
       <section className="py-16 bg-[#F5ECE0] mx-auto">
         <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-slate-800 text-2xl md:text-3xl font-bold mb-4 font-cascadia text-left md:ml-9 ml-5">
+          <h2 className="text-slate-800 text-xl md:text-2xl font-bold mb-4 font-cascadia text-left md:ml-9 ml-5">
             <span className="bg-gradient-to-r from-cyan-600 to-emerald-600 bg-clip-text text-transparent">
               Artikel
             </span>{" "}
@@ -174,13 +173,11 @@ const Home = () => {
           </h2>
           <div className="w-12 h-0.5 bg-[#3a4a3c] mb-5 md:ml-9 ml-5"></div>
           <BlogSection isHome limit={3} />
-
           <div className="flex justify-center mt-8">
             <LoadMoreButton to="/blog" />
           </div>
         </div>
       </section>
-
       {/* Footer */}
       <Footer />
     </>
