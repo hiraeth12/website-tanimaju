@@ -31,7 +31,7 @@ export default function BlogSection({
 
   // Fetch data dari post.json
   useEffect(() => {
-    fetch("../src/data/post.json")
+    fetch("/data/post.json")
       .then((res) => res.json())
       .then((data) => {
         setPosts(data);

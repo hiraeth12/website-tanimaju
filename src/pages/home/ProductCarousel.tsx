@@ -8,9 +8,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { DemoDialog } from "@/pages/home/ProductDialog";
-//import { products } from "../order/ProductData";
 
-// Definisikan tipe Product di sini
 interface Product {
   id: string;
   title: string;
@@ -26,9 +24,8 @@ export function CarouselDemo() {
   const [loading, setLoading] = useState(true); // State untuk loading
   const [openDialogId, setOpenDialogId] = useState<string | null>(null);
 
-  // Fetch data dari product.json
   useEffect(() => {
-    fetch("../src/data/product.json")
+    fetch("/data/product.json")
       .then((res) => res.json())
       .then((data) => {
         setProducts(data);

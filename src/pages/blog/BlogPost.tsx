@@ -14,7 +14,7 @@ interface Post {
   content?: string[];
   tags?: string[];
   authorImage?: string;
-  slug?: string; // Tambahkan slug ke tipe data
+  slug?: string;
 }
 
 const BlogPost: React.FC = () => {
@@ -26,10 +26,10 @@ const BlogPost: React.FC = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  // Fetch data dari post.json dan cari artikel yang cocok
+  // Fetch data dari post.json
   useEffect(() => {
     setLoading(true);
-    fetch("../src/data/post.json")
+    fetch("/data/post.json")
       .then((res) => res.json())
       .then((posts: Post[]) => {
         const foundPost = posts
@@ -42,104 +42,104 @@ const BlogPost: React.FC = () => {
         console.error("Error fetching post:", error);
         setLoading(false);
       });
-  }, [slug]); // Jalankan ulang efek jika slug berubah
+  }, [slug]);
 
   // Tampilan saat Loading
   if (loading) {
     return (
-      <>
+      <div className="flex flex-col min-h-screen">
         <Navbar />
-        <div className="bg-[#F7F7F7] pt-24">
-          <div className="max-w-6xl mx-auto px-4 py-16">
+        <main className="flex-grow bg-[#F7F7F7]">
+          <div className="flex items-center justify-center h-full">
             <p className="text-center text-slate-600">Loading article...</p>
           </div>
-        </div>
+        </main>
         <Footer />
-      </>
+      </div>
     );
   }
 
-  // Tampilan jika artikel tidak ditemukan
+  // Tampilan jika artikel tidak ditemukan (dengan perbaikan footer)
   if (!post) {
     return (
-      <>
+      <div className="flex flex-col min-h-screen">
         <Navbar />
-        <div className="bg-[#F7F7F7] pt-24">
-          <div className="max-w-6xl mx-auto px-4 py-16">
-            <p className="text-center text-slate-600">
-              Artikel tidak ditemukan.
-            </p>
-          </div>
-        </div>
+        <main className="flex-grow bg-[#F7F7F7] flex items-center justify-center font-body">
+          <p className="text-center text-slate-600 text-lg">
+            Artikel tidak ditemukan.
+          </p>
+        </main>
         <Footer />
-      </>
+      </div>
     );
   }
 
+  // Tampilan utama (dengan perbaikan footer)
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Navbar />
-      <div className="bg-[#F7F7F7] pt-10 md:pt-20">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 pb-16">
-          <BlogBreadcrumb />
-          <div className="flex flex-col md:flex-row gap-8">
-            <div className="flex-1">
-              <div className="relative w-full mb-6 rounded-lg overflow-hidden aspect-video">
-                <img
-                  src={post.image}
-                  alt={post.title}
-                  className="w-full h-full object-cover"
-                />
-              </div>
+      <main className="flex-grow bg-[#F7F7F7]">
+        <div className="pt-10 md:pt-20">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 pb-16">
+            <BlogBreadcrumb />
+            <div className="flex flex-col md:flex-row gap-8">
+              <div className="flex-1">
+                <div className="relative w-full mb-6 rounded-lg overflow-hidden aspect-video">
+                  <img
+                    src={post.image}
+                    alt={post.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
 
-              <h1 className="text-2xl sm:text-3xl font-bold mb-3 font-cascadia">
-                {post.title}
-              </h1>
+                <h1 className="text-2xl sm:text-3xl font-bold mb-3 font-cascadia">
+                  {post.title}
+                </h1>
 
-              <div className="flex flex-wrap gap-2 mb-4">
-                <Link
-                  to={`/blog?category=${encodeURIComponent(
-                    post.category ?? ""
-                  )}`}
-                  className="bg-gradient-to-r from-cyan-600 to-emerald-600 hover:from-cyan-500 hover:to-emerald-500 text-white px-3 py-1 rounded-full text-sm transition font-body"
-                >
-                  {post.category}
-                </Link>
-              </div>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  <Link
+                    to={`/blog?category=${encodeURIComponent(
+                      post.category ?? ""
+                    )}`}
+                    className="bg-gradient-to-r from-cyan-600 to-emerald-600 hover:from-cyan-500 hover:to-emerald-500 text-white px-3 py-1 rounded-full text-sm transition font-body"
+                  >
+                    {post.category}
+                  </Link>
+                </div>
 
-              <div className="mb-5">
-                <h3 className="font-semibold text-base sm:text-lg font-body">
-                  Admin
-                </h3>
-                <p className="text-sm text-gray-600 font-body">{post.date}</p>
-              </div>
+                <div className="mb-5">
+                  <h3 className="font-semibold text-base sm:text-lg font-body">
+                    Admin
+                  </h3>
+                  <p className="text-sm text-gray-600 font-body">{post.date}</p>
+                </div>
 
-              <div className="space-y-3 text-gray-700 mb-8 font-body text-sm sm:text-base text-justify">
-                {post.content?.map((para, idx) => (
-                  <p key={idx}>{para}</p>
-                ))}
-              </div>
-
-              <div className="mb-4">
-                <h3 className="font-semibold mb-2 font-body">Tags</h3>
-                <div className="flex flex-wrap gap-2">
-                  {post.tags?.map((tag) => (
-                    <span
-                      key={tag}
-                      className="border border-slate-600 rounded-full px-3 py-1 text-sm transition-all duration-200 hover:border-slate-400 hover:bg-emerald-300 hover:text-slate-900 hover:font-semibold font-body"
-                    >
-                      {tag}
-                    </span>
+                <div className="space-y-3 text-gray-700 mb-8 font-body text-sm sm:text-base text-justify">
+                  {post.content?.map((para, idx) => (
+                    <p key={idx}>{para}</p>
                   ))}
+                </div>
+
+                <div className="mb-4">
+                  <h3 className="font-semibold mb-2 font-body">Tags</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {post.tags?.map((tag) => (
+                      <span
+                        key={tag}
+                        className="border border-slate-600 rounded-full px-3 py-1 text-sm transition-all duration-200 hover:border-slate-400 hover:bg-emerald-300 hover:text-slate-900 hover:font-semibold font-body"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-
+      </main>
       <Footer />
-    </>
+    </div>
   );
 };
 

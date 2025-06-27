@@ -33,7 +33,7 @@ export default function BlogGrid({
   // Fetch data dari post.json
   useEffect(() => {
     setLoading(true);
-    fetch("../src/data/post.json")
+    fetch("data/post.json")
       .then((res) => res.json())
       .then((data) => {
         setPosts(data);
