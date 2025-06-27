@@ -1,4 +1,4 @@
-import { CarouselDemo } from "./CarouselDemo";
+import { CarouselDemo } from "./ProductCarousel";
 import CoolButton from "@/components/ShopButton";
 
 export default function ProductShowcase() {

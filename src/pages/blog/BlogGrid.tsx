@@ -7,14 +7,14 @@ interface BlogSectionProps {
   limit?: number;
   category?: string;
   searchQuery?: string;
-  isHome?: boolean; // ✅
+  isHome?: boolean; 
 }
 
 export default function BlogSection({
   limit,
   category = "All Posts",
   searchQuery = "",
-  isHome = false, // ✅ default false
+  isHome = false, 
 }: BlogSectionProps) {
   const [isMobile, setIsMobile] = useState(false);
 
@@ -52,7 +52,7 @@ export default function BlogSection({
 
   return (
     <section className="py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto grid gap-12 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center">
+      <div className="max-w-6xl mx-auto grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center">
         {limitedPosts.map((post) => (
           <BlogCard
             key={post.slug}
