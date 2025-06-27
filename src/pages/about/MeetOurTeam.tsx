@@ -22,7 +22,7 @@ export default function MeetOurTeam() {
 
   // useEffect untuk fetch data dari team.json saat komponen dimuat
   useEffect(() => {
-    fetch("../src/data/team.json") // Path relatif ke file di folder public
+    fetch("/data/team.json") // Path relatif ke file di folder public
       .then((response) => response.json())
       .then((data) => setTeam(data))
       .catch((error) => console.error("Error fetching team data:", error));

@@ -26,7 +26,7 @@ const Order = () => {
 
   // Fetch data dari product.json
   useEffect(() => {
-    fetch("../src/data/product.json")
+    fetch("/data/product.json")
       .then((res) => res.json())
       .then((data) => {
         setProducts(data);

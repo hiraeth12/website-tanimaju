@@ -30,7 +30,7 @@ export default function ProductDetail() {
   // Fetch data dari product.json
   useEffect(() => {
     setLoading(true);
-    fetch("../src/data/product.json")
+    fetch("/data/product.json")
       .then((res) => res.json())
       .then((data: Product[]) => {
         setProducts(data);
