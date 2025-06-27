@@ -3,7 +3,7 @@ import { Search, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "../../components/NavBar";
 import Footer from "@/components/Footer";
-import BlogSection from "@/pages/blog/BlogSection";
+import BlogSection from "@/pages/blog/BlogGrid";
 import { useLocation } from "react-router-dom";
 
 const Blog = () => {
@@ -29,21 +29,21 @@ const Blog = () => {
       <Navbar />
       <div className="min-h-screen bg-[#F6F4EB]">
         <section className="text-slate-600 px-4">
-          <div className="max-w-6xl w-full mx-auto px-4">
-            <div className="bg-[#F6F4EB] text-slate-800 py-8 text-center font-title font-semibold min-h-[180px] flex flex-col justify-center">
-              <h2 className="text-xl md:text-2xl font-bold text-slate-800 mb-2 font-cascadia">
+          <div className="max-w-[54rem] lg:max-w-[68rem] w-full mx-auto px-4">
+            <div className="bg-transparent text-slate-800 py-8 text-center font-title font-semibold min-h-[180px] flex flex-col justify-center">
+              <h2 className="text-xl md:text-2xl font-bold text-slate-800 mb-2 font-cascadia mt-7">
                 <span className="bg-gradient-to-r from-cyan-600 to-emerald-600 bg-clip-text text-transparent">
                   Artikel
                 </span>{" "}
                 
               </h2>
-              <div className="w-12 h-0.5 bg-[#3a4a3c] mx-auto mt-4"></div>
-              <p className="mt-3 font-body text-sm md:text-md max-w-xl mx-auto">
+              <div className="w-12 h-0.5 bg-[#3a4a3c] mx-auto mt-3"></div>
+              <p className="mt-3 font-body text-md max-w-xl mx-auto">
                 Lorem ipsum dolor sit amet.
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 sm:gap-0 font-body font-semibold mt-4">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 sm:gap-0 font-body font-semibold mt-3">
               <nav className="flex flex-wrap justify-center sm:justify-start gap-4">
                 {["All Posts", "News", "Recipes"].map((cat) => (
                   <button

@@ -3,7 +3,7 @@ import Navbar from "../../components/NavBar";
 import { AnimatePresence, motion } from "framer-motion";
 import { useInView } from "../../hooks/useInView";
 import ProductShowcase from "./ProductShowcase";
-import BlogSection from "@/pages/blog/BlogSection";
+import BlogSection from "./BlogSection";
 import Footer from "@/components/Footer";
 import CoolButton from "@/components/ShopButton";
 import LoadMoreButton from "@/components/LoadButton";

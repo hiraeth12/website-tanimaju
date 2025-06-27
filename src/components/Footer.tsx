@@ -1,26 +1,58 @@
-import { Link } from "react-router-dom";
-import { Github, Instagram, Linkedin, Mail } from "lucide-react";
+import { Github, Instagram, Linkedin, Mail, Youtube } from "lucide-react";
 
 export default function Footer() {
   return (
     <footer className="w-full bg-gradient-to-br from-emerald-500 to-cyan-600 text-white py-12 relative overflow-hidden font-body">
-      {/* Accent line di atas footer */}
-      {/* <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-70"></div> */}
-
       <div className="container mx-auto px-4">
         <div className="flex flex-col items-center space-y-6">
           {/* Social media */}
           <div className="flex space-x-4">
-            {[Instagram, Github, Linkedin, Mail].map((Icon, idx) => (
-              <Link
-                key={idx}
-                to="#"
-                className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/20 transition-colors duration-300 group"
-                aria-label="social-link"
-              >
-                <Icon className="h-4 w-4 text-slate-900 group-hover:text-cyan-400 transition-colors duration-300" />
-              </Link>
-            ))}
+            <a
+              href="https://www.instagram.com/sea.laboratory/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/20 transition-colors duration-300 group"
+              aria-label="Instagram"
+            >
+              <Instagram className="h-4 w-4 text-slate-900 group-hover:text-[#F6F4EB] transition-colors duration-300" />
+            </a>
+
+            <a
+              href="https://github.com/sealabtelu"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/20 transition-colors duration-300 group"
+              aria-label="GitHub"
+            >
+              <Github className="h-4 w-4 text-slate-900 group-hover:text-[#F6F4EB] transition-colors duration-300" />
+            </a>
+
+            <a
+              href="https://www.linkedin.com/company/sea-laboratory/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/20 transition-colors duration-300 group"
+              aria-label="LinkedIn"
+            >
+              <Linkedin className="h-4 w-4 text-slate-900 group-hover:text-[#F6F4EB] transition-colors duration-300" />
+            </a>
+
+            <a
+              href="mailto:sealaboratory@365.telkomuniversity.ac.id"
+              className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/20 transition-colors duration-300 group"
+              aria-label="Email"
+            >
+              <Mail className="h-4 w-4 text-slate-900 group-hover:text-[#F6F4EB] transition-colors duration-300" />
+            </a>
+            <a
+              href="https://www.youtube.com/channel/UCIxFBfOtf-EZA_9A9Xb4EpQ"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/20 transition-colors duration-300 group"
+              aria-label="LinkedIn"
+            >
+              <Youtube className="h-4 w-4 text-slate-900 group-hover:text-[#F6F4EB] transition-colors duration-300" />
+            </a>
           </div>
 
           {/* Garis aksen pemisah */}

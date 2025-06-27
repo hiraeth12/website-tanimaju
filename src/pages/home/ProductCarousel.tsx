@@ -7,7 +7,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { DemoDialog } from "@/components/DemoDialog";
+import { DemoDialog } from "@/pages/home/ProductDialog";
 import { products } from "../order/ProductData";
 
 export function CarouselDemo() {
@@ -33,6 +33,7 @@ export function CarouselDemo() {
                   sku={product.sku}
                   imageSrc={product.imageSrc}
                   description={product.description}
+                  info={product.info}
                 />
                 <Card
                   onClick={() => setOpenDialogId(product.id)}
