@@ -1,46 +1,32 @@
-import { useState } from "react";
+import { useState, useEffect } from "react"; // Import useEffect
 import { Github, Linkedin, Instagram } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
 
+// Definisikan tipe untuk anggota tim agar lebih aman
+interface TeamMember {
+  name: string;
+  role: string;
+  bio: string;
+  image: string;
+  social: {
+    Instagram: string;
+    linkedin: string;
+    github: string;
+  };
+}
+
 export default function MeetOurTeam() {
   const [hoveredMember, setHoveredMember] = useState<number | null>(null);
+  const [team, setTeam] = useState<TeamMember[]>([]); // State untuk menyimpan data tim
 
-  const team = [
-    {
-      name: "Sahrul Ridho Firdaus",
-      role: "Frontend Engineer",
-      bio: "Passionate about creating products that make a difference in people's lives.",
-      image: "images/about/card-1.jpg",
-      social: {
-        Instagram: "https://instagram.com/sahrulfirdaus",
-        linkedin: "https://linkedin.com/in/sahrulfirdaus/",
-        github: "https://github.com/hiraeth12",
-      },
-    },
-    {
-      name: "Sam Rivera",
-      role: "Backend Engineer",
-      bio: "Bringing beautiful, functional designs to life with a focus on user experience.",
-      image: "images/about/card-2.jpg",
-      social: {
-        Instagram: "https://twitter.com",
-        linkedin: "https://linkedin.com",
-        github: "https://github.com",
-      },
-    },
-    {
-      name: "Taylor Chen",
-      role: "UI/UX Designer",
-      bio: "Building robust, scalable solutions with cutting-edge technologies.",
-      image: "images/about/card-3.jpg",
-      social: {
-        Instagram: "https://twitter.com",
-        linkedin: "https://linkedin.com",
-        github: "https://github.com",
-      },
-    },
-  ];
+  // useEffect untuk fetch data dari team.json saat komponen dimuat
+  useEffect(() => {
+    fetch("../src/data/team.json") // Path relatif ke file di folder public
+      .then((response) => response.json())
+      .then((data) => setTeam(data))
+      .catch((error) => console.error("Error fetching team data:", error));
+  }, []); // Array kosong berarti efek ini hanya berjalan sekali
 
   return (
     <section className="bg-transparent py-16 px-4 w-full max-w-7xl mx-auto ">
@@ -103,7 +89,7 @@ export default function MeetOurTeam() {
                       rel="noopener noreferrer"
                       aria-label={`${member.name}'s Instagram`}
                     >
-                      <Instagram className="h-5 w-5 text-muted-foreground hover:text-[#0077B5] transition-colors" />
+                      <Instagram className="h-5 w-5 text-muted-foreground hover:text-[#E1306C] transition-colors" />
                     </a>
                     <a
                       href={member.social.linkedin}

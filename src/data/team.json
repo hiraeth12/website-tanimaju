@@ -1,0 +1,35 @@
+[
+  {
+    "name": "Sahrul Ridho Firdaus",
+    "role": "Frontend Engineer",
+    "bio": "Passionate about creating products that make a difference in people's lives.",
+    "image": "/images/about/card-1.jpg",
+    "social": {
+      "Instagram": "https://instagram.com/sahrulfirdaus",
+      "linkedin": "https://linkedin.com/in/sahrulfirdaus/",
+      "github": "https://github.com/hiraeth12"
+    }
+  },
+  {
+    "name": "Sam Rivera",
+    "role": "Backend Engineer",
+    "bio": "Bringing beautiful, functional designs to life with a focus on user experience.",
+    "image": "/images/about/card-2.jpg",
+    "social": {
+      "Instagram": "https://twitter.com",
+      "linkedin": "https://linkedin.com",
+      "github": "https://github.com"
+    }
+  },
+  {
+    "name": "Taylor Chen",
+    "role": "UI/UX Designer",
+    "bio": "Building robust, scalable solutions with cutting-edge technologies.",
+    "image": "/images/about/card-3.jpg",
+    "social": {
+      "Instagram": "https://twitter.com",
+      "linkedin": "https://linkedin.com",
+      "github": "https://github.com"
+    }
+  }
+]

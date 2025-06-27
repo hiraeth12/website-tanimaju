@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -7,27 +7,88 @@ import Footer from "@/components/Footer";
 import ProductInfo from "@/pages/order/ProductInfo";
 import ReturnPolicy from "@/pages/order/ReturnPolicy";
 import ShippingInfo from "@/pages/order/ShippingInfo";
-import { products } from "./ProductData";
 import { generateSlug, formatPrice } from "@/lib/utils";
+
+// Definisikan tipe Product di sini
+interface Product {
+  id: string;
+  title: string;
+  price: number;
+  imageSrc: string;
+  sku: string;
+  description: string;
+  info: string;
+  whatsappNumber: string;
+}
 
 export default function ProductDetail() {
   const { slug } = useParams<{ slug: string }>();
-  const product = products.find((p) => generateSlug(p.title) === slug);
-  const currentIndex = product ? products.indexOf(product) : -1;
-  const prevProduct = currentIndex > 0 ? products[currentIndex - 1] : null;
-  const nextProduct =
-    currentIndex < products.length - 1 ? products[currentIndex + 1] : null;
+  const [product, setProduct] = useState<Product | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
+  // Fetch data dari product.json
   useEffect(() => {
-    // Scroll ke atas saat komponen dimuat
-    window.scrollTo(0, 0);
-    // Set judul halaman
+    setLoading(true);
+    fetch("../src/data/product.json")
+      .then((res) => res.json())
+      .then((data: Product[]) => {
+        setProducts(data);
+        const foundProduct = data.find((p) => generateSlug(p.title) === slug);
+        setProduct(foundProduct || null);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching product details:", error);
+        setLoading(false);
+      });
+  }, [slug]);
+
+  // Set judul halaman
+  useEffect(() => {
     if (product) {
       document.title = `${product.title} - TaniMaju`;
+    } else if (!loading) {
+      document.title = "Produk Tidak Ditemukan - TaniMaju";
     }
-  }, [product]);
+  }, [product, loading]);
 
-  // 4. Handle jika produk tidak ditemukan
+  const currentIndex = product ? products.findIndex((p) => p.id === product.id) : -1;
+  const prevProduct = currentIndex > 0 ? products[currentIndex - 1] : null;
+  const nextProduct =
+    currentIndex !== -1 && currentIndex < products.length - 1
+      ? products[currentIndex + 1]
+      : null;
+
+  // Tampilan Skeleton saat loading
+  if (loading) {
+    return (
+      <div className="bg-[#f5efe7]">
+        <Navbar />
+        <div className="container mx-auto px-4 py-8 max-w-6xl min-h-screen">
+          <div className="h-6 bg-gray-200 rounded w-1/3 mb-6 animate-pulse"></div>
+          <div className="grid md:grid-cols-2 gap-12">
+            <div>
+              <div className="w-full aspect-square bg-gray-200 rounded-lg animate-pulse"></div>
+              <div className="mt-6 space-y-2">
+                <div className="h-4 bg-gray-200 rounded w-full animate-pulse"></div>
+                <div className="h-4 bg-gray-200 rounded w-5/6 animate-pulse"></div>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="h-10 bg-gray-200 rounded w-3/4 animate-pulse"></div>
+              <div className="h-8 bg-gray-200 rounded w-1/2 animate-pulse"></div>
+              <div className="h-24 bg-gray-200 rounded w-full animate-pulse"></div>
+              <div className="h-12 bg-gray-200 rounded w-full animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  // Handle jika produk tidak ditemukan
   if (!product) {
     return (
       <div className="bg-[#f5efe7] min-h-screen flex items-center justify-center">
@@ -50,47 +111,33 @@ export default function ProductDetail() {
       <Navbar />
       <div className="min-h-screen">
         <main className="container mx-auto px-4 py-8 max-w-6xl font-body">
-          {/* Breadcrumb Dinamis */}
+          {/* Breadcrumb & Navigasi */}
           <div className="flex justify-between items-center mb-6 text-sm">
             <div className="text-slate-700">
-              <Link to="/" className="hover:underline">
-                Home
-              </Link>{" "}
-              /
-              <Link to="/order" className="hover:underline">
-                All Products
-              </Link>{" "}
-              /<span> {product.title}</span>
+              <Link to="/" className="hover:underline">Home</Link> /
+              <Link to="/order" className="hover:underline"> All Products</Link> /
+              <span> {product.title}</span>
             </div>
-            {/* Navigasi Prev/Next Dinamis */}
             <div className="flex items-center gap-2 text-[#8b7e6d]">
               {prevProduct ? (
-                <Link
-                  to={`/order/${generateSlug(prevProduct.title)}`}
-                  className="flex items-center hover:text-[#6d6358]"
-                >
+                <Link to={`/order/${generateSlug(prevProduct.title)}`} className="flex items-center hover:text-[#6d6358]">
                   <ChevronLeft className="h-4 w-4" />
                   <span>Prev</span>
                 </Link>
               ) : (
                 <span className="text-gray-400/50 cursor-not-allowed flex items-center">
-                  <ChevronLeft className="h-4 w-4" />
-                  Prev
+                  <ChevronLeft className="h-4 w-4" /> Prev
                 </span>
               )}
               {" | "}
               {nextProduct ? (
-                <Link
-                  to={`/order/${generateSlug(nextProduct.title)}`}
-                  className="flex items-center hover:text-[#6d6358]"
-                >
+                <Link to={`/order/${generateSlug(nextProduct.title)}`} className="flex items-center hover:text-[#6d6358]">
                   <span>Next</span>
                   <ChevronRight className="h-4 w-4" />
                 </Link>
               ) : (
                 <span className="text-gray-400/50 cursor-not-allowed flex items-center">
-                  Next
-                  <ChevronRight className="h-4 w-4" />
+                  Next <ChevronRight className="h-4 w-4" />
                 </span>
               )}
             </div>

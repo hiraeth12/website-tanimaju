@@ -75,7 +75,7 @@ export default function BlogCard({
               onClick={handleTitleClick}
               className="transition-all duration-300"
             >
-              <span className="relative hover:bg-gradient-to-r from-cyan-500 to-emerald-600 hover:bg-clip-text hover:text-transparent text-md md:text-md font-cascadia">
+              <span className="relative hover:bg-gradient-to-r from-cyan-500 to-emerald-600 hover:bg-clip-text hover:text-transparent text-base md:text-lg font-cascadia">
                 {title}
               </span>
             </Link>

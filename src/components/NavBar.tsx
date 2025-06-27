@@ -1,3 +1,4 @@
+// File: src/components/NavBar.tsx
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Menu, X } from "lucide-react";
@@ -8,17 +9,28 @@ import { cn } from "@/lib/utils";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const linkStyle =
-    "relative font-semibold text-slate-800 transition-colors pb-1";
+  // === GAYA DIPISAHKAN UNTUK KEMUDAHAN PENGELOLAAN ===
 
-  const activeStyle =
-    "after:absolute after:left-0 after:bottom-0 after:h-0.5 after:w-full after:bg-gradient-to-r after:from-[#0891b2] after:to-[#059669]";
+  // 1. Gaya dasar untuk semua link
+  const baseLinkStyle = "relative font-semibold text-slate-800 transition-colors pb-1";
+
+  // 2. Gaya untuk garis bawah (disembunyikan secara default)
+  const underlineStyle =
+    "after:absolute after:left-0 after:bottom-0 after:h-0.5 after:w-full after:origin-center after:transition-transform after:duration-300 after:scale-x-0";
+
+  // 3. Gaya untuk link yang aktif (garis emerald selalu terlihat)
+  const activeLinkStyle = "after:bg-emerald-600 after:scale-x-100";
+
+  // 4. Gaya untuk hover di link yang tidak aktif (garis slate muncul saat hover)
+  const hoverLinkStyle = "hover:after:scale-x-100 after:bg-slate-400";
 
   const navLinks = (
     <>
       <NavLink
         to="/"
-        className={({ isActive }) => cn(linkStyle, isActive && activeStyle)}
+        className={({ isActive }) =>
+          cn(baseLinkStyle, underlineStyle, isActive ? activeLinkStyle : hoverLinkStyle)
+        }
         onClick={() => setIsOpen(false)}
       >
         Home
@@ -26,7 +38,9 @@ const Navbar = () => {
 
       <NavLink
         to="/about"
-        className={({ isActive }) => cn(linkStyle, isActive && activeStyle)}
+        className={({ isActive }) =>
+          cn(baseLinkStyle, underlineStyle, isActive ? activeLinkStyle : hoverLinkStyle)
+        }
         onClick={() => setIsOpen(false)}
       >
         About
@@ -34,7 +48,9 @@ const Navbar = () => {
 
       <NavLink
         to="/order"
-        className={({ isActive }) => cn(linkStyle, isActive && activeStyle)}
+        className={({ isActive }) =>
+          cn(baseLinkStyle, underlineStyle, isActive ? activeLinkStyle : hoverLinkStyle)
+        }
         onClick={() => setIsOpen(false)}
       >
         Order Online
@@ -42,7 +58,9 @@ const Navbar = () => {
 
       <NavLink
         to="/blog"
-        className={({ isActive }) => cn(linkStyle, isActive && activeStyle)}
+        className={({ isActive }) =>
+          cn(baseLinkStyle, underlineStyle, isActive ? activeLinkStyle : hoverLinkStyle)
+        }
         onClick={() => setIsOpen(false)}
       >
         Blog
@@ -95,9 +113,14 @@ const Navbar = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute top-20 left-0 w-full bg-[#fefaf3]/80 flex flex-col items-center space-y-4 py-4 z-50 font-body">
+        <motion.div 
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          className="absolute top-20 left-0 w-full bg-[#fefaf3]/95 backdrop-blur-md flex flex-col items-center space-y-4 py-6 z-40 shadow-md font-body"
+        >
           {navLinks}
-        </div>
+        </motion.div>
       )}
     </header>
   );

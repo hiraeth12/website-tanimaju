@@ -1,23 +1,51 @@
+import { useEffect, useState } from "react";
 import { slugify } from "@/utils/slugify";
 import BlogCard from "@/pages/blog/BlogCard";
-import { blogPosts } from "./post";
-import { useEffect, useState } from "react";
 
-interface BlogSectionProps {
+// Definisikan tipe Post di sini atau impor dari file terpisah
+interface Post {
+  title: string;
+  image: string;
+  date: string;
+  category?: string;
+  content?: string[];
+  tags?: string[];
+  authorImage?: string;
+}
+
+interface BlogGridProps {
   limit?: number;
   category?: string;
   searchQuery?: string;
-  isHome?: boolean; 
+  isHome?: boolean;
 }
 
-export default function BlogSection({
+export default function BlogGrid({
   limit,
   category = "All Posts",
   searchQuery = "",
-  isHome = false, 
-}: BlogSectionProps) {
+  isHome = false,
+}: BlogGridProps) {
+  const [posts, setPosts] = useState<Post[]>([]); // State untuk menyimpan data dari JSON
   const [isMobile, setIsMobile] = useState(false);
+  const [loading, setLoading] = useState(true); // State untuk loading
 
+  // Fetch data dari post.json
+  useEffect(() => {
+    setLoading(true);
+    fetch("../src/data/post.json")
+      .then((res) => res.json())
+      .then((data) => {
+        setPosts(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching blog posts:", error);
+        setLoading(false);
+      });
+  }, []);
+
+  // Cek ukuran layar untuk tampilan mobile di home
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 640);
@@ -27,7 +55,8 @@ export default function BlogSection({
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  const postsWithSlug = blogPosts.map((post) => ({
+  // Proses data setelah di-fetch
+  const postsWithSlug = posts.map((post) => ({
     ...post,
     slug: slugify(post.title),
   }));
@@ -49,6 +78,17 @@ export default function BlogSection({
       : limit
       ? filteredPosts.slice(0, limit)
       : filteredPosts;
+
+  // Tampilan saat loading
+  if (loading) {
+    return (
+      <section className="py-8 px-4 sm:px-6 lg:px-8">
+        <div className="text-center py-16">
+          <p className="text-slate-600">Loading articles...</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-8 px-4 sm:px-6 lg:px-8">

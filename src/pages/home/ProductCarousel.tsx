@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
@@ -8,10 +8,53 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { DemoDialog } from "@/pages/home/ProductDialog";
-import { products } from "../order/ProductData";
+//import { products } from "../order/ProductData";
+
+// Definisikan tipe Product di sini
+interface Product {
+  id: string;
+  title: string;
+  price: number;
+  imageSrc: string;
+  sku: string;
+  description: string;
+  info: string;
+}
 
 export function CarouselDemo() {
+  const [products, setProducts] = useState<Product[]>([]); // State untuk data produk\
+  const [loading, setLoading] = useState(true); // State untuk loading
   const [openDialogId, setOpenDialogId] = useState<string | null>(null);
+
+  // Fetch data dari product.json
+  useEffect(() => {
+    fetch("../src/data/product.json")
+      .then((res) => res.json())
+      .then((data) => {
+        setProducts(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching products:", error);
+        setLoading(false);
+      });
+  }, []);
+
+   if (loading) {
+    return (
+      <div className="w-full max-w-4xl mx-auto px-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="p-4">
+              <div className="bg-gray-200 aspect-square rounded-lg animate-pulse"></div>
+              <div className="mt-2 h-5 bg-gray-200 rounded w-3/4 mx-auto animate-pulse"></div>
+              <div className="mt-1 h-4 bg-gray-200 rounded w-1/2 mx-auto animate-pulse"></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative w-full mx-auto">
