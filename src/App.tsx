@@ -6,6 +6,7 @@ import Blog from "./pages/blog/Blog";
 import ProductDetail from "./pages/order/ProductDetail";
 import BlogPost from "@/pages/blog/BlogPost";
 import NotFound from "@/pages/notfound";
+import Dashboard from "@/app/dashboard/dashboard";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/order/:slug" element={<ProductDetail />} /> 
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
+        <Route path="/admin" element={<Dashboard />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
