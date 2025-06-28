@@ -17,7 +17,7 @@ interface Product {
   whatsappNumber: string;
 }
 
-const PRODUCTS_PER_PAGE = 8; // Menampilkan 8 produk per halaman
+const PRODUCTS_PER_PAGE = 4; // Menampilkan 8 produk per halaman
 
 const Order = () => {
   const [products, setProducts] = useState<Product[]>([]); // State untuk data dari JSON

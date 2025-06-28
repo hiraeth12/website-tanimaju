@@ -25,10 +25,29 @@ export default function BlogSection({
   searchQuery = "",
   isHome = false,
 }: BlogSectionProps) {
+  const [screenSize, setScreenSize] = useState<"mobile" | "tablet" | "desktop">(
+    "desktop"
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      if (width < 640) {
+        setScreenSize("mobile");
+      } else if (width >= 640 && width < 1024) {
+        setScreenSize("tablet");
+      } else {
+        setScreenSize("desktop");
+      }
+    };
+
+    handleResize(); // run on mount
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const [posts, setPosts] = useState<Post[]>([]); // State untuk data dari JSON
   const [loading, setLoading] = useState(true); // State untuk loading
-  const [isMobile, setIsMobile] = useState(false);
-
   // Fetch data dari post.json
   useEffect(() => {
     fetch("/data/post.json")
@@ -41,16 +60,6 @@ export default function BlogSection({
         console.error("Error fetching blog posts:", error);
         setLoading(false);
       });
-  }, []);
-
-  // Cek ukuran layar
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 640);
-    };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   // Proses data setelah di-fetch
@@ -71,8 +80,10 @@ export default function BlogSection({
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const limitedPosts =
-    isHome && isMobile
+    isHome && screenSize === "mobile"
       ? filteredPosts.slice(0, 1)
+      : isHome && screenSize === "tablet"
+      ? filteredPosts.slice(0, 2)
       : limit
       ? filteredPosts.slice(0, limit)
       : filteredPosts;
