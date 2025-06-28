@@ -5,6 +5,7 @@ import Order from "./pages/order/Order";
 import Blog from "./pages/blog/Blog";
 import ProductDetail from "./pages/order/ProductDetail";
 import BlogPost from "@/pages/blog/BlogPost";
+import NotFound from "@/pages/notfound";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/order/:slug" element={<ProductDetail />} /> 
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );

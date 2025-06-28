@@ -118,17 +118,45 @@ const BlogPost: React.FC = () => {
                 </motion.div>
               )}
 
-              {isLoaded && !post && (
-                <motion.p
-                  key="notfound"
+              {!isLoaded && (
+                <motion.div
+                  key="loading"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.2 }}
-                  className="text-center text-slate-600 text-lg font-body py-16"
+                  className="animate-pulse space-y-6"
                 >
-                  Artikel tidak ditemukan.
-                </motion.p>
+                  {/* Gambar Skeleton */}
+                  <div className="w-full aspect-video bg-gray-300 rounded-lg" />
+
+                  {/* Judul Skeleton */}
+                  <div className="h-8 bg-gray-300 rounded w-2/3" />
+
+                  {/* Kategori Skeleton */}
+                  <div className="h-6 bg-gray-300 rounded w-1/4" />
+
+                  {/* Admin dan tanggal */}
+                  <div className="space-y-2">
+                    <div className="h-4 bg-gray-300 rounded w-1/5" />
+                    <div className="h-4 bg-gray-200 rounded w-1/6" />
+                  </div>
+
+                  {/* Konten skeleton */}
+                  <div className="space-y-3">
+                    <div className="h-4 bg-gray-200 rounded" />
+                    <div className="h-4 bg-gray-200 rounded w-5/6" />
+                    <div className="h-4 bg-gray-200 rounded w-4/5" />
+                    <div className="h-4 bg-gray-200 rounded w-3/4" />
+                  </div>
+
+                  {/* Tags Skeleton */}
+                  <div className="flex gap-2">
+                    <div className="h-6 w-16 bg-gray-300 rounded-full" />
+                    <div className="h-6 w-20 bg-gray-300 rounded-full" />
+                    <div className="h-6 w-12 bg-gray-300 rounded-full" />
+                  </div>
+                </motion.div>
               )}
             </AnimatePresence>
           </div>

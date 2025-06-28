@@ -140,3 +140,8 @@ body {
 [data-radix-dialog-close] {
   display: none;
 }
+
+
+.animate-pulse {
+  animation: pulse 1.5s ease-in-out infinite;
+}
