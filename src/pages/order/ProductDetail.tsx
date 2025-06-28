@@ -1,3 +1,4 @@
+// File: src/pages/order/ProductDetail.tsx
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -53,7 +54,9 @@ export default function ProductDetail() {
     }
   }, [product, loading]);
 
-  const currentIndex = product ? products.findIndex((p) => p.id === product.id) : -1;
+  const currentIndex = product
+    ? products.findIndex((p) => p.id === product.id)
+    : -1;
   const prevProduct = currentIndex > 0 ? products[currentIndex - 1] : null;
   const nextProduct =
     currentIndex !== -1 && currentIndex < products.length - 1
@@ -111,35 +114,61 @@ export default function ProductDetail() {
       <Navbar />
       <div className="min-h-screen">
         <main className="container mx-auto px-4 py-8 max-w-6xl font-body">
-          {/* Breadcrumb & Navigasi */}
-          <div className="flex justify-between items-center mb-6 text-sm">
-            <div className="text-slate-700">
-              <Link to="/" className="hover:underline">Home</Link> /
-              <Link to="/order" className="hover:underline"> All Products</Link> /
-              <span> {product.title}</span>
+          {/* Navigasi Responsif */}
+          {/* Navigasi Responsif */}
+          <div className="mb-6 text-sm flex justify-between items-center text-slate-700">
+            {/* Breadcrumb tampil di md+ */}{" "}
+            <div className="hidden md:block">
+              {" "}
+              <Link to="/" className="hover:underline">
+                Home
+              </Link>{" "}
+              /{" "}
+              <Link to="/order" className="hover:underline">
+                {" "}
+                All Products
+              </Link>{" "}
+              / <span> {product.title}</span>{" "}
             </div>
+            {/* Tombol kembali di sm (mobile only) */}{" "}
+            <div className="md:hidden">
+              {" "}
+              <Link
+                to="/order"
+                className="flex items-center text-[#8b7e6d] hover:text-[#6d6358]"
+              >
+                <ChevronLeft className="h-4 w-4 mr-1" /> <span>Kembali</span>{" "}
+              </Link>{" "}
+            </div>
+            {/* Prev / Next tetap tampil di semua layar */}{" "}
             <div className="flex items-center gap-2 text-[#8b7e6d]">
+              {" "}
               {prevProduct ? (
-                <Link to={`/order/${generateSlug(prevProduct.title)}`} className="flex items-center hover:text-[#6d6358]">
-                  <ChevronLeft className="h-4 w-4" />
-                  <span>Prev</span>
+                <Link
+                  to={`/order/${generateSlug(prevProduct.title)}`}
+                  className="flex items-center hover:text-[#6d6358]"
+                >
+                  <ChevronLeft className="h-4 w-4" /> <span>Prev</span>{" "}
                 </Link>
               ) : (
                 <span className="text-gray-400/50 cursor-not-allowed flex items-center">
-                  <ChevronLeft className="h-4 w-4" /> Prev
+                  <ChevronLeft className="h-4 w-4" /> Prev{" "}
                 </span>
               )}
-              {" | "}
+              {" | "}{" "}
               {nextProduct ? (
-                <Link to={`/order/${generateSlug(nextProduct.title)}`} className="flex items-center hover:text-[#6d6358]">
+                <Link
+                  to={`/order/${generateSlug(nextProduct.title)}`}
+                  className="flex items-center hover:text-[#6d6358]"
+                >
                   <span>Next</span>
-                  <ChevronRight className="h-4 w-4" />
+                  <ChevronRight className="h-4 w-4" />{" "}
                 </Link>
               ) : (
                 <span className="text-gray-400/50 cursor-not-allowed flex items-center">
-                  Next <ChevronRight className="h-4 w-4" />
+                  Next <ChevronRight className="h-4 w-4" />{" "}
                 </span>
-              )}
+              )}{" "}
             </div>
           </div>
 
