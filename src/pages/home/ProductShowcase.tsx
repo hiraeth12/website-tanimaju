@@ -1,4 +1,4 @@
-import { CarouselDemo } from "./ProductCarousel";
+import { ProductCarousel } from "./ProductCarousel";
 import CoolButton from "@/components/ShopButton";
 
 export default function ProductShowcase() {
@@ -31,7 +31,7 @@ export default function ProductShowcase() {
           </h2>
           <div className="w-12 h-0.5 bg-[#3a4a3c] mb-10 ml-4 md:ml-5"></div>
           <div className="flex items-center justify-center">
-            <CarouselDemo />
+            <ProductCarousel />
           </div>
         </div>
 

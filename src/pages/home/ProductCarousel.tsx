@@ -19,7 +19,7 @@ interface Product {
   info: string;
 }
 
-export function CarouselDemo() {
+export function ProductCarousel() {
   const [products, setProducts] = useState<Product[]>([]); // State untuk data produk\
   const [loading, setLoading] = useState(true); // State untuk loading
   const [openDialogId, setOpenDialogId] = useState<string | null>(null);

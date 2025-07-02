@@ -1,24 +1,40 @@
+import { lazy, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./pages/home/Home";
-import About from "./pages/about/About";
-import Order from "./pages/order/Order";
-import Blog from "./pages/blog/Blog";
-import ProductDetail from "./pages/order/ProductDetail";
-import BlogPost from "@/pages/blog/BlogPost";
-import NotFound from "@/pages/notfound";
+
+// Lazy load all the page components
+const Home = lazy(() => import("./pages/home/Home"));
+const About = lazy(() => import("./pages/about/About"));
+const Order = lazy(() => import("./pages/order/Order"));
+const ProductDetail = lazy(() => import("./pages/order/ProductDetail"));
+const Blog = lazy(() => import("./pages/blog/Blog"));
+const BlogPost = lazy(() => import("@/pages/blog/BlogPost"));
+const NotFound = lazy(() => import("@/pages/notfound"));
+const Admin = lazy(() => import("@/pages/dashboard/Admin"));
+const Panen = lazy(() => import("@/pages/dashboard/slug_pages/panen/Panen"));
+const CreatePanen = lazy(() => import("@/pages/dashboard/slug_pages/panen/CreatePanen"));
+const Item = lazy(() => import("@/pages/dashboard/slug_pages/Petani/item"));
+
+// You can create a more sophisticated loading component if you like
+const LoadingSpinner = () => <div>Loading...</div>;
 
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/order" element={<Order />} />
-        <Route path="/order/:slug" element={<ProductDetail />} /> 
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/blog/:slug" element={<BlogPost />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <Suspense fallback={<LoadingSpinner />}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/order" element={<Order />} />
+          <Route path="/order/:slug" element={<ProductDetail />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/admin/panen" element={<Panen />} />
+          <Route path="/admin/panen/create" element={<CreatePanen />} />
+          <Route path="/admin/item" element={<Item />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
     </Router>
   );
 }

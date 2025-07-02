@@ -1,10 +1,11 @@
 // File: src/components/NavBar.tsx
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "../assets/(1)logo.png";
 import { cn } from "@/lib/utils";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,7 +13,8 @@ const Navbar = () => {
   // === GAYA DIPISAHKAN UNTUK KEMUDAHAN PENGELOLAAN ===
 
   // 1. Gaya dasar untuk semua link
-  const baseLinkStyle = "relative font-semibold text-slate-800 transition-colors pb-1";
+  const baseLinkStyle =
+    "relative font-semibold text-slate-800 transition-colors pb-1";
 
   // 2. Gaya untuk garis bawah (disembunyikan secara default)
   const underlineStyle =
@@ -29,7 +31,11 @@ const Navbar = () => {
       <NavLink
         to="/"
         className={({ isActive }) =>
-          cn(baseLinkStyle, underlineStyle, isActive ? activeLinkStyle : hoverLinkStyle)
+          cn(
+            baseLinkStyle,
+            underlineStyle,
+            isActive ? activeLinkStyle : hoverLinkStyle
+          )
         }
         onClick={() => setIsOpen(false)}
       >
@@ -39,7 +45,11 @@ const Navbar = () => {
       <NavLink
         to="/about"
         className={({ isActive }) =>
-          cn(baseLinkStyle, underlineStyle, isActive ? activeLinkStyle : hoverLinkStyle)
+          cn(
+            baseLinkStyle,
+            underlineStyle,
+            isActive ? activeLinkStyle : hoverLinkStyle
+          )
         }
         onClick={() => setIsOpen(false)}
       >
@@ -49,7 +59,11 @@ const Navbar = () => {
       <NavLink
         to="/order"
         className={({ isActive }) =>
-          cn(baseLinkStyle, underlineStyle, isActive ? activeLinkStyle : hoverLinkStyle)
+          cn(
+            baseLinkStyle,
+            underlineStyle,
+            isActive ? activeLinkStyle : hoverLinkStyle
+          )
         }
         onClick={() => setIsOpen(false)}
       >
@@ -59,7 +73,11 @@ const Navbar = () => {
       <NavLink
         to="/blog"
         className={({ isActive }) =>
-          cn(baseLinkStyle, underlineStyle, isActive ? activeLinkStyle : hoverLinkStyle)
+          cn(
+            baseLinkStyle,
+            underlineStyle,
+            isActive ? activeLinkStyle : hoverLinkStyle
+          )
         }
         onClick={() => setIsOpen(false)}
       >
@@ -80,40 +98,50 @@ const Navbar = () => {
         {navLinks}
       </nav>
 
-      {/* Hamburger / X button with transition */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="md:hidden text-slate-900 focus:outline-none relative w-8 h-8"
-      >
-        <AnimatePresence mode="wait" initial={false}>
-          {isOpen ? (
-            <motion.div
-              key="close"
-              initial={{ opacity: 0, rotate: -90 }}
-              animate={{ opacity: 1, rotate: 0 }}
-              exit={{ opacity: 0, rotate: 90 }}
-              transition={{ duration: 0.3 }}
-              className="absolute inset-0 flex items-center justify-center"
-            >
-              <X size={28} />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="menu"
-              initial={{ opacity: 0, rotate: 90 }}
-              animate={{ opacity: 1, rotate: 0 }}
-              exit={{ opacity: 0, rotate: -90 }}
-              transition={{ duration: 0.3 }}
-              className="absolute inset-0 flex items-center justify-center"
-            >
-              <Menu size={28} />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </button>
+      {/* Area kanan: User icon + hamburger */}
+      <div className="flex items-center gap-4">
+        <Link
+          to="/admin"
+          className="text-slate-900 hover:text-emerald-600 transition-colors"
+        >
+          <User className="w-6 h-6" />
+        </Link>
+
+        {/* Hamburger / X button */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="md:hidden text-slate-900 focus:outline-none relative w-8 h-8"
+        >
+          <AnimatePresence mode="wait" initial={false}>
+            {isOpen ? (
+              <motion.div
+                key="close"
+                initial={{ opacity: 0, rotate: -90 }}
+                animate={{ opacity: 1, rotate: 0 }}
+                exit={{ opacity: 0, rotate: 90 }}
+                transition={{ duration: 0.3 }}
+                className="absolute inset-0 flex items-center justify-center"
+              >
+                <X size={28} />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="menu"
+                initial={{ opacity: 0, rotate: 90 }}
+                animate={{ opacity: 1, rotate: 0 }}
+                exit={{ opacity: 0, rotate: -90 }}
+                transition={{ duration: 0.3 }}
+                className="absolute inset-0 flex items-center justify-center"
+              >
+                <Menu size={28} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </button>
+      </div>
 
       {isOpen && (
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
