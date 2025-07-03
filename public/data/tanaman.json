@@ -1,0 +1,34 @@
+[
+  {
+    "namaTanaman": "Padi",
+    "pupuk": "Urea"
+  },
+  {
+    "namaTanaman": "Jagung",
+    "pupuk": "ZA"
+  },
+  {
+    "namaTanaman": "Kedelai",
+    "pupuk": "SP-36"
+  },
+  {
+    "namaTanaman": "Cabe",
+    "pupuk": "Kompos"
+  },
+  {
+    "namaTanaman": "Tomat",
+    "pupuk": "NPK"
+  },
+  {
+    "namaTanaman": "Bawang Merah",
+    "pupuk": "Kandang"
+  },
+  {
+    "namaTanaman": "Kentang",
+    "pupuk": "Urea"
+  },
+  {
+    "namaTanaman": "Tebu",
+    "pupuk": "Phonska"
+  }
+]

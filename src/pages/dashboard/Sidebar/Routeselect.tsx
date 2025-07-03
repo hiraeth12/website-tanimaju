@@ -3,14 +3,11 @@ import {
   Home,
   Sprout,
   Database,
-  Tag,
   LucideIcon,
   Globe,
   UsersRound,
   Leaf,
   Bean,
-  Flower2,
-  Grid2x2Check,
   FileUp,
 } from "lucide-react";
 
@@ -21,7 +18,7 @@ interface RouteItem {
   group?: string;
 }
 
-const routes: RouteItem[] = [
+export const routes: RouteItem[]  = [
   { title: "Dashboard", icon: Home, to: "/admin" },
   { title: "Halaman Utama", icon: Globe, to: "/" },
   { title: "Panen", icon: Sprout, to: "/admin/panen", group: "Pencatatan" },
@@ -39,20 +36,7 @@ const routes: RouteItem[] = [
   },
   { title: "Bibit", icon: Bean, to: "/admin/bibit", group: "Data Umum" },
   { title: "Tanaman", icon: Leaf, to: "/admin/tanaman", group: "Data Umum" },
-  { title: "Pupuk", icon: Flower2, to: "/admin/pupuk", group: "Data Umum" },
 
-  {
-    title: "Kategori",
-    icon: Grid2x2Check,
-    to: "/admin/kategori",
-    group: "Blog",
-  },
-  {
-    title: "Tags",
-    icon: Tag,
-    to: "/admin/tags",
-    group: "Blog",
-  },
   {
     title: "Posts",
     icon: FileUp,
@@ -75,6 +59,13 @@ export const RouteSelect = () => {
 
   const isRouteActive = (route: RouteItem) => {
     if (!route.to) return false;
+
+    // Khusus dashboard, hanya aktif di path "/admin" saja
+    if (route.to === "/admin") {
+      return location.pathname === "/admin";
+    }
+
+    // Selain itu, boleh aktif di path langsung atau subpath-nya
     return (
       location.pathname === route.to ||
       location.pathname.startsWith(route.to + "/")
@@ -137,12 +128,20 @@ const Route = ({ Icon, title, to, isActive = false }: RouteProps) => {
       }`}
     >
       <Icon
-        className={`w-4 h-4 ${isActive ? "text-violet-500" : ""}`}
+        className={`w-4 h-4 ${isActive ? "text-emerald-500" : ""}`}
         strokeWidth={2}
       />
       <span>{title}</span>
     </div>
   );
+
+  if (to === "/") {
+    return (
+      <a href={to} target="_blank" rel="noopener noreferrer">
+        {content}
+      </a>
+    );
+  }
 
   return to ? <Link to={to}>{content}</Link> : content;
 };

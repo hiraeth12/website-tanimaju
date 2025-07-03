@@ -1,12 +1,8 @@
-// src/pages/dashboard/panen/CreatePanenPage.tsx
-
-import type React from "react";
 import { useState } from "react";
 import { ChevronRight, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -17,7 +13,6 @@ import {
 import { DashboardLayout } from "@/components/Layout/DashboardLayout";
 import { Link } from "react-router-dom";
 
-// Definisikan tipe untuk form data agar lebih aman
 type FormData = {
   petani: string;
   pupuk: string;
@@ -25,9 +20,9 @@ type FormData = {
   namaPenyediaBibit: string;
   lahan: string;
   jumlahHasilPanen: string;
+  tanggalPanen: string;
   statusPenjualan: string;
   namaPembeli: string;
-  deskripsi: string;
   foto: File | null;
 };
 
@@ -39,28 +34,14 @@ export default function CreatePanenPage() {
     namaPenyediaBibit: "",
     lahan: "",
     jumlahHasilPanen: "",
+    tanggalPanen: "",
     statusPenjualan: "",
     namaPembeli: "",
-    deskripsi: "",
     foto: null,
   });
 
-  // Satu fungsi untuk menangani semua perubahan input teks dan select
   const handleChange = (field: keyof FormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) setFormData((prev) => ({ ...prev, foto: file }));
-  };
-
-  const handleDragOver = (event: React.DragEvent) => event.preventDefault();
-
-  const handleDrop = (event: React.DragEvent) => {
-    event.preventDefault();
-    const file = event.dataTransfer.files[0];
-    if (file) setFormData((prev) => ({ ...prev, foto: file }));
   };
 
   return (
@@ -89,6 +70,19 @@ export default function CreatePanenPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Column */}
           <div className="space-y-6">
+            {/* Tanggal Panen */}
+            <div className="space-y-2">
+              <Label htmlFor="tanggalPanen">
+                Tanggal Panen<span className="text-red-500">*</span>
+              </Label>
+              <Input
+                id="tanggalPanen"
+                type="date"
+                value={formData.tanggalPanen}
+                onChange={(e) => handleChange("tanggalPanen", e.target.value)}
+              />
+            </div>
+
             {/* Petani */}
             <div className="space-y-2">
               <Label htmlFor="petani">
@@ -112,30 +106,6 @@ export default function CreatePanenPage() {
               </div>
             </div>
 
-            {/* Tanaman */}
-            <div className="space-y-2">
-              <Label htmlFor="tanaman">
-                Tanaman<span className="text-red-500">*</span>
-              </Label>
-              <div className="flex gap-2">
-                <Select
-                  value={formData.tanaman}
-                  onValueChange={(value) => handleChange("tanaman", value)}
-                >
-                  <SelectTrigger className="flex-1">
-                    <SelectValue placeholder="Pilih tanaman" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="padi">Padi</SelectItem>
-                    <SelectItem value="jagung">Jagung</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Button variant="outline" size="icon" className="shrink-0">
-                  <Plus className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-
             {/* Lahan */}
             <div className="space-y-2">
               <Label htmlFor="lahan">
@@ -151,64 +121,6 @@ export default function CreatePanenPage() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="lahan1">Lahan 1</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Button variant="outline" size="icon" className="shrink-0">
-                  <Plus className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-
-            {/* Status penjualan */}
-            <div className="space-y-2">
-              <Label htmlFor="status">
-                Status penjualan<span className="text-red-500">*</span>
-              </Label>
-              <Select
-                value={formData.statusPenjualan}
-                onValueChange={(value) =>
-                  handleChange("statusPenjualan", value)
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Pilih status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="terjual">Terjual</SelectItem>
-                  <SelectItem value="belum-terjual">Belum Terjual</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Deskripsi */}
-            <div className="space-y-2">
-              <Label htmlFor="deskripsi">Deskripsi</Label>
-              <Textarea
-                id="deskripsi"
-                value={formData.deskripsi}
-                onChange={(e) => handleChange("deskripsi", e.target.value)}
-                className="min-h-[120px] resize-none"
-              />
-            </div>
-          </div>
-
-          {/* Right Column */}
-          <div className="space-y-6">
-            {/* Pupuk */}
-            <div className="space-y-2">
-              <Label htmlFor="pupuk">
-                Pupuk<span className="text-red-500">*</span>
-              </Label>
-              <div className="flex gap-2">
-                <Select
-                  value={formData.pupuk}
-                  onValueChange={(value) => handleChange("pupuk", value)}
-                >
-                  <SelectTrigger className="flex-1">
-                    <SelectValue placeholder="Pilih pupuk" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="urea">Urea</SelectItem>
                   </SelectContent>
                 </Select>
                 <Button variant="outline" size="icon" className="shrink-0">
@@ -241,6 +153,56 @@ export default function CreatePanenPage() {
                 </Button>
               </div>
             </div>
+          </div>
+
+          {/* Right Column */}
+          <div className="space-y-6">
+            {/* Tanaman */}
+            <div className="space-y-2">
+              <Label htmlFor="tanaman">
+                Tanaman<span className="text-red-500">*</span>
+              </Label>
+              <div className="flex gap-2">
+                <Select
+                  value={formData.tanaman}
+                  onValueChange={(value) => handleChange("tanaman", value)}
+                >
+                  <SelectTrigger className="flex-1">
+                    <SelectValue placeholder="Pilih tanaman" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="padi">Padi</SelectItem>
+                    <SelectItem value="jagung">Jagung</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button variant="outline" size="icon" className="shrink-0">
+                  <Plus className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Pupuk */}
+            <div className="space-y-2">
+              <Label htmlFor="pupuk">
+                Pupuk<span className="text-red-500">*</span>
+              </Label>
+              <div className="flex gap-2">
+                <Select
+                  value={formData.pupuk}
+                  onValueChange={(value) => handleChange("pupuk", value)}
+                >
+                  <SelectTrigger className="flex-1">
+                    <SelectValue placeholder="Pilih pupuk" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="urea">Urea</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button variant="outline" size="icon" className="shrink-0">
+                  <Plus className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
 
             {/* Jumlah hasil panen */}
             <div className="space-y-2">
@@ -257,6 +219,27 @@ export default function CreatePanenPage() {
               />
             </div>
 
+            {/* Status penjualan */}
+            <div className="space-y-2">
+              <Label htmlFor="status">
+                Status penjualan<span className="text-red-500">*</span>
+              </Label>
+              <Select
+                value={formData.statusPenjualan}
+                onValueChange={(value) =>
+                  handleChange("statusPenjualan", value)
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Pilih status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="terjual">Terjual</SelectItem>
+                  <SelectItem value="belum-terjual">Belum Terjual</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
             {/* Nama pembeli */}
             <div className="space-y-2">
               <Label htmlFor="pembeli">Nama pembeli</Label>
@@ -267,43 +250,10 @@ export default function CreatePanenPage() {
                 onChange={(e) => handleChange("namaPembeli", e.target.value)}
               />
             </div>
-
-            {/* Foto */}
-            <div className="space-y-2">
-              <Label htmlFor="foto">Foto</Label>
-              <div
-                className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400"
-                onDragOver={handleDragOver}
-                onDrop={handleDrop}
-              >
-                <input
-                  type="file"
-                  id="foto"
-                  className="hidden"
-                  accept="image/*"
-                  onChange={handleFileUpload}
-                />
-                <label htmlFor="foto" className="cursor-pointer">
-                  <div className="text-gray-500">
-                    <p>
-                      Drag & Drop atau{" "}
-                      <span className="text-blue-600 font-semibold">
-                        Browse
-                      </span>
-                    </p>
-                  </div>
-                </label>
-                {formData.foto && (
-                  <p className="mt-2 text-sm text-gray-600">
-                    Terpilih: {formData.foto.name}
-                  </p>
-                )}
-              </div>
-            </div>
           </div>
         </div>
 
-        {/* Action Buttons */}
+        {/* Tombol Aksi */}
         <div className="flex gap-4 mt-8 pt-6 border-t">
           <Button className="bg-green-600 hover:bg-green-700 text-white px-6">
             Create

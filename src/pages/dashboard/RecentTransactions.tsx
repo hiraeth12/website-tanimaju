@@ -1,117 +1,92 @@
-import {
-  DollarSign,
-  ArrowUpRight,
-  MoreHorizontal,
-} from "lucide-react";
+// src/pages/dashboard/RecentTransactions.tsx
+
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { ChevronDown, Download } from "lucide-react";
+import * as XLSX from "xlsx";
+
+interface HarvestItem {
+  id: number;
+  date: string;
+  farmer: string;
+  field: string;
+  seedProvider: string;
+  plant: string;
+  fertilizer: string;
+  amount: string;
+  salesStatus: string;
+  buyerName: string;
+}
 
 export const RecentTransactions = () => {
+  const [harvestData, setHarvestData] = useState<HarvestItem[]>([]);
+
+  useEffect(() => {
+    fetch("/data/panen.json")
+      .then((res) => res.json())
+      .then((data) => setHarvestData(data))
+      .catch((err) => console.error("Failed to load data:", err));
+  }, []);
+
+  const handleExport = () => {
+    const worksheet = XLSX.utils.json_to_sheet(harvestData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Panen");
+    XLSX.writeFile(workbook, "data_panen.xlsx");
+  };
+
   return (
     <div className="col-span-12 p-4 rounded border border-stone-300">
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="flex items-center gap-1.5 font-medium">
-          <DollarSign className="w-4 h-4" /> Recent Transactions
-        </h3>
-        <button className="text-sm text-violet-500 hover:underline">
-          See all
-        </button>
+        <h3 className="text-lg font-medium">Data Panen (Recent Transactions)</h3>
+        <Button onClick={handleExport} className="gap-2">
+          <Download className="w-4 h-4" />
+          Export Excel
+        </Button>
       </div>
-      <table className="w-full table-auto">
-        <TableHead />
 
-        <tbody>
-          <TableRow
-            cusId="#48149"
-            sku="Pro 1 Month"
-            date="Aug 2nd"
-            price="$9.75"
-            order={1}
-          />
-          <TableRow
-            cusId="#1942s"
-            sku="Pro 3 Month"
-            date="Aug 2nd"
-            price="$21.25"
-            order={2}
-          />
-          <TableRow
-            cusId="#4192"
-            sku="Pro 1 Year"
-            date="Aug 1st"
-            price="$94.75"
-            order={3}
-          />
-          <TableRow
-            cusId="#99481"
-            sku="Pro 1 Month"
-            date="Aug 1st"
-            price="$9.44"
-            order={4}
-          />
-          <TableRow
-            cusId="#1304"
-            sku="Pro 1 Month"
-            date="Aug 1st"
-            price="$9.23"
-            order={5}
-          />
-          <TableRow
-            cusId="#1304"
-            sku="Pro 3 Month"
-            date="Jul 31st"
-            price="$22.02"
-            order={6}
-          />
-        </tbody>
-      </table>
+      <div className="overflow-auto">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              {[
+                "Tanggal Panen",
+                "Petani",
+                "Lahan",
+                "Penyedia Bibit",
+                "Tanaman",
+                "Pupuk",
+                "Jumlah",
+                "Status",
+                "Pembeli",
+              ].map((header) => (
+                <TableHead key={header} className="text-gray-700">
+                  <div className="flex items-center gap-1">
+                    <span>{header}</span>
+                    <ChevronDown className="w-4 h-4 text-gray-400" />
+                  </div>
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {harvestData.map((item) => (
+              <TableRow key={item.id}>
+                <TableCell>{item.date}</TableCell>
+                <TableCell>{item.farmer}</TableCell>
+                <TableCell>{item.field}</TableCell>
+                <TableCell>{item.seedProvider}</TableCell>
+                <TableCell>{item.plant}</TableCell>
+                <TableCell>{item.fertilizer}</TableCell>
+                <TableCell>{item.amount}</TableCell>
+                <TableCell>{item.salesStatus}</TableCell>
+                <TableCell>{item.buyerName}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
-  );
-};
-
-const TableHead = () => {
-  return (
-    <thead>
-      <tr className="text-sm font-normal text-stone-500">
-        <th className="text-start p-1.5">Customer ID</th>
-        <th className="text-start p-1.5">SKU</th>
-        <th className="text-start p-1.5">Date</th>
-        <th className="text-start p-1.5">Price</th>
-        <th className="w-8"></th>
-      </tr>
-    </thead>
-  );
-};
-
-const TableRow = ({
-  cusId,
-  sku,
-  date,
-  price,
-  order,
-}: {
-  cusId: string;
-  sku: string;
-  date: string;
-  price: string;
-  order: number;
-}) => {
-  return (
-    <tr className={order % 2 ? "bg-stone-100 text-sm" : "text-sm"}>
-      <td className="p-1.5">
-        <a
-          href="#"
-          className="text-violet-600 underline flex items-center gap-1"
-        >
-          {cusId} <ArrowUpRight className="w-3.5 h-3.5" />
-        </a>
-      </td>
-      <td className="p-1.5">{sku}</td>
-      <td className="p-1.5">{date}</td>
-      <td className="p-1.5">{price}</td>
-      <td className="w-8">
-        <button className="hover:bg-stone-200 transition-colors grid place-content-center rounded text-sm size-8">
-          <MoreHorizontal className="w-4 h-4" />
-        </button>
-      </td>
-    </tr>
   );
 };

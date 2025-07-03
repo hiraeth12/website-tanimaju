@@ -1,15 +1,16 @@
+// src/pages/dashboard/tanaman/TanamanPage.tsx
+
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import {
   Select,
-  SelectContent,
-  SelectItem,
   SelectTrigger,
   SelectValue,
+  SelectContent,
+  SelectItem,
 } from "@/components/ui/select";
 import {
   Table,
@@ -22,40 +23,41 @@ import {
 import { Search, ChevronDown, ChevronRight } from "lucide-react";
 import { DashboardLayout } from "@/components/Layout/DashboardLayout";
 
-interface HarvestItem {
-  id: number;
-  date: string;
-  farmer: string;
-  field: string;
-  seedProvider: string;
-  plant: string;
-  fertilizer: string;
-  amount: string;
-  salesStatus: string;
-  buyerName: string;
+interface TanamanItem {
+  id: string;
+  namaTanaman: string;
+  pupuk: string;
 }
 
-export default function PanenPage() {
-  const [harvestData, setHarvestData] = useState<HarvestItem[]>([]);
-  const [selectedRows, setSelectedRows] = useState<number[]>([]);
+export default function TanamanPage() {
+  const [tanamanData, setTanamanData] = useState<TanamanItem[]>([]);
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    fetch("/data/panen.json")
+    fetch("/data/tanaman.json")
       .then((res) => res.json())
-      .then((data) => setHarvestData(data))
-      .catch((err) => console.error("Failed to load data:", err));
+      .then((data) => {
+        const withId = data.map(
+          (item: Omit<TanamanItem, "id">, index: number) => ({
+            ...item,
+            id: `tanaman-${index + 1}`,
+          })
+        );
+        setTanamanData(withId);
+      })
+      .catch((err) => console.error("Failed to load tanaman data:", err));
   }, []);
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedRows(harvestData.map((item) => item.id));
+      setSelectedRows(tanamanData.map((item) => item.id));
     } else {
       setSelectedRows([]);
     }
   };
 
-  const handleSelectRow = (id: number, checked: boolean) => {
+  const handleSelectRow = (id: string, checked: boolean) => {
     if (checked) {
       setSelectedRows((prev) => [...prev, id]);
     } else {
@@ -63,7 +65,7 @@ export default function PanenPage() {
     }
   };
 
-  const filteredData = harvestData.filter((item) =>
+  const filteredData = tanamanData.filter((item) =>
     Object.values(item).some((value) =>
       String(value).toLowerCase().includes(searchTerm.toLowerCase())
     )
@@ -73,63 +75,48 @@ export default function PanenPage() {
     <DashboardLayout>
       <div className="px-6 mt-2 ml-[2px]">
         <div className="flex items-center gap-2 text-sm text-gray-600">
-          <span>Panen</span>
+          <span>Tanaman</span>
           <ChevronRight className="w-4 h-4" />
           <span className="font-semibold text-gray-800">List</span>
         </div>
       </div>
+
       <div className="px-6 py-4">
-        {/* Title */}
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold text-gray-800">Panen</h1>
-          <Link to="/admin/panen/create">
+          <h1 className="text-3xl font-bold text-gray-800">Tanaman</h1>
+          <Link to="/admin/tanaman/create">
             <Button className="bg-green-600 hover:bg-green-700 text-white">
-              New hasil panen
+              Tambah Tanaman
             </Button>
           </Link>
         </div>
 
-        {/* Search */}
         <div className="mb-6">
-          <div className="flex items-center justify-between">
-            <div className="relative w-80">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <Input
-                placeholder="Search"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
+          <div className="relative w-80">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Input
+              placeholder="Cari Tanaman/Pupuk..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
           </div>
         </div>
 
-        {/* Table */}
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm mb-6">
+        <div className="bg-white border border-gray-200 rounded-lg shadow-sm mb-6 overflow-auto">
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead className="w-12">
                   <Checkbox
                     checked={
-                      selectedRows.length === harvestData.length &&
-                      harvestData.length > 0
+                      selectedRows.length === tanamanData.length &&
+                      tanamanData.length > 0
                     }
                     onCheckedChange={handleSelectAll}
                   />
                 </TableHead>
-                {[
-                  "Tanggal Panen",
-                  "Petani",
-                  "Lahan",
-                  "Nama Penyedia Bibit",
-                  "Tanaman",
-                  "Pupuk",
-                  "Jumlah hasil panen",
-                  "Status penjualan",
-                  "Nama pembeli",
-                  "Aksi",
-                ].map((header) => (
+                {["Nama Tanaman", "Pupuk", "Aksi"].map((header) => (
                   <TableHead key={header} className="text-gray-700">
                     <div className="flex items-center space-x-1">
                       <span>{header}</span>
@@ -150,36 +137,14 @@ export default function PanenPage() {
                       }
                     />
                   </TableCell>
-                  <TableCell>{item.date}</TableCell>
-                  <TableCell>
-                    <Link
-                      to={`/admin/panen/${item.id}`}
-                      className="text-blue-600 hover:underline"
-                    >
-                      {item.farmer}
-                    </Link>
+
+                  <TableCell className="text-gray-800">
+                    {item.namaTanaman}
                   </TableCell>
-                  <TableCell>{item.field}</TableCell>
-                  <TableCell>{item.seedProvider}</TableCell>
-                  <TableCell>{item.plant}</TableCell>
-                  <TableCell>{item.fertilizer}</TableCell>
-                  <TableCell>{item.amount}</TableCell>
-                  <TableCell>
-                    <Badge
-                      variant="outline"
-                      className={
-                        item.salesStatus === "Terjual"
-                          ? "border-green-600 text-green-600"
-                          : "border-gray-400 text-gray-600"
-                      }
-                    >
-                      {item.salesStatus}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>{item.buyerName}</TableCell>
+                  <TableCell className="text-gray-700">{item.pupuk}</TableCell>
                   <TableCell>
                     <div className="flex gap-2">
-                      <Link to={`/admin/panen/edit/${item.id}`}>
+                      <Link to={`/admin/tanaman/edit/${item.id}`}>
                         <Button variant="outline" size="sm">
                           Edit
                         </Button>
@@ -195,11 +160,10 @@ export default function PanenPage() {
           </Table>
         </div>
 
-        {/* Pagination */}
         <div className="flex items-center justify-between text-sm text-gray-600">
           <div>
             Menampilkan {filteredData.length > 0 ? 1 : 0} sampai{" "}
-            {filteredData.length} dari {harvestData.length} hasil
+            {filteredData.length} dari {tanamanData.length} hasil
           </div>
           <div className="flex items-center space-x-2">
             <span>Per halaman</span>

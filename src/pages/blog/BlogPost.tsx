@@ -13,6 +13,7 @@ interface Post {
   category?: string;
   content?: string[];
   tags?: string[];
+  author: string;
   authorImage?: string;
   slug?: string;
 }
@@ -88,7 +89,7 @@ const BlogPost: React.FC = () => {
 
                     <div className="mb-5">
                       <h3 className="font-semibold text-base sm:text-lg font-body">
-                        Admin
+                        {post.author}
                       </h3>
                       <p className="text-sm text-gray-600 font-body">
                         {post.date}

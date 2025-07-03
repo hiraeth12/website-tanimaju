@@ -101,7 +101,7 @@ const Navbar = () => {
       {/* Area kanan: User icon + hamburger */}
       <div className="flex items-center gap-4">
         <Link
-          to="/admin"
+          to="/login"
           className="text-slate-900 hover:text-emerald-600 transition-colors"
         >
           <User className="w-6 h-6" />

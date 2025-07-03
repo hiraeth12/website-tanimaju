@@ -68,8 +68,8 @@ export const UsageRadar = () => {
             <Radar
               name="Desktop"
               dataKey="desktop"
-              stroke="#5b21b6"
-              fill="#5b21b6"
+              stroke="#10b981"
+              fill="#10b981"
               fillOpacity={0.2}
             />
             <Tooltip

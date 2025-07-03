@@ -18,7 +18,7 @@ interface ProductDialogProps {
   info: string;
 }
 
-export function DemoDialog({
+export function ProductDialog({
   open,
   onOpenChange,
   title,

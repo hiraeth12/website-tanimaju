@@ -3,13 +3,12 @@ import { Link } from "react-router-dom";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import {
   Select,
-  SelectContent,
-  SelectItem,
   SelectTrigger,
   SelectValue,
+  SelectContent,
+  SelectItem,
 } from "@/components/ui/select";
 import {
   Table,
@@ -22,40 +21,43 @@ import {
 import { Search, ChevronDown, ChevronRight } from "lucide-react";
 import { DashboardLayout } from "@/components/Layout/DashboardLayout";
 
-interface HarvestItem {
-  id: number;
-  date: string;
-  farmer: string;
-  field: string;
-  seedProvider: string;
-  plant: string;
-  fertilizer: string;
-  amount: string;
-  salesStatus: string;
-  buyerName: string;
+interface BibitItem {
+  id: string;
+  tanaman: string;
+  sumber: string;
+  namaPenyedia: string;
+  tanggalPemberian: string;
 }
 
-export default function PanenPage() {
-  const [harvestData, setHarvestData] = useState<HarvestItem[]>([]);
-  const [selectedRows, setSelectedRows] = useState<number[]>([]);
+export default function BibitPage() {
+  const [bibitData, setBibitData] = useState<BibitItem[]>([]);
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    fetch("/data/panen.json")
+    fetch("/data/bibit.json")
       .then((res) => res.json())
-      .then((data) => setHarvestData(data))
-      .catch((err) => console.error("Failed to load data:", err));
+      .then((data) => {
+        const withId = data.map(
+          (item: Omit<BibitItem, "id">, index: number) => ({
+            ...item,
+            id: `bibit-${index + 1}`,
+          })
+        );
+        setBibitData(withId);
+      })
+      .catch((err) => console.error("Failed to load bibit data:", err));
   }, []);
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedRows(harvestData.map((item) => item.id));
+      setSelectedRows(bibitData.map((item) => item.id));
     } else {
       setSelectedRows([]);
     }
   };
 
-  const handleSelectRow = (id: number, checked: boolean) => {
+  const handleSelectRow = (id: string, checked: boolean) => {
     if (checked) {
       setSelectedRows((prev) => [...prev, id]);
     } else {
@@ -63,7 +65,7 @@ export default function PanenPage() {
     }
   };
 
-  const filteredData = harvestData.filter((item) =>
+  const filteredData = bibitData.filter((item) =>
     Object.values(item).some((value) =>
       String(value).toLowerCase().includes(searchTerm.toLowerCase())
     )
@@ -73,61 +75,52 @@ export default function PanenPage() {
     <DashboardLayout>
       <div className="px-6 mt-2 ml-[2px]">
         <div className="flex items-center gap-2 text-sm text-gray-600">
-          <span>Panen</span>
+          <span>Bibit</span>
           <ChevronRight className="w-4 h-4" />
           <span className="font-semibold text-gray-800">List</span>
         </div>
       </div>
+
       <div className="px-6 py-4">
-        {/* Title */}
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold text-gray-800">Panen</h1>
-          <Link to="/admin/panen/create">
+          <h1 className="text-3xl font-bold text-gray-800">Bibit</h1>
+          <Link to="/admin/bibit/create">
             <Button className="bg-green-600 hover:bg-green-700 text-white">
-              New hasil panen
+              Tambah Bibit
             </Button>
           </Link>
         </div>
 
-        {/* Search */}
         <div className="mb-6">
-          <div className="flex items-center justify-between">
-            <div className="relative w-80">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <Input
-                placeholder="Search"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
+          <div className="relative w-80">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Input
+              placeholder="Cari Tanaman/Nama Penyedia..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
           </div>
         </div>
 
-        {/* Table */}
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm mb-6">
+        <div className="bg-white border border-gray-200 rounded-lg shadow-sm mb-6 overflow-auto">
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead className="w-12">
                   <Checkbox
                     checked={
-                      selectedRows.length === harvestData.length &&
-                      harvestData.length > 0
+                      selectedRows.length === bibitData.length &&
+                      bibitData.length > 0
                     }
                     onCheckedChange={handleSelectAll}
                   />
                 </TableHead>
                 {[
-                  "Tanggal Panen",
-                  "Petani",
-                  "Lahan",
-                  "Nama Penyedia Bibit",
                   "Tanaman",
-                  "Pupuk",
-                  "Jumlah hasil panen",
-                  "Status penjualan",
-                  "Nama pembeli",
+                  "Sumber",
+                  "Nama Penyedia",
+                  "Tanggal Pemberian",
                   "Aksi",
                 ].map((header) => (
                   <TableHead key={header} className="text-gray-700">
@@ -150,40 +143,25 @@ export default function PanenPage() {
                       }
                     />
                   </TableCell>
-                  <TableCell>{item.date}</TableCell>
-                  <TableCell>
-                    <Link
-                      to={`/admin/panen/${item.id}`}
-                      className="text-blue-600 hover:underline"
-                    >
-                      {item.farmer}
-                    </Link>
+
+                  <TableCell className="text-gray-800">
+                    {item.tanaman}
                   </TableCell>
-                  <TableCell>{item.field}</TableCell>
-                  <TableCell>{item.seedProvider}</TableCell>
-                  <TableCell>{item.plant}</TableCell>
-                  <TableCell>{item.fertilizer}</TableCell>
-                  <TableCell>{item.amount}</TableCell>
-                  <TableCell>
-                    <Badge
-                      variant="outline"
-                      className={
-                        item.salesStatus === "Terjual"
-                          ? "border-green-600 text-green-600"
-                          : "border-gray-400 text-gray-600"
-                      }
-                    >
-                      {item.salesStatus}
-                    </Badge>
+                  <TableCell className="text-gray-700">{item.sumber}</TableCell>
+                  <TableCell className="text-gray-700">
+                    {item.namaPenyedia}
                   </TableCell>
-                  <TableCell>{item.buyerName}</TableCell>
+                  <TableCell className="text-gray-600">
+                    {item.tanggalPemberian}
+                  </TableCell>
                   <TableCell>
                     <div className="flex gap-2">
-                      <Link to={`/admin/panen/edit/${item.id}`}>
+                      <Link to={`/admin/bibit/edit/${item.id}`}>
                         <Button variant="outline" size="sm">
                           Edit
                         </Button>
                       </Link>
+
                       <Button variant="destructive" size="sm">
                         Hapus
                       </Button>
@@ -195,11 +173,10 @@ export default function PanenPage() {
           </Table>
         </div>
 
-        {/* Pagination */}
         <div className="flex items-center justify-between text-sm text-gray-600">
           <div>
             Menampilkan {filteredData.length > 0 ? 1 : 0} sampai{" "}
-            {filteredData.length} dari {harvestData.length} hasil
+            {filteredData.length} dari {bibitData.length} hasil
           </div>
           <div className="flex items-center space-x-2">
             <span>Per halaman</span>

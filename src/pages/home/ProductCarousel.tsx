@@ -7,7 +7,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { DemoDialog } from "@/pages/home/ProductDialog";
+import { ProductDialog } from "@/pages/home/ProductDialog";
 
 interface Product {
   id: string;
@@ -63,7 +63,7 @@ export function ProductCarousel() {
               className="basis-full sm:basis-1/2 lg:basis-1/3"
             >
               <div className="p-4">
-                <DemoDialog
+                <ProductDialog
                   open={openDialogId === product.id}
                   onOpenChange={(open) =>
                     setOpenDialogId(open ? product.id : null)

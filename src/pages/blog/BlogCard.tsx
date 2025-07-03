@@ -8,6 +8,7 @@ interface BlogCardProps {
   image: string;
   date: string;
   slug: string;
+  author: string;
   authorImage?: string;
 }
 
@@ -16,6 +17,7 @@ export default function BlogCard({
   image,
   date,
   slug,
+  author,
   authorImage,
 }: BlogCardProps) {
   const [views, setViews] = useState(0);
@@ -53,7 +55,7 @@ export default function BlogCard({
                 <div className="w-8 h-8 rounded-full bg-gray-300 mr-3" />
               )}
               <div>
-                <p className="text-sm font-medium">Admin</p>
+                <p className="text-sm font-medium">{author}</p>
                 <p className="text-xs text-gray-500">{date}</p>
               </div>
             </div>

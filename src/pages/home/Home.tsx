@@ -26,9 +26,9 @@ const Home = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // useEffect(() => {
-  //   window.scrollTo(0, 0);
-  // }, []);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const textInView = useInView();
   const imageInView = useInView();

@@ -1,28 +1,47 @@
-import { TrendingDown, TrendingUp } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export const StatCards = () => {
+  const [productCount, setProductCount] = useState(0);
+  const [petaniCount, setPetaniCount] = useState(0);
+  const [postCount, setPostCount] = useState(0);
+
+  useEffect(() => {
+    // Fetch produk
+    fetch("/data/product.json")
+      .then((res) => res.json())
+      .then((data) => setProductCount(data.length));
+
+    // Fetch petani
+    fetch("/data/petani.json")
+      .then((res) => res.json())
+      .then((data) => setPetaniCount(data.length));
+
+    // Fetch posts
+    fetch("/data/post.json")
+      .then((res) => res.json())
+      .then((data) => setPostCount(data.length));
+  }, []);
+
   return (
     <>
       <Card
-        title="Gross Revenue"
-        value="$120,054.24"
-        pillText="2.75%"
+        title="Jumlah Produk"
+        value={productCount.toString()}
         trend="up"
-        period="From Jan 1st - Jul 31st"
+        period="Per 365 Hari"
       />
       <Card
-        title="Avg Order"
-        value="$27.97"
-        pillText="1.01%"
-        trend="down"
-        period="From Jan 1st - Jul 31st"
+        title="Jumlah Petani"
+        value={petaniCount.toString()}
+
+        trend="up"
+        period="Per 365 Hari"
       />
       <Card
-        title="Trailing Year"
-        value="$278,054.24"
-        pillText="60.75%"
+        title="Jumlah Post"
+        value={postCount.toString()}
         trend="up"
-        period="Previous 365 days"
+        period="Per 365 Hari"
       />
     </>
   );
@@ -31,13 +50,10 @@ export const StatCards = () => {
 const Card = ({
   title,
   value,
-  pillText,
-  trend,
   period,
 }: {
   title: string;
   value: string;
-  pillText: string;
   trend: "up" | "down";
   period: string;
 }) => {
@@ -49,15 +65,7 @@ const Card = ({
           <p className="text-3xl font-semibold">{value}</p>
         </div>
 
-        <span
-          className={`text-xs flex items-center gap-1 font-medium px-2 py-1 rounded ${
-            trend === "up"
-              ? "bg-green-100 text-green-700"
-              : "bg-red-100 text-red-700"
-          }`}
-        >
-          {trend === "up" ? <TrendingUp /> : <TrendingDown />} {pillText}
-        </span>
+        
       </div>
 
       <p className="text-xs text-stone-500">{period}</p>

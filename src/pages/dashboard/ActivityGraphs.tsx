@@ -1,3 +1,5 @@
+// src/pages/dashboard/ActivityGraph.tsx
+
 import { User } from "lucide-react";
 import {
   XAxis,
