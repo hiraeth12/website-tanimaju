@@ -10,6 +10,7 @@ interface Post {
   content?: string[];
   tags?: string[];
   authorImage?: string;
+  author: string;
   slug?: string;
 }
 
@@ -128,6 +129,7 @@ export default function BlogGrid({
               image={post.image}
               date={post.date}
               slug={post.slug as string}
+              author={post.author}
               authorImage={post.authorImage}
             />
           ))

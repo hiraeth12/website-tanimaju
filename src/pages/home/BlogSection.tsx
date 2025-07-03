@@ -9,6 +9,7 @@ interface Post {
   date: string;
   category?: string;
   authorImage?: string;
+  author: string;
   slug?: string;
 }
 
@@ -107,6 +108,7 @@ export default function BlogSection({
             image={post.image}
             date={post.date}
             slug={post.slug ?? ""}
+            author={post.author}
             authorImage={post.authorImage}
           />
         ))}
