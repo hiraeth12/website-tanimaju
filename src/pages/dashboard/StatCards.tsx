@@ -23,7 +23,7 @@ export const StatCards = () => {
   }, []);
 
   return (
-    <>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4 w-full">
       <Card
         title="Jumlah Produk"
         value={productCount.toString()}
@@ -43,7 +43,7 @@ export const StatCards = () => {
         trend="up"
         period="Per 365 Hari"
       />
-    </>
+    </div>
   );
 };
 
@@ -58,17 +58,15 @@ const Card = ({
   period: string;
 }) => {
   return (
-    <div className="col-span-4 p-4 rounded border border-stone-300">
-      <div className="flex mb-8 items-start justify-between">
-        <div>
-          <h3 className="text-stone-500 mb-2 text-sm">{title}</h3>
-          <p className="text-3xl font-semibold">{value}</p>
+    <div className="p-4 rounded border border-stone-300 bg-white min-w-0">
+      <div className="flex mb-4 lg:mb-8 items-start justify-between">
+        <div className="min-w-0 flex-1">
+          <h3 className="text-stone-500 mb-2 text-sm truncate">{title}</h3>
+          <p className="text-2xl lg:text-3xl font-semibold break-words">{value}</p>
         </div>
-
-        
       </div>
 
-      <p className="text-xs text-stone-500">{period}</p>
+      <p className="text-xs text-stone-500 truncate">{period}</p>
     </div>
   );
 };

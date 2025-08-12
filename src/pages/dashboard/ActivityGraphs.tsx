@@ -23,14 +23,14 @@ const data = [
 
 export const ActivityGraph = () => {
   return (
-    <div className="col-span-8 overflow-hidden rounded border border-stone-300">
-      <div className="p-4">
+    <div className="flex flex-col overflow-hidden rounded border border-stone-300 bg-white h-80">
+      <div className="p-4 flex-shrink-0">
         <h3 className="flex items-center gap-1.5 font-medium">
           <User className="w-4 h-4" /> Activity
         </h3>
       </div>
 
-      <div className="h-64 px-4">
+      <div className="flex-1 px-4 pb-4">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
             data={data}
