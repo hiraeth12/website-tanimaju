@@ -45,14 +45,14 @@ const data = [
 
 export const UsageRadar = () => {
   return (
-    <div className="col-span-4 overflow-hidden rounded border border-stone-300">
-      <div className="p-4">
+    <div className="flex flex-col overflow-hidden rounded border border-stone-300 bg-white h-80">
+      <div className="p-4 flex-shrink-0">
         <h3 className="flex items-center gap-1.5 font-medium">
-          <Eye /> Usage
+          <Eye className="w-4 h-4" /> Usage
         </h3>
       </div>
 
-      <div className="h-64 px-4">
+      <div className="flex-1 px-4 pb-4">
         <ResponsiveContainer width="100%" height="100%">
           <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
             <PolarGrid />

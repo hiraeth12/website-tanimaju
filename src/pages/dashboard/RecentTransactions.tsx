@@ -37,55 +37,58 @@ export const RecentTransactions = () => {
   };
 
   return (
-    <div className="col-span-12 p-4 rounded border border-stone-300">
-      <div className="mb-4 flex items-center justify-between">
+    <div className="p-4 rounded border border-stone-300 bg-white">
+      <div className="mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <h3 className="text-lg font-medium">Data Panen (Recent Transactions)</h3>
-        <Button onClick={handleExport} className="gap-2">
+        <Button onClick={handleExport} className="gap-2 self-start sm:self-auto">
           <Download className="w-4 h-4" />
-          Export Excel
+          <span className="hidden sm:inline">Export Excel</span>
+          <span className="sm:hidden">Export</span>
         </Button>
       </div>
 
-      <div className="overflow-auto">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              {[
-                "Tanggal Panen",
-                "Petani",
-                "Lahan",
-                "Penyedia Bibit",
-                "Tanaman",
-                "Pupuk",
-                "Jumlah",
-                "Status",
-                "Pembeli",
-              ].map((header) => (
-                <TableHead key={header} className="text-gray-700">
-                  <div className="flex items-center gap-1">
-                    <span>{header}</span>
-                    <ChevronDown className="w-4 h-4 text-gray-400" />
-                  </div>
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {harvestData.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell>{item.date}</TableCell>
-                <TableCell>{item.farmer}</TableCell>
-                <TableCell>{item.field}</TableCell>
-                <TableCell>{item.seedProvider}</TableCell>
-                <TableCell>{item.plant}</TableCell>
-                <TableCell>{item.fertilizer}</TableCell>
-                <TableCell>{item.amount}</TableCell>
-                <TableCell>{item.salesStatus}</TableCell>
-                <TableCell>{item.buyerName}</TableCell>
+      <div className="overflow-x-auto -mx-4 sm:mx-0">
+        <div className="inline-block min-w-full align-middle">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                {[
+                  "Tanggal Panen",
+                  "Petani",
+                  "Lahan",
+                  "Penyedia Bibit",
+                  "Tanaman",
+                  "Pupuk",
+                  "Jumlah",
+                  "Status",
+                  "Pembeli",
+                ].map((header) => (
+                  <TableHead key={header} className="text-gray-700 whitespace-nowrap">
+                    <div className="flex items-center gap-1">
+                      <span>{header}</span>
+                      <ChevronDown className="w-4 h-4 text-gray-400" />
+                    </div>
+                  </TableHead>
+                ))}
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {harvestData.map((item) => (
+                <TableRow key={item.id}>
+                  <TableCell className="whitespace-nowrap">{item.date}</TableCell>
+                  <TableCell className="whitespace-nowrap">{item.farmer}</TableCell>
+                  <TableCell className="whitespace-nowrap">{item.field}</TableCell>
+                  <TableCell className="whitespace-nowrap">{item.seedProvider}</TableCell>
+                  <TableCell className="whitespace-nowrap">{item.plant}</TableCell>
+                  <TableCell className="whitespace-nowrap">{item.fertilizer}</TableCell>
+                  <TableCell className="whitespace-nowrap">{item.amount}</TableCell>
+                  <TableCell className="whitespace-nowrap">{item.salesStatus}</TableCell>
+                  <TableCell className="whitespace-nowrap">{item.buyerName}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </div>
   );
