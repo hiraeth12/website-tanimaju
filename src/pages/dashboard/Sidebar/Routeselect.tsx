@@ -90,7 +90,7 @@ export const RouteSelect = () => {
       {/* Grouped */}
       {Object.entries(groupedRoutes).map(([groupName, groupRoutes]) => (
         <div key={groupName} className="space-y-1">
-          <div className="px-2 py-1 text-xs font-medium text-stone-500 uppercase">
+          <div className="py-1 text-xs font-medium text-stone-500 uppercase">
             {groupName}
           </div>
 

@@ -7,13 +7,22 @@ import { Plan } from "./Plan";
 
 export const Sidebar = () => {
   return (
-    <div>
-      <div className="overflow-y-scroll sticky top-4 h-[calc(100vh-32px-48px)]">
+    <div className="flex flex-col h-full">
+      {/* Header section with consistent padding */}
+      <div className="px-4 pt-4">
         <AccountToggle />
         <Search />
+      </div>
+      
+      {/* Scrollable menu section */}
+      <div className="flex-1 overflow-y-auto px-4">
         <RouteSelect />
       </div>
-      <Plan />
+      
+      {/* Footer section */}
+      <div className="px-4 pb-4">
+        <Plan />
+      </div>
     </div>
   );
 };
