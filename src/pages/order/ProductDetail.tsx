@@ -27,11 +27,12 @@ export default function ProductDetail() {
   const [product, setProduct] = useState<Product | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   // Fetch data dari product.json
   useEffect(() => {
     setLoading(true);
-    fetch("/data/product.json")
+    fetch(`${API_URL}/products`)
       .then((res) => res.json())
       .then((data: Product[]) => {
         setProducts(data);

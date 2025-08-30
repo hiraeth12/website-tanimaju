@@ -30,10 +30,11 @@ export default function BlogGrid({
   const [posts, setPosts] = useState<Post[]>([]);
   const [isMobile, setIsMobile] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     setIsLoaded(false);
-    fetch("/data/post.json")
+    fetch(`${API_URL}/posts`)
       .then((res) => res.json())
       .then((data) => {
         setTimeout(() => {

@@ -21,9 +21,10 @@ interface HarvestItem {
 
 export const RecentTransactions = () => {
   const [harvestData, setHarvestData] = useState<HarvestItem[]>([]);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    fetch("/data/panen.json")
+    fetch(`${API_URL}/panens`)
       .then((res) => res.json())
       .then((data) => setHarvestData(data))
       .catch((err) => console.error("Failed to load data:", err));

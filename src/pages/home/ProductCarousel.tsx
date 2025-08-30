@@ -24,8 +24,10 @@ export function ProductCarousel() {
   const [loading, setLoading] = useState(true); // State untuk loading
   const [openDialogId, setOpenDialogId] = useState<string | null>(null);
 
+  const API_URL = import.meta.env.VITE_API_URL; 
+
   useEffect(() => {
-    fetch("/data/product.json")
+    fetch(`${API_URL}/products`)
       .then((res) => res.json())
       .then((data) => {
         setProducts(data);
@@ -35,7 +37,7 @@ export function ProductCarousel() {
         console.error("Error fetching products:", error);
         setLoading(false);
       });
-  }, []);
+  }, [API_URL]);
 
    if (loading) {
     return (

@@ -23,7 +23,7 @@ import { Search, ChevronDown, ChevronRight } from "lucide-react";
 import { DashboardLayout } from "@/components/Layout/DashboardLayout";
 
 interface HarvestItem {
-  id: number;
+  _id: string;   // ✅ ganti dari id:number → _id:string
   date: string;
   farmer: string;
   field: string;
@@ -37,11 +37,12 @@ interface HarvestItem {
 
 export default function PanenPage() {
   const [harvestData, setHarvestData] = useState<HarvestItem[]>([]);
-  const [selectedRows, setSelectedRows] = useState<number[]>([]);
+  const [selectedRows, setSelectedRows] = useState<string[]>([]); // ✅ string karena _id
   const [searchTerm, setSearchTerm] = useState("");
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    fetch("/data/panen.json")
+    fetch(`${API_URL}/panens`)
       .then((res) => res.json())
       .then((data) => setHarvestData(data))
       .catch((err) => console.error("Failed to load data:", err));
@@ -49,13 +50,13 @@ export default function PanenPage() {
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedRows(harvestData.map((item) => item.id));
+      setSelectedRows(harvestData.map((item) => item._id)); // ✅ pakai _id
     } else {
       setSelectedRows([]);
     }
   };
 
-  const handleSelectRow = (id: number, checked: boolean) => {
+  const handleSelectRow = (id: string, checked: boolean) => {
     if (checked) {
       setSelectedRows((prev) => [...prev, id]);
     } else {
@@ -141,19 +142,19 @@ export default function PanenPage() {
             </TableHeader>
             <TableBody>
               {filteredData.map((item) => (
-                <TableRow key={item.id} className="hover:bg-gray-50">
+                <TableRow key={item._id} className="hover:bg-gray-50">
                   <TableCell>
                     <Checkbox
-                      checked={selectedRows.includes(item.id)}
+                      checked={selectedRows.includes(item._id)}
                       onCheckedChange={(checked) =>
-                        handleSelectRow(item.id, checked as boolean)
+                        handleSelectRow(item._id, checked as boolean)
                       }
                     />
                   </TableCell>
                   <TableCell>{item.date}</TableCell>
                   <TableCell>
                     <Link
-                      to={`/admin/panen/${item.id}`}
+                      to={`/admin/panen/${item._id}`}
                       className="text-blue-600 hover:underline"
                     >
                       {item.farmer}
@@ -179,7 +180,7 @@ export default function PanenPage() {
                   <TableCell>{item.buyerName}</TableCell>
                   <TableCell>
                     <div className="flex gap-2">
-                      <Link to={`/admin/panen/edit/${item.id}`}>
+                      <Link to={`/admin/panen/edit/${item._id}`}>
                         <Button variant="outline" size="sm">
                           Edit
                         </Button>

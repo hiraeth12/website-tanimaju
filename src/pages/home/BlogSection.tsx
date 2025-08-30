@@ -47,21 +47,22 @@ export default function BlogSection({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const [posts, setPosts] = useState<Post[]>([]); // State untuk data dari JSON
-  const [loading, setLoading] = useState(true); // State untuk loading
-  // Fetch data dari post.json
+  const [posts, setPosts] = useState<Post[]>([]); 
+  const [loading, setLoading] = useState(true); 
+  const API_URL = import.meta.env.VITE_API_URL; 
+
   useEffect(() => {
-    fetch("/data/post.json")
+    fetch(`${API_URL}/posts`)
       .then((res) => res.json())
       .then((data) => {
         setPosts(data);
         setLoading(false);
       })
       .catch((error) => {
-        console.error("Error fetching blog posts:", error);
+        console.error("Error fetching blog post:", error);
         setLoading(false);
       });
-  }, []);
+  }, [API_URL]);
 
   // Proses data setelah di-fetch
   const postsWithSlug = posts.map((post) => ({

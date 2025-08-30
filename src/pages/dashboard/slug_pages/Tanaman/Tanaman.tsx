@@ -33,9 +33,10 @@ export default function TanamanPage() {
   const [tanamanData, setTanamanData] = useState<TanamanItem[]>([]);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    fetch("/data/tanaman.json")
+    fetch(`${API_URL}/tanamans`)
       .then((res) => res.json())
       .then((data) => {
         const withId = data.map(
