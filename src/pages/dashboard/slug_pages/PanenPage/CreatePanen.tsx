@@ -50,7 +50,7 @@ export default function CreatePanenPage() {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch(`${API}/api/panens`, {
+      const response = await fetch(`${API}/panens`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

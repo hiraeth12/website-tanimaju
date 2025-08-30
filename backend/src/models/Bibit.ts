@@ -1,3 +1,5 @@
+// backend/src/models/Bibit.ts
+
 import mongoose from "mongoose";
 
 const BibitSchema = new mongoose.Schema({

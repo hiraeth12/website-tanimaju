@@ -31,9 +31,10 @@ interface PanenData {
 export default function EditPanenPage() {
   const { id } = useParams();
   const [data, setData] = useState<PanenData | null>(null);
+  const API = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    fetch("/data/panen.json")
+    fetch(`${API}/panens`)
       .then((res) => res.json())
       .then((json) => {
         const selected = json.find((item: PanenData) => String(item.id) === id);

@@ -1,3 +1,6 @@
+// backend/src/models/Petani.ts
+
+
 import mongoose from "mongoose";
 
 const PetaniSchema = new mongoose.Schema({
