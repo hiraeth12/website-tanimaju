@@ -35,9 +35,10 @@ export default function PostsPage() {
   const [blogData, setBlogData] = useState<BlogPost[]>([]);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    fetch("/data/post.json")
+    fetch(`${API_URL}/posts`)
       .then((res) => res.json())
       .then((data) => {
         const withId = data.map(

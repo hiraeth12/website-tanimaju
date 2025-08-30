@@ -4,20 +4,21 @@ export const StatCards = () => {
   const [productCount, setProductCount] = useState(0);
   const [petaniCount, setPetaniCount] = useState(0);
   const [postCount, setPostCount] = useState(0);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     // Fetch produk
-    fetch("/data/product.json")
+    fetch(`${API_URL}/products`)
       .then((res) => res.json())
       .then((data) => setProductCount(data.length));
 
     // Fetch petani
-    fetch("/data/petani.json")
+    fetch(`${API_URL}/petanis`)
       .then((res) => res.json())
       .then((data) => setPetaniCount(data.length));
 
     // Fetch posts
-    fetch("/data/post.json")
+    fetch(`${API_URL}/posts`)
       .then((res) => res.json())
       .then((data) => setPostCount(data.length));
   }, []);

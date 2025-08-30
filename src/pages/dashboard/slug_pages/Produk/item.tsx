@@ -37,9 +37,10 @@ export default function ItemPage() {
   const [productData, setProductData] = useState<ProductItem[]>([]);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    fetch("/data/product.json")
+    fetch(`${API_URL}/products`)
       .then((res) => res.json())
       .then((data) => setProductData(data))
       .catch((err) => console.error("Failed to load product data:", err));

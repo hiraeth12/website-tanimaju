@@ -5,7 +5,6 @@ import ProductCard from "./ProductCard";
 import Footer from "@/components/Footer";
 import LoadMoreButton from "@/components/LoadButton";
 
-// Definisikan tipe Product di sini atau impor dari file shared
 interface Product {
   id: string;
   title: string;
@@ -17,16 +16,17 @@ interface Product {
   whatsappNumber: string;
 }
 
-const PRODUCTS_PER_PAGE = 4; // Menampilkan 8 produk per halaman
+const PRODUCTS_PER_PAGE = 4; 
 
 const Order = () => {
-  const [products, setProducts] = useState<Product[]>([]); // State untuk data dari JSON
-  const [loading, setLoading] = useState(true); // State untuk loading
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true); 
   const [visibleProducts, setVisibleProducts] = useState(PRODUCTS_PER_PAGE);
 
-  // Fetch data dari product.json
+  const API_URL = import.meta.env.VITE_API_URL; 
+
   useEffect(() => {
-    fetch("/data/product.json")
+    fetch(`${API_URL}/products`)
       .then((res) => res.json())
       .then((data) => {
         setProducts(data);
@@ -36,7 +36,7 @@ const Order = () => {
         console.error("Error fetching products:", error);
         setLoading(false);
       });
-  }, []);
+  }, [API_URL]);
 
   const handleLoadMore = () => {
     setVisibleProducts((prev) => prev + PRODUCTS_PER_PAGE);
@@ -103,7 +103,7 @@ const Order = () => {
                   ))}
                 </div>
               )}
-              
+
               {/* Tombol Load More */}
               {!loading && visibleProducts < products.length && (
                 <div className="text-center mt-8">

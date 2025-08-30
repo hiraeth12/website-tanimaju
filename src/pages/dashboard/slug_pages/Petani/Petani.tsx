@@ -35,9 +35,10 @@ export default function PetaniPage() {
   const [petaniData, setPetaniData] = useState<PetaniItem[]>([]);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    fetch("/data/petani.json")
+    fetch(`${API_URL}/petanis`)
       .then((res) => res.json())
       .then((data) => {
         // Tambahkan id unik berdasarkan index

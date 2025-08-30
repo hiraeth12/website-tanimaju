@@ -1,0 +1,74 @@
+[
+  {
+    "id": "prod-01",
+    "title": "Padi",
+    "price": 6500,
+    "imageSrc": "/images/shop-placeholder-1.jpg",
+    "description": "Padi berkualitas untuk hasil panen terbaik.",
+    "info": "Padi adalah tanaman serealia yang menjadi sumber utama karbohidrat di banyak negara, termasuk Indonesia. Padi yang kami tawarkan adalah hasil panen terbaik dari petani lokal, dipanen pada waktu yang tepat untuk memastikan kualitas dan kesegaran.",
+    "whatsappNumber": "6287747583087"
+  },
+  {
+    "id": "prod-02",
+    "title": "Bawang Merah",
+    "price": 60000,
+    "imageSrc": "/images/shop-placeholder-2.jpg",
+    "description": "Bawang merah segar langsung dari petani.",
+    "info": "Bawang merah adalah bumbu dapur yang penting dalam masakan Indonesia. Kami menyediakan bawang merah segar yang ditanam secara organik, memberikan rasa dan aroma yang khas pada setiap hidangan.",
+    "whatsappNumber": "6287747583087"
+  },
+  {
+    "id": "prod-03",
+    "title": "Jagung Manis",
+    "price": 17000,
+    "imageSrc": "/images/shop-placeholder-3.jpg",
+    "description": "Jagung manis pilihan, cocok untuk dibakar atau direbus.",
+    "info": "Jagung manis adalah salah satu sayuran yang banyak digemari. Kami menyediakan jagung manis segar yang dipanen pada puncak kematangan, sehingga rasanya manis dan juicy. Cocok untuk berbagai olahan, mulai dari direbus, dibakar, hingga dijadikan campuran salad.",
+    "whatsappNumber": "6287747583087"
+  },
+  {
+    "id": "prod-04",
+    "title": "Sawi",
+    "price": 7000,
+    "imageSrc": "/images/shop-placeholder-4.jpg",
+    "description": "Sawi hijau segar, kaya akan nutrisi.",
+    "info": "Sawi adalah sayuran hijau yang kaya akan vitamin dan mineral. Kami menyediakan sawi segar yang ditanam secara organik, bebas dari pestisida kimia. Sawi ini cocok untuk berbagai masakan, mulai dari tumisan, sup, hingga salad.",
+    "whatsappNumber": "6287747583087"
+  },
+  {
+    "id": "prod-05",
+    "title": "Kentang",
+    "price": 18000,
+    "imageSrc": "/images/shop-placeholder-5.jpg",
+    "description": "Kentang berkualitas untuk berbagai masakan.",
+    "info": "Kentang adalah salah satu bahan makanan yang serbaguna. Kami menyediakan kentang segar yang ditanam di lahan subur, cocok untuk berbagai olahan seperti kentang goreng, mashed potato, atau sebagai bahan tambahan dalam sup dan stew.",
+    "whatsappNumber": "6287747583087"
+  },
+  {
+    "id": "prod-06",
+    "title": "Ubi Ungu",
+    "price": 12000,
+    "imageSrc": "/images/shop-placeholder-6.jpg",
+    "description": "Ubi ungu manis dan lezat.",
+    "info": "Ubi ungu adalah sumber karbohidrat yang kaya akan antioksidan. Kami menyediakan ubi ungu segar yang manis dan lezat, cocok untuk dijadikan camilan sehat, bahan kue, atau direbus sebagai lauk pendamping.",
+    "whatsappNumber": "6287747583087"
+  },
+  {
+    "id": "prod-07",
+    "title": "Tomat Ceri",
+    "price": 25000,
+    "imageSrc": "/images/shop-placeholder-1.jpg",
+    "description": "Tomat ceri manis dan segar, cocok untuk salad.",
+    "info": "Tomat ceri adalah jenis tomat kecil yang manis dan juicy. Kami menyediakan tomat ceri segar yang ditanam secara organik, ideal untuk salad, sandwich, atau sebagai camilan sehat. Rasanya yang manis membuatnya disukai oleh anak-anak dan dewasa.",
+    "whatsappNumber": "6287747583087"
+  },
+  {
+    "id": "prod-08",
+    "title": "Cabai Rawit",
+    "price": 45000,
+    "imageSrc": "/images/shop-placeholder-2.jpg",
+    "description": "Cabai rawit pedas untuk menambah cita rasa masakan.",
+    "info": "Cabai rawit adalah jenis cabai kecil yang terkenal dengan tingkat kepedasannya yang tinggi. Kami menyediakan cabai rawit segar yang ditanam secara organik, cocok untuk menambah cita rasa pedas pada masakan Indonesia. Gunakan dengan hati-hati sesuai selera.",
+    "whatsappNumber": "6287747583087"
+  }
+]

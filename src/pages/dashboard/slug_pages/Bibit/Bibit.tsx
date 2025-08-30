@@ -33,9 +33,10 @@ export default function BibitPage() {
   const [bibitData, setBibitData] = useState<BibitItem[]>([]);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    fetch("/data/bibit.json")
+    fetch(`${API_URL}/bibits`)
       .then((res) => res.json())
       .then((data) => {
         const withId = data.map(

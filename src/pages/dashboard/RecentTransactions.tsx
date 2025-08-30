@@ -1,5 +1,3 @@
-// src/pages/dashboard/RecentTransactions.tsx
-
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -7,7 +5,7 @@ import { ChevronDown, Download } from "lucide-react";
 import * as XLSX from "xlsx";
 
 interface HarvestItem {
-  id: number;
+  _id: string; 
   date: string;
   farmer: string;
   field: string;
@@ -21,9 +19,10 @@ interface HarvestItem {
 
 export const RecentTransactions = () => {
   const [harvestData, setHarvestData] = useState<HarvestItem[]>([]);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    fetch("/data/panen.json")
+    fetch(`${API_URL}/panens`)
       .then((res) => res.json())
       .then((data) => setHarvestData(data))
       .catch((err) => console.error("Failed to load data:", err));
@@ -74,7 +73,7 @@ export const RecentTransactions = () => {
             </TableHeader>
             <TableBody>
               {harvestData.map((item) => (
-                <TableRow key={item.id}>
+                <TableRow key={item._id}> {/* PENYESUAIAN 2: Menggunakan item._id untuk key */}
                   <TableCell className="whitespace-nowrap">{item.date}</TableCell>
                   <TableCell className="whitespace-nowrap">{item.farmer}</TableCell>
                   <TableCell className="whitespace-nowrap">{item.field}</TableCell>

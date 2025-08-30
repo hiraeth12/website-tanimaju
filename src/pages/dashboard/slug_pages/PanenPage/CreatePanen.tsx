@@ -1,4 +1,6 @@
-import { useState } from "react";
+// src/pages/dashboard/slug_pages/PanenPage/CreatePanen.tsx
+
+import { useState, useEffect } from "react";
 import { ChevronRight, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,6 +45,55 @@ export default function CreatePanenPage() {
   const handleChange = (field: keyof FormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
+
+  const API = import.meta.env.VITE_API_URL;
+
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch(`${API}/panens`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Gagal membuat panen");
+      }
+
+      const data = await response.json();
+      console.log("Berhasil buat panen:", data);
+      alert("Data panen berhasil disimpan!");
+    } catch (error) {
+      console.error(error);
+      alert("Terjadi kesalahan saat menyimpan panen");
+    }
+  };
+
+  const [petanis, setPetanis] = useState<any[]>([]);
+  const [penyediaBibit, setPenyediaBibit] = useState<any[]>([]);
+  const [tanamans, setTanamans] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchOptions = async () => {
+      try {
+        const [petaniRes, bibitRes, tanamanRes] = await Promise.all([
+          fetch(`${API}/petanis`).then((r) => r.json()),
+          fetch(`${API}/bibits`).then((r) => r.json()),
+          fetch(`${API}/tanamans`).then((r) => r.json()),
+        ]);
+
+        setPetanis(petaniRes);
+        setPenyediaBibit(bibitRes);
+        setTanamans(tanamanRes);
+      } catch (err) {
+        console.error("Gagal fetch data dropdown", err);
+      }
+    };
+
+    fetchOptions();
+  }, [API]);
 
   return (
     <DashboardLayout>
@@ -97,9 +148,14 @@ export default function CreatePanenPage() {
                     <SelectValue placeholder="Pilih petani" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="petani1">Petani 1</SelectItem>
+                    {petanis.map((p) => (
+                      <SelectItem key={p._id} value={p._id}>
+                        {p.nama}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
+
                 <Button variant="outline" size="icon" className="shrink-0">
                   <Plus className="w-4 h-4" />
                 </Button>
@@ -145,7 +201,11 @@ export default function CreatePanenPage() {
                     <SelectValue placeholder="Pilih penyedia bibit" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="penyedia1">Penyedia 1</SelectItem>
+                    {penyediaBibit.map((pb) => (
+                      <SelectItem key={pb._id} value={pb._id}>
+                        {pb.namaPenyedia}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <Button variant="outline" size="icon" className="shrink-0">
@@ -171,8 +231,11 @@ export default function CreatePanenPage() {
                     <SelectValue placeholder="Pilih tanaman" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="padi">Padi</SelectItem>
-                    <SelectItem value="jagung">Jagung</SelectItem>
+                    {tanamans.map((t) => (
+                      <SelectItem key={t._id} value={t._id}>
+                        {t.namaTanaman}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <Button variant="outline" size="icon" className="shrink-0">
@@ -255,7 +318,10 @@ export default function CreatePanenPage() {
 
         {/* Tombol Aksi */}
         <div className="flex gap-4 mt-8 pt-6 border-t">
-          <Button className="bg-green-600 hover:bg-green-700 text-white px-6">
+          <Button
+            className="bg-green-600 hover:bg-green-700 text-white px-6"
+            onClick={handleSubmit}
+          >
             Create
           </Button>
           <Button variant="outline" className="px-6">

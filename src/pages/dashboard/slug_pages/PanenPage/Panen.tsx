@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react"; // 1. Tambahkan useCallback
 import { Link } from "react-router-dom";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -19,11 +19,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Search, ChevronDown, ChevronRight } from "lucide-react";
+import { Search, ChevronDown, ChevronRight, RefreshCw } from "lucide-react"; // 2. Tambahkan ikon RefreshCw
 import { DashboardLayout } from "@/components/Layout/DashboardLayout";
 
 interface HarvestItem {
-  id: number;
+  _id: string;
   date: string;
   farmer: string;
   field: string;
@@ -37,25 +37,60 @@ interface HarvestItem {
 
 export default function PanenPage() {
   const [harvestData, setHarvestData] = useState<HarvestItem[]>([]);
-  const [selectedRows, setSelectedRows] = useState<number[]>([]);
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false); // State untuk loading indicator
+  const API_URL = import.meta.env.VITE_API_URL;
 
+  // Fungsi untuk memetakan data yang tidak konsisten ke format yang benar
+  const mapApiDataToHarvestItem = (item: any): HarvestItem => {
+    // Cek apakah ini format data yang baru (dengan field 'tanggalPanen')
+    if (item.tanggalPanen) {
+      return {
+        _id: item._id,
+        date: item.tanggalPanen,
+        farmer: item.petani,
+        field: item.lahan,
+        seedProvider: item.namaPenyediaBibit,
+        plant: item.tanaman,
+        fertilizer: item.pupuk,
+        amount: String(item.jumlahHasilPanen),
+        salesStatus: item.statusPenjualan,
+        buyerName: item.namaPembeli,
+      };
+    }
+    return item;
+  };
+
+  const fetchHarvestData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/panens`);
+      const rawData = await response.json();
+      const cleanedData = rawData.map(mapApiDataToHarvestItem);
+
+      setHarvestData(cleanedData);
+    } catch (err) {
+      console.error("Failed to load data:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [API_URL]);
+
+  // 4. Panggil fungsi fetch saat komponen pertama kali dimuat
   useEffect(() => {
-    fetch("/data/panen.json")
-      .then((res) => res.json())
-      .then((data) => setHarvestData(data))
-      .catch((err) => console.error("Failed to load data:", err));
-  }, []);
+    fetchHarvestData();
+  }, [fetchHarvestData]);
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedRows(harvestData.map((item) => item.id));
+      setSelectedRows(harvestData.map((item) => item._id));
     } else {
       setSelectedRows([]);
     }
   };
 
-  const handleSelectRow = (id: number, checked: boolean) => {
+  const handleSelectRow = (id: string, checked: boolean) => {
     if (checked) {
       setSelectedRows((prev) => [...prev, id]);
     } else {
@@ -89,7 +124,7 @@ export default function PanenPage() {
           </Link>
         </div>
 
-        {/* Search */}
+        {/* Search & Actions */}
         <div className="mb-6">
           <div className="flex items-center justify-between">
             <div className="relative w-80">
@@ -101,6 +136,17 @@ export default function PanenPage() {
                 className="pl-10"
               />
             </div>
+            {/* 5. Tambahkan tombol Refresh di sini */}
+            <Button
+              variant="outline"
+              onClick={fetchHarvestData}
+              disabled={loading}
+            >
+              <RefreshCw
+                className={`w-4 h-4 mr-2 ${loading ? "animate-spin" : ""}`}
+              />
+              {loading ? "Memuat..." : "Muat Ulang"}
+            </Button>
           </div>
         </div>
 
@@ -140,57 +186,65 @@ export default function PanenPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredData.map((item) => (
-                <TableRow key={item.id} className="hover:bg-gray-50">
-                  <TableCell>
-                    <Checkbox
-                      checked={selectedRows.includes(item.id)}
-                      onCheckedChange={(checked) =>
-                        handleSelectRow(item.id, checked as boolean)
-                      }
-                    />
-                  </TableCell>
-                  <TableCell>{item.date}</TableCell>
-                  <TableCell>
-                    <Link
-                      to={`/admin/panen/${item.id}`}
-                      className="text-blue-600 hover:underline"
-                    >
-                      {item.farmer}
-                    </Link>
-                  </TableCell>
-                  <TableCell>{item.field}</TableCell>
-                  <TableCell>{item.seedProvider}</TableCell>
-                  <TableCell>{item.plant}</TableCell>
-                  <TableCell>{item.fertilizer}</TableCell>
-                  <TableCell>{item.amount}</TableCell>
-                  <TableCell>
-                    <Badge
-                      variant="outline"
-                      className={
-                        item.salesStatus === "Terjual"
-                          ? "border-green-600 text-green-600"
-                          : "border-gray-400 text-gray-600"
-                      }
-                    >
-                      {item.salesStatus}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>{item.buyerName}</TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                      <Link to={`/admin/panen/edit/${item.id}`}>
-                        <Button variant="outline" size="sm">
-                          Edit
-                        </Button>
-                      </Link>
-                      <Button variant="destructive" size="sm">
-                        Hapus
-                      </Button>
-                    </div>
+              {loading ? (
+                <TableRow>
+                  <TableCell colSpan={11} className="text-center">
+                    Memuat data...
                   </TableCell>
                 </TableRow>
-              ))}
+              ) : (
+                filteredData.map((item) => (
+                  <TableRow key={item._id} className="hover:bg-gray-50">
+                    <TableCell>
+                      <Checkbox
+                        checked={selectedRows.includes(item._id)}
+                        onCheckedChange={(checked) =>
+                          handleSelectRow(item._id, checked as boolean)
+                        }
+                      />
+                    </TableCell>
+                    <TableCell>
+                      {new Date(item.date).toLocaleDateString("id-ID")}
+                    </TableCell>
+
+                    <TableCell>
+                      <Link to="#" className="text-blue-600 hover:underline">
+                        {item.farmer}
+                      </Link>
+                    </TableCell>
+                    <TableCell>{item.field}</TableCell>
+                    <TableCell>{item.seedProvider}</TableCell>
+                    <TableCell>{item.plant}</TableCell>
+                    <TableCell>{item.fertilizer}</TableCell>
+                    <TableCell>{item.amount}</TableCell>
+                    <TableCell>
+                      <Badge
+                        variant="outline"
+                        className={
+                          item.salesStatus === "Terjual"
+                            ? "border-green-600 text-green-600"
+                            : "border-gray-400 text-gray-600"
+                        }
+                      >
+                        {item.salesStatus}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>{item.buyerName}</TableCell>
+                    <TableCell>
+                      <div className="flex gap-2">
+                        <Link to={`/admin/panen/edit/${item._id}`}>
+                          <Button variant="outline" size="sm">
+                            Edit
+                          </Button>
+                        </Link>
+                        <Button variant="destructive" size="sm">
+                          Hapus
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </div>
