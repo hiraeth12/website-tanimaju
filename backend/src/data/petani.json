@@ -1,0 +1,32 @@
+[
+  {
+    "nama": "Samsul Hadi",
+    "alamat": "Tokyo",
+    "nomorKontak": "6281234567890",
+    "foto": "/images/petani/petani-1.jpg"
+  },
+  {
+    "nama": "Tini Wulandari",
+    "alamat": "Tokyo",
+    "nomorKontak": "6282234567891",
+    "foto": "/images/petani/petani-2.jpg"
+  },
+  {
+    "nama": "Rudi Hartono",
+    "alamat": "Tokyo",
+    "nomorKontak": "6283234567892",
+    "foto": "/images/petani/petani-3.jpg"
+  },
+  {
+    "nama": "Ani Lestari",
+    "alamat": "Tokyo",
+    "nomorKontak": "6284234567893",
+    "foto": "/images/petani/petani-4.jpg"
+  },
+  {
+    "nama": "Bambang Setiawan",
+    "alamat": "Tokyo",
+    "nomorKontak": "6285234567894",
+    "foto": "/images/petani/petani-5.jpg"
+  }
+]
