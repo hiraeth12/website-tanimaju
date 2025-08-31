@@ -1,70 +1,113 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import { ChevronRight } from "lucide-react";
+import { useParams, useNavigate } from "react-router-dom";
 import { DashboardLayout } from "@/components/Layout/DashboardLayout";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Breadcrumb } from "./Breadcrumb";
+import { InputField } from "./InputField";
+import { SelectField } from "./SelectField";
+import { FormActions } from "./FormActions";
 
-interface PanenData {
-  id: number;
+interface HarvestItem {
+  _id: string;
   date: string;
   farmer: string;
   field: string;
   seedProvider: string;
   plant: string;
   fertilizer: string;
-  amount: string;
+  amount: number;
   salesStatus: string;
   buyerName: string;
-  description?: string;
-  photo?: File | null;
 }
 
 export default function EditPanenPage() {
   const { id } = useParams();
-  const [data, setData] = useState<PanenData | null>(null);
+  const navigate = useNavigate();
+  const [data, setData] = useState<HarvestItem | null>(null);
+  const [loading, setLoading] = useState(false);
   const API = import.meta.env.VITE_API_URL;
+  const [petaniList, setPetaniList] = useState<any[]>([]);
+  const [bibitList, setBibitList] = useState<any[]>([]);
+  const [tanamanList, setTanamanList] = useState<any[]>([]);
+  const mapApiData = (item: any): HarvestItem => ({
+    _id: item._id,
+    date: item.tanggalPanen,
+    farmer: item.petani?._id ?? "",
+    field: item.lahan,
+    seedProvider: item.bibit?._id ?? "",
+    plant: item.tanaman?._id ?? "",
+    fertilizer: item.pupuk,
+    amount: item.jumlahHasilPanen ?? 0,
+    salesStatus: item.statusPenjualan,
+    buyerName: item.namaPembeli ?? "",
+  });
 
+  // fetch data panen by id
   useEffect(() => {
-    fetch(`${API}/panens`)
+    if (!id) return;
+    setLoading(true);
+    fetch(`${API}/panens/${id}`)
       .then((res) => res.json())
-      .then((json) => {
-        const selected = json.find((item: PanenData) => String(item.id) === id);
-        setData({ ...selected, photo: null });
-      })
-      .catch((err) => console.error("Failed to fetch panen data:", err));
+      .then((json) => setData(mapApiData(json)))
+      .catch((err) => console.error("Failed to fetch panen data:", err))
+      .finally(() => setLoading(false));
   }, [id]);
 
-  const handleChange = (field: keyof PanenData, value: string) => {
+  // fetch list petani, bibit, tanaman
+  useEffect(() => {
+    fetch(`${API}/petanis`)
+      .then((res) => res.json())
+      .then(setPetaniList);
+    fetch(`${API}/bibits`)
+      .then((res) => res.json())
+      .then(setBibitList);
+    fetch(`${API}/tanamans`)
+      .then((res) => res.json())
+      .then(setTanamanList);
+  }, []);
+
+  const handleChange = (field: keyof HarvestItem, value: string | number) => {
     if (!data) return;
     setData({ ...data, [field]: value });
   };
 
-  if (!data) return <div className="p-6">Loading...</div>;
+  const handleSubmit = async () => {
+    if (!data) return;
+    try {
+      const payload = {
+        tanggalPanen: data.date,
+        petani: data.farmer,
+        lahan: data.field,
+        bibit: data.seedProvider,
+        tanaman: data.plant,
+        pupuk: data.fertilizer,
+        jumlahHasilPanen: Number(data.amount),
+        statusPenjualan: data.salesStatus,
+        namaPembeli: data.buyerName,
+      };
+
+      const res = await fetch(`${API}/panens/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) throw new Error("Gagal update panen");
+
+      alert("Data panen berhasil diperbarui!");
+      navigate("/admin/panen");
+    } catch (err) {
+      console.error(err);
+      alert("Terjadi kesalahan saat update panen");
+    }
+  };
+
+  if (loading || !data) return <div className="p-6">Loading...</div>;
 
   return (
     <DashboardLayout>
-      {/* Breadcrumb */}
-      <div className="px-6 mt-2 mb-4 ml-2">
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Link
-            to="/admin/panen"
-            className="hover:underline hover:text-gray-800 transition"
-          >
-            Panen
-          </Link>
-          <ChevronRight className="w-4 h-4" />
-          <span className="font-semibold text-gray-800">Edit</span>
-        </div>
-      </div>
+      <Breadcrumb
+        items={[{ label: "Panen", to: "/admin/panen" }, { label: "Edit" }]}
+      />
 
       {/* Title */}
       <div className="px-6 mb-6 ml-2">
@@ -74,120 +117,115 @@ export default function EditPanenPage() {
       {/* Form */}
       <div className="bg-white rounded-lg shadow-sm p-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Left Column */}
+          {/* Kolom Kiri */}
           <div className="space-y-6">
-            {/* Tanggal Panen */}
-            <div className="space-y-2">
-              <Label htmlFor="date">Tanggal Panen</Label>
-              <Input
-                id="date"
-                type="date"
-                value={new Date(data.date).toISOString().split("T")[0]}
-                onChange={(e) => handleChange("date", e.target.value)}
-              />
-            </div>
+            <InputField
+              id="date"
+              label="Tanggal Panen"
+              type="date"
+              value={new Date(data.date).toISOString().split("T")[0]}
+              onChange={(v) => handleChange("date", v)}
+            />
 
-            {/* Petani */}
-            <div className="space-y-2">
-              <Label htmlFor="farmer">Petani</Label>
-              <Input
-                id="farmer"
-                value={data.farmer}
-                onChange={(e) => handleChange("farmer", e.target.value)}
-              />
-            </div>
+            <SelectField
+              id="farmer"
+              label="Petani"
+              value={data.farmer}
+              onChange={(v) => handleChange("farmer", v)}
+              options={petaniList.map((p) => ({ label: p.nama, value: p._id }))}
+              placeholder="Pilih petani"
+            />
 
-            {/* Lahan */}
-            <div className="space-y-2">
-              <Label htmlFor="field">Lahan</Label>
-              <Input
-                id="field"
-                value={data.field}
-                onChange={(e) => handleChange("field", e.target.value)}
-              />
-            </div>
+            <SelectField
+              id="field"
+              label="Lahan"
+              value={data.field}
+              onChange={(v) => handleChange("field", v)}
+              options={[
+                { label: "Sukabirus", value: "Sukabirus" },
+                { label: "Sukapura", value: "Sukapura" },
+                { label: "Cikoneng", value: "Cikoneng" },
+              ]}
+              placeholder="Pilih lahan"
+            />
 
-            {/* Nama Penyedia Bibit */}
-            <div className="space-y-2">
-              <Label htmlFor="seedProvider">Nama Penyedia Bibit</Label>
-              <Input
-                id="seedProvider"
-                value={data.seedProvider}
-                onChange={(e) => handleChange("seedProvider", e.target.value)}
-              />
-            </div>
+            <SelectField
+              id="seedProvider"
+              label="Penyedia Bibit"
+              value={data.seedProvider}
+              onChange={(v) => handleChange("seedProvider", v)}
+              options={bibitList.map((b) => ({
+                value: b._id,
+                label: b.namaPenyedia,
+              }))}
+              placeholder="Pilih bibit"
+            />
           </div>
 
-          {/* Right Column */}
+          {/* Kolom Kanan */}
           <div className="space-y-6">
-            {/* Tanaman */}
-            <div className="space-y-2">
-              <Label htmlFor="plant">Tanaman</Label>
-              <Input
-                id="plant"
-                value={data.plant}
-                onChange={(e) => handleChange("plant", e.target.value)}
-              />
-            </div>
+            <SelectField
+              id="plant"
+              label="Tanaman"
+              value={data.plant}
+              onChange={(v) => handleChange("plant", v)}
+              options={tanamanList.map((t) => ({
+                value: t._id,
+                label: t.namaTanaman,
+              }))}
+              placeholder="Pilih tanaman"
+            />
 
-            {/* Pupuk */}
-            <div className="space-y-2">
-              <Label htmlFor="fertilizer">Pupuk</Label>
-              <Input
-                id="fertilizer"
-                value={data.fertilizer}
-                onChange={(e) => handleChange("fertilizer", e.target.value)}
-              />
-            </div>
+            <SelectField
+              id="fertilizer"
+              label="Pupuk"
+              value={data.fertilizer}
+              onChange={(v) => handleChange("fertilizer", v)}
+              options={[
+                { value: "Urea", label: "Urea" },
+                { value: "NPK", label: "NPK" },
+                { value: "Kompos", label: "Kompos" },
+                { value: "Organik Cair", label: "Organik Cair" },
+              ]}
+              placeholder="Pilih pupuk"
+            />
 
-            {/* Jumlah Hasil Panen */}
-            <div className="space-y-2">
-              <Label htmlFor="amount">Jumlah Hasil Panen</Label>
-              <Input
-                id="amount"
-                value={data.amount}
-                onChange={(e) => handleChange("amount", e.target.value)}
-              />
-            </div>
+            <InputField
+              id="amount"
+              label="Jumlah Hasil Panen"
+              type="number"
+              value={data.amount}
+              onChange={(v) => handleChange("amount", v)}
+            />
 
-            {/* Status Penjualan */}
-            <div className="space-y-2">
-              <Label htmlFor="salesStatus">Status Penjualan</Label>
-              <Select
-                value={data.salesStatus}
-                onValueChange={(v) => handleChange("salesStatus", v)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Pilih status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Terjual">Terjual</SelectItem>
-                  <SelectItem value="Belum Terjual">Belum Terjual</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            <SelectField
+              id="salesStatus"
+              label="Status Penjualan"
+              value={data.salesStatus}
+              onChange={(v) => handleChange("salesStatus", v)}
+              options={[
+                { label: "Terjual", value: "Terjual" },
+                { label: "Belum Terjual", value: "Belum Terjual" },
+              ]}
+              placeholder="Pilih status"
+            />
 
-            {/* Nama Pembeli */}
-            <div className="space-y-2">
-              <Label htmlFor="buyerName">Nama Pembeli</Label>
-              <Input
-                id="buyerName"
-                value={data.buyerName}
-                onChange={(e) => handleChange("buyerName", e.target.value)}
-              />
-            </div>
+            <InputField
+              id="buyerName"
+              label="Nama Pembeli"
+              value={data.buyerName}
+              onChange={(v) => handleChange("buyerName", v)}
+            />
           </div>
         </div>
 
         {/* Tombol Aksi */}
-        <div className="flex gap-4 mt-8 pt-6 border-t">
-          <Button className="bg-green-600 hover:bg-green-700 text-white px-6">
-            Simpan Perubahan
-          </Button>
-          <Button variant="outline" className="px-6">
-            Cancel
-          </Button>
-        </div>
+        <FormActions
+          onSubmit={handleSubmit}
+          onCancel={() => navigate("/admin/panen")}
+          submitLabel="Simpan Perubahan"
+          cancelLabel="Batal"
+        />
       </div>
     </DashboardLayout>
   );
