@@ -1,79 +1,89 @@
-// src/pages/dashboard/slug_pages/PanenPage/CreatePanen.tsx
-
 import { useState, useEffect } from "react";
-import { ChevronRight, Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { DashboardLayout } from "@/components/Layout/DashboardLayout";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Breadcrumb } from "./Breadcrumb";
+import { SelectField } from "./SelectField";
+import { InputField } from "./InputField";
+import { FormActions } from "./FormActions";
+import { StatusSelectField } from "./StatusSelectField";
 
 type FormData = {
-  petani: string;
-  pupuk: string;
-  tanaman: string;
-  namaPenyediaBibit: string;
-  lahan: string;
-  jumlahHasilPanen: string;
   tanggalPanen: string;
+  petani: string;
+  lahan: string;
+  bibit: string;
+  tanaman: string;
+  pupuk: string;
+  jumlahHasilPanen: string;
   statusPenjualan: string;
   namaPembeli: string;
-  foto: File | null;
 };
 
 export default function CreatePanenPage() {
   const [formData, setFormData] = useState<FormData>({
-    petani: "",
-    pupuk: "",
-    tanaman: "",
-    namaPenyediaBibit: "",
-    lahan: "",
-    jumlahHasilPanen: "",
     tanggalPanen: "",
+    petani: "",
+    lahan: "",
+    bibit: "",
+    tanaman: "",
+    pupuk: "",
+    jumlahHasilPanen: "",
     statusPenjualan: "",
     namaPembeli: "",
-    foto: null,
   });
 
   const handleChange = (field: keyof FormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  const [petanis, setPetanis] = useState<any[]>([]);
+  const [penyediaBibit, setPenyediaBibit] = useState<any[]>([]);
+  const [tanamans, setTanamans] = useState<any[]>([]);
   const API = import.meta.env.VITE_API_URL;
-
+  const navigate = useNavigate();
   const handleSubmit = async () => {
     try {
+      const payload = {
+        ...formData,
+        jumlahHasilPanen: Number(formData.jumlahHasilPanen),
+        tanggalPanen: new Date(formData.tanggalPanen),
+        statusPenjualan:
+          formData.statusPenjualan === "terjual" ? "Terjual" : "Belum Terjual",
+      };
+
       const response = await fetch(`${API}/panens`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
-      if (!response.ok) {
-        throw new Error("Gagal membuat panen");
-      }
+      if (!response.ok) throw new Error("Gagal membuat panen");
 
       const data = await response.json();
       console.log("Berhasil buat panen:", data);
       alert("Data panen berhasil disimpan!");
+
+      // reset form
+      setFormData({
+        tanggalPanen: "",
+        petani: "",
+        lahan: "",
+        bibit: "",
+        tanaman: "",
+        pupuk: "",
+        jumlahHasilPanen: "",
+        statusPenjualan: "",
+        namaPembeli: "",
+      });
+
+      navigate("/admin/panen");
     } catch (error) {
       console.error(error);
       alert("Terjadi kesalahan saat menyimpan panen");
     }
   };
-
-  const [petanis, setPetanis] = useState<any[]>([]);
-  const [penyediaBibit, setPenyediaBibit] = useState<any[]>([]);
-  const [tanamans, setTanamans] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchOptions = async () => {
@@ -97,19 +107,9 @@ export default function CreatePanenPage() {
 
   return (
     <DashboardLayout>
-      {/* Breadcrumb */}
-      <div className="px-6 mt-2 mb-4 ml-2">
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Link
-            to="/admin/panen"
-            className="hover:underline hover:text-gray-800 transition"
-          >
-            Panen
-          </Link>
-          <ChevronRight className="w-4 h-4" />
-          <span className="font-semibold text-gray-800">Create</span>
-        </div>
-      </div>
+      <Breadcrumb
+        items={[{ label: "Panen", to: "/admin/panen" }, { label: "Create" }]}
+      />
 
       {/* Title */}
       <div className="px-6 mb-6 ml-2">
@@ -122,215 +122,125 @@ export default function CreatePanenPage() {
           {/* Left Column */}
           <div className="space-y-6">
             {/* Tanggal Panen */}
-            <div className="space-y-2">
-              <Label htmlFor="tanggalPanen">
-                Tanggal Panen<span className="text-red-500">*</span>
-              </Label>
-              <Input
-                id="tanggalPanen"
-                type="date"
-                value={formData.tanggalPanen}
-                onChange={(e) => handleChange("tanggalPanen", e.target.value)}
-              />
-            </div>
+            <InputField
+              id="tanggalPanen"
+              label="Tanggal Panen"
+              type="date"
+              required
+              value={formData.tanggalPanen}
+              onChange={(val) => handleChange("tanggalPanen", val)}
+            />
 
             {/* Petani */}
-            <div className="space-y-2">
-              <Label htmlFor="petani">
-                Petani<span className="text-red-500">*</span>
-              </Label>
-              <div className="flex gap-2">
-                <Select
-                  value={formData.petani}
-                  onValueChange={(value) => handleChange("petani", value)}
-                >
-                  <SelectTrigger className="flex-1">
-                    <SelectValue placeholder="Pilih petani" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {petanis.map((p) => (
-                      <SelectItem key={p._id} value={p._id}>
-                        {p.nama}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-                <Button variant="outline" size="icon" className="shrink-0">
-                  <Plus className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
+            <SelectField
+              id="petani"
+              label="Petani"
+              required
+              value={formData.petani}
+              placeholder="Pilih petani"
+              options={petanis.map((p) => ({ value: p._id, label: p.nama }))}
+              onChange={(val) => handleChange("petani", val)}
+              withAddButton
+            />
 
             {/* Lahan */}
-            <div className="space-y-2">
-              <Label htmlFor="lahan">
-                Lahan<span className="text-red-500">*</span>
-              </Label>
-              <div className="flex gap-2">
-                <Select
-                  value={formData.lahan}
-                  onValueChange={(value) => handleChange("lahan", value)}
-                >
-                  <SelectTrigger className="flex-1">
-                    <SelectValue placeholder="Pilih lahan" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="lahan1">Lahan 1</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Button variant="outline" size="icon" className="shrink-0">
-                  <Plus className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
+            <SelectField
+              id="lahan"
+              label="Lahan"
+              required
+              value={formData.lahan}
+              placeholder="Pilih lahan"
+              options={[
+                { value: "Sukabirus", label: "Sukabirus" },
+                { value: "Sukapura", label: "Sukapura" },
+                { value: "Cikoneng", label: "Cikoneng" },
+                { value: "Cibiru", label: "Cibiru" },
+              ]}
+              onChange={(val) => handleChange("lahan", val)}
+              withAddButton
+            />
 
             {/* Nama Penyedia Bibit */}
-            <div className="space-y-2">
-              <Label htmlFor="penyedia">
-                Nama Penyedia Bibit<span className="text-red-500">*</span>
-              </Label>
-              <div className="flex gap-2">
-                <Select
-                  value={formData.namaPenyediaBibit}
-                  onValueChange={(value) =>
-                    handleChange("namaPenyediaBibit", value)
-                  }
-                >
-                  <SelectTrigger className="flex-1">
-                    <SelectValue placeholder="Pilih penyedia bibit" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {penyediaBibit.map((pb) => (
-                      <SelectItem key={pb._id} value={pb._id}>
-                        {pb.namaPenyedia}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Button variant="outline" size="icon" className="shrink-0">
-                  <Plus className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
+            <SelectField
+              id="bibit"
+              label="Nama Penyedia Bibit"
+              required
+              value={formData.bibit}
+              placeholder="Pilih penyedia bibit"
+              options={penyediaBibit.map((pb) => ({
+                value: pb._id,
+                label: pb.namaPenyedia,
+              }))}
+              onChange={(val) => handleChange("bibit", val)}
+              withAddButton
+            />
           </div>
 
           {/* Right Column */}
           <div className="space-y-6">
             {/* Tanaman */}
-            <div className="space-y-2">
-              <Label htmlFor="tanaman">
-                Tanaman<span className="text-red-500">*</span>
-              </Label>
-              <div className="flex gap-2">
-                <Select
-                  value={formData.tanaman}
-                  onValueChange={(value) => handleChange("tanaman", value)}
-                >
-                  <SelectTrigger className="flex-1">
-                    <SelectValue placeholder="Pilih tanaman" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {tanamans.map((t) => (
-                      <SelectItem key={t._id} value={t._id}>
-                        {t.namaTanaman}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Button variant="outline" size="icon" className="shrink-0">
-                  <Plus className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
+            <SelectField
+              id="tanaman"
+              label="Tanaman"
+              required
+              value={formData.tanaman}
+              placeholder="Pilih tanaman"
+              options={tanamans.map((t) => ({
+                value: t._id,
+                label: t.namaTanaman,
+              }))}
+              onChange={(val) => handleChange("tanaman", val)}
+              withAddButton
+            />
 
             {/* Pupuk */}
-            <div className="space-y-2">
-              <Label htmlFor="pupuk">
-                Pupuk<span className="text-red-500">*</span>
-              </Label>
-              <div className="flex gap-2">
-                <Select
-                  value={formData.pupuk}
-                  onValueChange={(value) => handleChange("pupuk", value)}
-                >
-                  <SelectTrigger className="flex-1">
-                    <SelectValue placeholder="Pilih pupuk" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="urea">Urea</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Button variant="outline" size="icon" className="shrink-0">
-                  <Plus className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
+            <SelectField
+              id="pupuk"
+              label="Pupuk"
+              required
+              value={formData.pupuk}
+              placeholder="Pilih pupuk"
+              options={[
+                { value: "Urea", label: "Urea" },
+                { value: "NPK", label: "NPK" },
+                { value: "Kompos", label: "Kompos" },
+                { value: "Organik Cair", label: "Organik Cair" },
+              ]}
+              onChange={(val) => handleChange("pupuk", val)}
+              withAddButton
+            />
 
             {/* Jumlah hasil panen */}
-            <div className="space-y-2">
-              <Label htmlFor="jumlah">
-                Jumlah hasil panen (kg)<span className="text-red-500">*</span>
-              </Label>
-              <Input
-                id="jumlah"
-                type="number"
-                value={formData.jumlahHasilPanen}
-                onChange={(e) =>
-                  handleChange("jumlahHasilPanen", e.target.value)
-                }
-              />
-            </div>
+            <InputField
+              id="jumlahHasilPanen"
+              label="Jumlah hasil panen (kg)"
+              type="number"
+              required
+              value={formData.jumlahHasilPanen}
+              onChange={(val) => handleChange("jumlahHasilPanen", val)}
+            />
 
             {/* Status penjualan */}
-            <div className="space-y-2">
-              <Label htmlFor="status">
-                Status penjualan<span className="text-red-500">*</span>
-              </Label>
-              <Select
-                value={formData.statusPenjualan}
-                onValueChange={(value) =>
-                  handleChange("statusPenjualan", value)
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Pilih status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="terjual">Terjual</SelectItem>
-                  <SelectItem value="belum-terjual">Belum Terjual</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            <StatusSelectField
+              value={formData.statusPenjualan}
+              onChange={(val) => handleChange("statusPenjualan", val)}
+            />
 
-            {/* Nama pembeli */}
-            <div className="space-y-2">
-              <Label htmlFor="pembeli">Nama pembeli</Label>
-              <Input
-                id="pembeli"
-                type="text"
-                value={formData.namaPembeli}
-                onChange={(e) => handleChange("namaPembeli", e.target.value)}
-              />
-            </div>
+            <InputField
+              id="namaPembeli"
+              label="Nama Pembeli"
+              type="text"
+              value={formData.namaPembeli}
+              onChange={(val) => handleChange("namaPembeli", val)}
+            />
           </div>
         </div>
 
         {/* Tombol Aksi */}
-        <div className="flex gap-4 mt-8 pt-6 border-t">
-          <Button
-            className="bg-green-600 hover:bg-green-700 text-white px-6"
-            onClick={handleSubmit}
-          >
-            Create
-          </Button>
-          <Button variant="outline" className="px-6">
-            Create & create another
-          </Button>
-          <Button variant="outline" className="px-6">
-            Cancel
-          </Button>
-        </div>
+        <FormActions
+          onSubmit={handleSubmit}
+          onCancel={() => navigate("/admin/panen")}
+        />
       </div>
     </DashboardLayout>
   );
