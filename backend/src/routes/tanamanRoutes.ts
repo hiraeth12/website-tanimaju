@@ -1,19 +1,18 @@
 import express from "express";
-import Tanaman from "../models/Tanaman";
+import {
+  getTanaman,
+  createTanaman,
+  deleteTanaman,
+  getTanamanById,
+  updateTanaman,
+} from "../controller/tanamanController.js";
 
 const router = express.Router();
 
-// GET all
-router.get("/", async (req, res) => {
-  const data = await Tanaman.find();
-  res.json(data);
-});
-
-// POST new
-router.post("/", async (req, res) => {
-  const tanaman = new Tanaman(req.body);
-  await tanaman.save();
-  res.status(201).json(tanaman);
-});
+router.get("/", getTanaman);
+router.post("/", createTanaman);
+router.get("/:id", getTanamanById);   // 🔥 GET detail tanaman
+router.put("/:id", updateTanaman);    // 🔥 UPDATE tanaman
+router.delete("/:id", deleteTanaman);
 
 export default router;

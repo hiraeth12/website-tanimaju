@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { DashboardLayout } from "@/components/Layout/DashboardLayout";
 import { useNavigate } from "react-router-dom";
-import { Breadcrumb } from "./Breadcrumb";
-import { SelectField } from "./SelectField";
-import { InputField } from "./InputField";
-import { FormActions } from "./FormActions";
+import { Breadcrumb } from "@/components/Breadcrumb";
+import { InputField } from "@/components/InputField";
+import { SelectField } from "@/components/SelectField";
+import { FormActions } from "@/components/FormActions";
 import { StatusSelectField } from "./StatusSelectField";
 
 type FormData = {
@@ -140,7 +140,6 @@ export default function CreatePanenPage() {
               placeholder="Pilih petani"
               options={petanis.map((p) => ({ value: p._id, label: p.nama }))}
               onChange={(val) => handleChange("petani", val)}
-              withAddButton
             />
 
             {/* Lahan */}
@@ -157,7 +156,6 @@ export default function CreatePanenPage() {
                 { value: "Cibiru", label: "Cibiru" },
               ]}
               onChange={(val) => handleChange("lahan", val)}
-              withAddButton
             />
 
             {/* Nama Penyedia Bibit */}
@@ -172,7 +170,6 @@ export default function CreatePanenPage() {
                 label: pb.namaPenyedia,
               }))}
               onChange={(val) => handleChange("bibit", val)}
-              withAddButton
             />
           </div>
 
@@ -190,7 +187,7 @@ export default function CreatePanenPage() {
                 label: t.namaTanaman,
               }))}
               onChange={(val) => handleChange("tanaman", val)}
-              withAddButton
+              
             />
 
             {/* Pupuk */}
@@ -207,7 +204,7 @@ export default function CreatePanenPage() {
                 { value: "Organik Cair", label: "Organik Cair" },
               ]}
               onChange={(val) => handleChange("pupuk", val)}
-              withAddButton
+              
             />
 
             {/* Jumlah hasil panen */}

@@ -3,12 +3,12 @@ import fs from "fs";
 import path from "path";
 
 // Import model
-import Bibit from "./models/Bibit";
-import Panen from "./models/Panen";
-import Petani from "./models/Petani";
-import Post from "./models/Post";
-import Product from "./models/Product";
-import Tanaman from "./models/Tanaman";
+import Bibit from "./models/Bibit.js";
+import Panen from "./models/Panen.js";
+import Petani from "./models/Petani.js";
+import Post from "./models/Post.js";
+import Product from "./models/Product.js";
+import Tanaman from "./models/Tanaman.js";
 
 const MONGO_URI = "mongodb://127.0.0.1:27017/website_tanijuu";
 

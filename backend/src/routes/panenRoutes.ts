@@ -1,7 +1,7 @@
 // backend/src/routes/panenRoutes.ts
 import express from "express";
-import Panen from "../models/Panen";
-import { createPanen } from "../controller/panenController";
+import Panen from "../models/Panen.js";
+import { createPanen } from "../controller/panenController.js";
 
 const router = express.Router();
 

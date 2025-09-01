@@ -1,5 +1,5 @@
 import express from "express";
-import Bibit from "../models/Bibit";
+import Bibit from "../models/Bibit.js";
 
 const router = express.Router();
 

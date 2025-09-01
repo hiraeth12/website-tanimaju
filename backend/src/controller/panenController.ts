@@ -1,6 +1,6 @@
 // File: backend/src/controller/panenController.ts
 import { Request, Response } from "express";
-import Panen from "../models/Panen";
+import Panen from "../models/Panen.js";
 
 export const createPanen = async (req: Request, res: Response) => {
   try {
