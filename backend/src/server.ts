@@ -31,15 +31,20 @@ app.use("/api/products", productRoutes);
 app.use("/api/tanamans", tanamanRoutes);
 
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/website_tanijuu";
+const MONGO_URI = process.env.MONGO_URI as string;
 
-// === MongoDB connect ===
+if (!MONGO_URI) {
+  console.error("❌ MONGO_URI belum di-set di .env");
+  process.exit(1);
+}
+
 mongoose.connect(MONGO_URI)
   .then(() => {
     console.log("MongoDB connected ✅");
     app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
   })
-  .catch(err => console.error(err));
+  .catch(err => console.error("MongoDB connection error ❌", err));
+
 
 // === Default route ===
 app.get("/", (req, res) => {
