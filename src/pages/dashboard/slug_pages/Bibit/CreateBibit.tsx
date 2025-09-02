@@ -1,12 +1,11 @@
 // File: src/pages/dashboard/slug_pages/Bibit/CreateBibitPage.tsx
 
 import { useState } from "react";
-import { ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { DashboardLayout } from "@/components/Layout/DashboardLayout";
-import { Link } from "react-router-dom";
+import { Breadcrumb } from "@/components/Breadcrumb";
+import { InputField } from "@/components/InputField";
+import { FormActions } from "@/components/FormActions";
+import { useNavigate } from "react-router-dom";
 
 type BibitForm = {
   tanaman: string;
@@ -26,24 +25,48 @@ export default function CreateBibitPage() {
   const handleChange = (field: keyof BibitForm, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
+  const navigate = useNavigate();
+  const API = import.meta.env.VITE_API_URL;
+
+  const handleSubmit = async () => {
+    try {
+      const payload = { ...formData };
+
+      const response = await fetch(`${API}/bibits`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) throw new Error("Gagal membuat bibit");
+
+      const data = await response.json();
+      console.log("Berhasil buat bibit !:", data);
+      alert("Data bibit berhasil disimpan!");
+
+      // reset form
+      setFormData({
+        tanaman: "",
+        sumber: "",
+        namaPenyedia: "",
+        tanggalPemberian: "",
+      });
+
+      navigate("/admin/bibit");
+    } catch (error) {
+      console.error(error);
+      alert("Terjadi kesalahan saat menyimpan bibit");
+    }
+  };
 
   return (
     <DashboardLayout>
       {/* Breadcrumb */}
-      <div className="px-6 mt-2 mb-4 ml-2">
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Link
-            to="/admin/bibit"
-            className="hover:underline hover:text-gray-800 transition"
-          >
-            Bibit
-          </Link>
-          <ChevronRight className="w-4 h-4" />
-          <span className="font-semibold text-gray-800">Create</span>
-        </div>
-      </div>
-
-      {/* Title */}
+      <Breadcrumb
+        items={[{ label: "Bibit", to: "/admin/bibit" }, { label: "Create" }]}
+      />
       <div className="px-6 mb-6 ml-2">
         <h1 className="text-3xl font-bold text-gray-900">Tambahkan Bibit</h1>
       </div>
@@ -54,20 +77,24 @@ export default function CreateBibitPage() {
           {/* Kolom Kiri */}
           <div className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="tanaman">Tanaman</Label>
-              <Input
+              <InputField
                 id="tanaman"
+                label="Nama Tanaman"
+                type="text"
                 value={formData.tanaman}
-                onChange={(e) => handleChange("tanaman", e.target.value)}
+                onChange={(val) => handleChange("tanaman", val)}
+                required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="sumber">Sumber</Label>
-              <Input
+              <InputField
                 id="sumber"
+                label="Sumber"
+                type="text"
                 value={formData.sumber}
-                onChange={(e) => handleChange("sumber", e.target.value)}
+                onChange={(val) => handleChange("sumber", val)}
+                required
               />
             </div>
           </div>
@@ -75,40 +102,34 @@ export default function CreateBibitPage() {
           {/* Kolom Kanan */}
           <div className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="namaPenyedia">Nama Penyedia</Label>
-              <Input
+              <InputField
                 id="namaPenyedia"
+                label="Penyedia"
+                type="text"
                 value={formData.namaPenyedia}
-                onChange={(e) => handleChange("namaPenyedia", e.target.value)}
+                onChange={(val) => handleChange("namaPenyedia", val)}
+                required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="tanggalPemberian">Tanggal Pemberian</Label>
-              <Input
+              <InputField
                 id="tanggalPemberian"
+                label="Tanggal Pemberian"
                 type="date"
                 value={formData.tanggalPemberian}
-                onChange={(e) =>
-                  handleChange("tanggalPemberian", e.target.value)
-                }
+                onChange={(val) => handleChange("tanggalPemberian", val)}
+                required
               />
             </div>
           </div>
         </div>
 
         {/* Tombol Aksi */}
-        <div className="flex gap-4 mt-8 pt-6 border-t">
-          <Button className="bg-green-600 hover:bg-green-700 text-white px-6">
-            Create
-          </Button>
-          <Button variant="outline" className="px-6">
-            Create & create another
-          </Button>
-          <Button variant="outline" className="px-6">
-            Cancel
-          </Button>
-        </div>
+        <FormActions
+          onSubmit={handleSubmit}
+          onCancel={() => navigate("/admin/panen")}
+        />
       </div>
     </DashboardLayout>
   );

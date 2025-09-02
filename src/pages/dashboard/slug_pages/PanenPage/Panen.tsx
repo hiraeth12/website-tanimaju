@@ -7,10 +7,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { DashboardLayout } from "@/components/Layout/DashboardLayout";
-import { SearchBar } from "./SearchPanen";
-import { ActionButtons } from "./ActionButtonPanen";
+import { SearchBar } from "@/components/SearchBarProps";
+import { ActionButtons } from "@/components/ActionButton";
 import { PanenTableHeader } from "./PanenTableHeader";
 import { PanenTableRow } from "./PanenTableRow";
+import { TableFooter } from "@/components/TableFooter";
 
 interface HarvestItem {
   _id: string;
@@ -30,6 +31,7 @@ export default function PanenPage() {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
+  const [perPage, setPerPage] = useState(10);
   const API_URL = import.meta.env.VITE_API_URL;
 
   const mapApiData = (item: any): HarvestItem => ({
@@ -102,11 +104,21 @@ export default function PanenPage() {
         <div className="flex items-center justify-between mb-6">
           <SearchBar value={searchTerm} onChange={setSearchTerm} />
 
-          <ActionButtons onRefresh={fetchHarvestData} loading={loading} />
+          <ActionButtons
+            onRefresh={fetchHarvestData}
+            loading={loading}
+            actions={[
+              {
+                label: "Tambah Panen",
+                to: "/admin/panen/create",
+                className: "bg-green-600 hover:bg-green-700 text-white",
+              },
+            ]}
+          />
         </div>
 
         {/* Table */}
-        <div className="bg-white border rounded-lg shadow-sm">
+        <div className="bg-white border rounded-lg shadow-sm mb-6">
           <Table>
             <TableHeader>
               <PanenTableHeader
@@ -137,6 +149,12 @@ export default function PanenPage() {
             </TableBody>
           </Table>
         </div>
+        <TableFooter
+          total={harvestData.length}
+          filtered={filteredData.length}
+          perPage={perPage}
+          onPerPageChange={setPerPage}
+        />
       </div>
     </DashboardLayout>
   );

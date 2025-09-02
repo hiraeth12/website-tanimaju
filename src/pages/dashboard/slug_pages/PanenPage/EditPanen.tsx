@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { DashboardLayout } from "@/components/Layout/DashboardLayout";
-import { Breadcrumb } from "./Breadcrumb";
-import { InputField } from "./InputField";
-import { SelectField } from "./SelectField";
-import { FormActions } from "./FormActions";
+import { Breadcrumb } from "@/components/Breadcrumb";
+import { InputField } from "@/components/InputField";
+import { SelectField } from "@/components/SelectField";
+import { FormActions } from "@/components/FormActions";
 
 interface HarvestItem {
   _id: string;

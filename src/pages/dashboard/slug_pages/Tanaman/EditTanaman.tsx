@@ -1,48 +1,70 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import { ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { useParams, useNavigate } from "react-router-dom";
 import { DashboardLayout } from "@/components/Layout/DashboardLayout";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
+import { Breadcrumb } from "@/components/Breadcrumb";
+import { InputField } from "@/components/InputField";
+import { SelectField } from "@/components/SelectField";
+import { FormActions } from "@/components/FormActions";
 
 type TanamanForm = {
-  id: string;
+  _id: string;
   namaTanaman: string;
   pupuk: string;
 };
 
 export default function EditTanamanPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<TanamanForm | null>(null);
-  const pupukOptions = ["Urea", "ZA", "Kompos", "NPK", "Organik"];
+  const [loading, setLoading] = useState(false);
+  const API = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    fetch("/data/tanaman.json")
-      .then((res) => res.json())
-      .then((data: Omit<TanamanForm, "id">[]) => {
-        const withIds = data.map((item, index) => ({
-          ...item,
-          id: `tanaman-${index + 1}`,
-        }));
-        const found = withIds.find((tanaman) => tanaman.id === id);
-        if (found) setFormData(found);
+    if (!id) return;
+    setLoading(true);
+    fetch(`${API}/tanamans/${id}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Gagal fetch tanaman");
+        return res.json();
       })
-      .catch((err) => console.error("Gagal memuat data tanaman:", err));
+      .then((data) => {
+        setFormData({
+          _id: data._id,
+          namaTanaman: data.namaTanaman,
+          pupuk: data.pupuk,
+        });
+      })
+      .catch((err) => console.error("Gagal memuat data tanaman:", err))
+      .finally(() => setLoading(false));
   }, [id]);
 
   const handleChange = (field: keyof TanamanForm, value: string) => {
     setFormData((prev) => (prev ? { ...prev, [field]: value } : prev));
   };
 
-  if (!formData) {
+  const handleSubmit = async () => {
+    if (!formData) return;
+    try {
+      const res = await fetch(`${API}/tanamans/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          namaTanaman: formData.namaTanaman,
+          pupuk: formData.pupuk,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Gagal update tanaman");
+
+      alert("Data tanaman berhasil diperbarui!");
+      navigate("/admin/tanaman");
+    } catch (err) {
+      console.error(err);
+      alert("Terjadi kesalahan saat update tanaman");
+    }
+  };
+
+  if (loading || !formData) {
     return (
       <DashboardLayout>
         <div className="p-6 text-gray-600">Memuat data tanaman...</div>
@@ -52,19 +74,9 @@ export default function EditTanamanPage() {
 
   return (
     <DashboardLayout>
-      {/* Breadcrumb */}
-      <div className="px-6 mt-2 mb-4 ml-2">
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Link
-            to="/admin/tanaman"
-            className="hover:underline hover:text-gray-800 transition"
-          >
-            Tanaman
-          </Link>
-          <ChevronRight className="w-4 h-4" />
-          <span className="font-semibold text-gray-800">Edit</span>
-        </div>
-      </div>
+      <Breadcrumb
+        items={[{ label: "Tanaman", to: "/admin/tanaman" }, { label: "Edit" }]}
+      />
 
       {/* Title */}
       <div className="px-6 mb-6 ml-2">
@@ -76,46 +88,37 @@ export default function EditTanamanPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="space-y-4">
             {/* Input Nama Tanaman */}
-            <div className="space-y-2">
-              <Label htmlFor="namaTanaman">Nama Tanaman</Label>
-              <Input
-                id="namaTanaman"
-                value={formData.namaTanaman}
-                onChange={(e) => handleChange("namaTanaman", e.target.value)}
-              />
-            </div>
+            <InputField
+              id="namaTanaman"
+              label="Nama Tanaman"
+              value={formData.namaTanaman}
+              onChange={(value) => handleChange("namaTanaman", value)}
+            />
 
             {/* Select Pupuk */}
-            <div className="space-y-2">
-              <Label htmlFor="pupuk">Pupuk</Label>
-              <Select
-                value={formData.pupuk}
-                onValueChange={(value) => handleChange("pupuk", value)}
-              >
-                <SelectTrigger className="w-full" id="pupuk">
-                  <SelectValue placeholder="Pilih jenis pupuk" />
-                </SelectTrigger>
-                <SelectContent>
-                  {pupukOptions.map((option) => (
-                    <SelectItem key={option} value={option}>
-                      {option}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            <SelectField
+              id="pupuk"
+              label="Pupuk"
+              value={formData.pupuk}
+              onChange={(value) => handleChange("pupuk", value)}
+              options={[
+                { value: "Urea", label: "Urea" },
+                { value: "NPK", label: "NPK" },
+                { value: "Kompos", label: "Kompos" },
+                { value: "Organik Cair", label: "Organik Cair" },
+              ]}
+              placeholder="Pilih pupuk"
+            />
           </div>
         </div>
 
         {/* Tombol Aksi */}
-        <div className="flex gap-4 mt-8 pt-6 border-t">
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6">
-            Update
-          </Button>
-          <Button variant="outline" className="px-6">
-            Kembali
-          </Button>
-        </div>
+        <FormActions
+          onSubmit={handleSubmit}
+          onCancel={() => navigate("/admin/tanaman")}
+          submitLabel="Simpan Perubahan"
+          cancelLabel="Batal"
+        />
       </div>
     </DashboardLayout>
   );

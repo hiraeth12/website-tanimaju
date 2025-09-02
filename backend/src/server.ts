@@ -16,12 +16,12 @@ app.use(cors({
 app.use(express.json());
 
 // === Routes ===
-import bibitRoutes from "./routes/bibitRoutes";
-import panenRoutes from "./routes/panenRoutes";
-import petaniRoutes from "./routes/petaniRoutes";
-import postRoutes from "./routes/postRoutes";
-import productRoutes from "./routes/productRoutes";
-import tanamanRoutes from "./routes/tanamanRoutes";
+import bibitRoutes from "./routes/bibitRoutes.js";
+import panenRoutes from "./routes/panenRoutes.js";
+import petaniRoutes from "./routes/petaniRoutes.js";
+import postRoutes from "./routes/postRoutes.js";
+import productRoutes from "./routes/productRoutes.js";
+import tanamanRoutes from "./routes/tanamanRoutes.js";
 
 app.use("/api/bibits", bibitRoutes);
 app.use("/api/panens", panenRoutes);

@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import { ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { useParams, useNavigate } from "react-router-dom";
 import { DashboardLayout } from "@/components/Layout/DashboardLayout";
+import { Breadcrumb } from "@/components/Breadcrumb";
+import { InputField } from "@/components/InputField";
+import { FormActions } from "@/components/FormActions";
 
 type BibitForm = {
-  id: string;
+  _id: string;
   tanaman: string;
   sumber: string;
   namaPenyedia: string;
@@ -17,45 +16,74 @@ type BibitForm = {
 export default function EditBibitPage() {
   const { id } = useParams();
   const [formData, setFormData] = useState<BibitForm | null>(null);
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const API = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    fetch("/data/bibit.json")
-      .then((res) => res.json())
-      .then((data: Omit<BibitForm, "id">[]) => {
-        const withIds = data.map((item, index) => ({
-          ...item,
-          id: `bibit-${index + 1}`,
-        }));
-        const found = withIds.find((item) => item.id === id);
-        if (found) setFormData(found);
+    if (!id) return;
+    setLoading(true);
+    fetch(`${API}/bibits/${id}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Gagal fetch bibit");
+        return res.json();
       })
-      .catch((err) => console.error("Gagal memuat data bibit:", err));
+      .then((data) => {
+        setFormData({
+          _id: data._id,
+          tanaman: data.tanaman || "",
+          sumber: data.sumber || "",
+          namaPenyedia: data.namaPenyedia || "",
+          tanggalPemberian: data.tanggalPemberian
+            ? new Date(data.tanggalPemberian).toISOString().split("T")[0]
+            : "",
+        });
+      })
+      .catch((err) => console.error("Gagal memuat data bibit:", err))
+      .finally(() => setLoading(false));
   }, [id]);
 
   const handleChange = (field: keyof BibitForm, value: string) => {
     setFormData((prev) => (prev ? { ...prev, [field]: value } : prev));
   };
 
-  if (!formData) {
+  const handleSubmit = async () => {
+    if (!formData) return;
+    try {
+      const res = await fetch(`${API}/bibits/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tanaman: formData.tanaman,
+          sumber: formData.sumber,
+          namaPenyedia: formData.namaPenyedia,
+          tanggalPemberian: formData.tanggalPemberian,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Gagal update bibit");
+
+      alert("Data bibit berhasil diperbarui!");
+      navigate("/admin/bibit");
+    } catch (err) {
+      console.error(err);
+      alert("Terjadi kesalahan saat update bibit");
+    }
+  };
+
+  if (loading || !formData) {
     return (
       <DashboardLayout>
-        <div className="p-6 text-gray-600">Memuat data bibit...</div>
+        <div className="p-6 text-gray-600">Memuat data tanaman...</div>
       </DashboardLayout>
     );
   }
 
   return (
     <DashboardLayout>
-      {/* Breadcrumb */}
-      <div className="px-6 mt-2 mb-4 ml-2">
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Link to="/admin/bibit" className="hover:underline hover:text-gray-800 transition">
-            Bibit
-          </Link>
-          <ChevronRight className="w-4 h-4" />
-          <span className="font-semibold text-gray-800">Edit</span>
-        </div>
-      </div>
+      <Breadcrumb
+        items={[{ label: "Bibit", to: "/admin/bibit" }, { label: "Edit" }]}
+      />
 
       {/* Title */}
       <div className="px-6 mb-6 ml-2">
@@ -67,57 +95,48 @@ export default function EditBibitPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Kolom Kiri */}
           <div className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="tanaman">Tanaman</Label>
-              <Input
-                id="tanaman"
-                value={formData.tanaman}
-                onChange={(e) => handleChange("tanaman", e.target.value)}
-              />
-            </div>
+            <InputField
+              id="tanaman"
+              label="Nama Tanaman"
+              value={formData.tanaman}
+              onChange={(value) => handleChange("tanaman", value)}
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="sumber">Sumber</Label>
-              <Input
-                id="sumber"
-                value={formData.sumber}
-                onChange={(e) => handleChange("sumber", e.target.value)}
-              />
-            </div>
+            <InputField
+              id="sumber"
+              label="Sumber"
+              value={formData.sumber}
+              onChange={(value) => handleChange("sumber", value)}
+            />
           </div>
 
           {/* Kolom Kanan */}
           <div className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="namaPenyedia">Nama Penyedia</Label>
-              <Input
-                id="namaPenyedia"
-                value={formData.namaPenyedia}
-                onChange={(e) => handleChange("namaPenyedia", e.target.value)}
-              />
-            </div>
+            <InputField
+              id="namaPenyedia"
+              label="Penyedia"
+              value={formData.namaPenyedia}
+              onChange={(value) => handleChange("namaPenyedia", value)}
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="tanggalPemberian">Tanggal Pemberian</Label>
-              <Input
-                id="tanggalPemberian"
-                type="date"
-                value={formData.tanggalPemberian}
-                onChange={(e) => handleChange("tanggalPemberian", e.target.value)}
-              />
-            </div>
+            <InputField
+              id="tanggalPemberian"
+              label="Tanggal Pemberian"
+              type="date"
+              required
+              value={formData.tanggalPemberian}
+              onChange={(val) => handleChange("tanggalPemberian", val)}
+            />
           </div>
         </div>
 
         {/* Tombol Aksi */}
-        <div className="flex gap-4 mt-8 pt-6 border-t">
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6">
-            Update
-          </Button>
-          <Button variant="outline" className="px-6">
-            Kembali
-          </Button>
-        </div>
+        <FormActions
+          onSubmit={handleSubmit}
+          onCancel={() => navigate("/admin/tanaman")}
+          submitLabel="Simpan Perubahan"
+          cancelLabel="Batal"
+        />
       </div>
     </DashboardLayout>
   );

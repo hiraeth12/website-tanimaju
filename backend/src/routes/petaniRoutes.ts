@@ -1,5 +1,5 @@
 import express from "express";
-import Petani from "../models/Petani";
+import Petani from "../models/Petani.js";
 
 const router = express.Router();
 
