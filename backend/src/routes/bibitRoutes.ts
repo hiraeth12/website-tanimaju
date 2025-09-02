@@ -1,19 +1,18 @@
 import express from "express";
-import Bibit from "../models/Bibit.js";
+import {
+  getAllBibits,
+  createBibit,
+  getBibitById,
+  updateBibit,
+  deleteBibit,
+} from "../controller/bibitController.js";
 
 const router = express.Router();
 
-// GET all
-router.get("/", async (req, res) => {
-  const data = await Bibit.find();
-  res.json(data);
-});
-
-// POST new
-router.post("/", async (req, res) => {
-  const bibit = new Bibit(req.body);
-  await bibit.save();
-  res.status(201).json(bibit);
-});
+router.get("/", getAllBibits);
+router.post("/", createBibit);
+router.get("/:id", getBibitById);
+router.put("/:id", updateBibit);
+router.delete("/:id", deleteBibit);
 
 export default router;

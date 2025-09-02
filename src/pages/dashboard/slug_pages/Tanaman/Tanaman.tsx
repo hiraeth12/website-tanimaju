@@ -19,10 +19,7 @@ export default function TanamanPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
   const [perPage, setPerPage] = useState(10);
-
   const API_URL = import.meta.env.VITE_API_URL;
-
-  // Ambil data tanaman
   const fetchTanamanData = async () => {
     setLoading(true);
     try {
@@ -73,7 +70,7 @@ export default function TanamanPage() {
       if (!res.ok) throw new Error("Gagal menghapus tanaman");
 
       alert("Tanaman berhasil dihapus!");
-      fetchTanamanData(); // refresh data
+      fetchTanamanData(); 
     } catch (err) {
       console.error("Error deleting tanaman:", err);
       alert("Terjadi kesalahan saat menghapus tanaman");
