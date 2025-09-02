@@ -21,7 +21,7 @@ const validateBibitInput = (body: any) => {
   return errors;
 };
 
-// ✅ GET semua bibit
+
 export const getAllBibits = async (req: Request, res: Response) => {
   try {
     const bibits = await Bibit.find();
@@ -77,7 +77,7 @@ export const updateBibit = async (req: Request, res: Response) => {
   }
 };
 
-// ✅ DELETE bibit
+
 export const deleteBibit = async (req: Request, res: Response) => {
   try {
     const bibit = await Bibit.findByIdAndDelete(req.params.id);
