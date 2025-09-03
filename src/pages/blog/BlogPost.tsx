@@ -22,6 +22,7 @@ const BlogPost: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const [post, setPost] = useState<Post | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const API = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -29,7 +30,7 @@ const BlogPost: React.FC = () => {
 
   useEffect(() => {
     setIsLoaded(false);
-    fetch("/data/post.json")
+    fetch(`${API}/posts`)
       .then((res) => res.json())
       .then((posts: Post[]) => {
         const foundPost = posts
@@ -39,7 +40,7 @@ const BlogPost: React.FC = () => {
         setIsLoaded(true);
       })
       .catch((error) => {
-        console.error("Error fetching post:", error);
+        console.error("Error fetching posts:", error);
         setPost(null);
         setIsLoaded(true);
       });
@@ -97,9 +98,10 @@ const BlogPost: React.FC = () => {
                     </div>
 
                     <div className="space-y-3 text-gray-700 mb-8 font-body text-sm sm:text-base text-justify">
-                      {post.content?.map((para, idx) => (
-                        <p key={idx}>{para}</p>
-                      ))}
+                      {post.content &&
+                        post.content
+                          .flatMap((para) => para.split(/\r?\n\r?\n/)) // split isi string panjang jadi array
+                          .map((para, idx) => <p key={idx}>{para}</p>)}
                     </div>
 
                     <div className="mb-4">

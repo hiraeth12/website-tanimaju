@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import { ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { useParams, useNavigate } from "react-router-dom";
+import { DashboardLayout } from "@/components/Layout/DashboardLayout";
+import { Breadcrumb } from "@/components/Breadcrumb";
+import { InputField } from "@/components/InputField";
+import ImageUpload from "@/components/ImageUpload";
+import { FormActions } from "@/components/FormActions";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { DashboardLayout } from "@/components/Layout/DashboardLayout";
 
-// Tipe untuk data form produk
 type ProductForm = {
+  _id: string;
   title: string;
   price: string;
-  imageSrc: string | File | null;
+  imageSrc: string | File | null; 
   description: string;
   info: string;
   whatsappNumber: string;
@@ -19,89 +20,106 @@ type ProductForm = {
 
 export default function EditItemPage() {
   const { id } = useParams();
-  const [formData, setFormData] = useState<ProductForm>({
-    title: "",
-    price: "",
-    imageSrc: null,
-    description: "",
-    info: "",
-    whatsappNumber: "",
-  });
+  const [formData, setFormData] = useState<ProductForm | null>(null);
+  const [loading, setLoading] = useState(false);
+  const API = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("/data/product.json")
-      .then((res) => res.json())
-      .then((data) => {
-        const item = data.find((p: any) => p.id === id);
-        if (item) {
-          setFormData({
-            ...item,
-            price: String(item.price),
-            imageSrc: item.imageSrc, // keep URL for preview
-          });
-        }
+    if (!id) return;
+    setLoading(true);
+    fetch(`${API}/products/${id}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Gagal fetch produk");
+        return res.json();
       })
-      .catch((err) => console.error("Failed to fetch product:", err));
+      .then((data) => {
+        setFormData({
+          _id: data._id,
+          title: data.title || "",
+          price: data.price || "",
+          imageSrc: data.imageSrc || null, 
+          description: data.description || "",
+          info: data.info || "",
+          whatsappNumber: data.whatsappNumber || "",
+        });
+      })
+      .catch((err) => console.error("Gagal memuat produk:", err))
+      .finally(() => setLoading(false));
   }, [id]);
 
-  const handleChange = (field: keyof ProductForm, value: string | number) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+  const handleChange = (field: keyof ProductForm, value: string | File | null) => {
+    setFormData((prev) => (prev ? { ...prev, [field]: value } : prev));
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) setFormData((prev) => ({ ...prev, imageSrc: file }));
+  // ✅ Submit update data
+  const handleSubmit = async () => {
+    if (!formData) return;
+    try {
+      const form = new FormData();
+      form.append("title", formData.title);
+      form.append("price", formData.price);
+      form.append("description", formData.description);
+      form.append("info", formData.info);
+      form.append("whatsappNumber", formData.whatsappNumber);
+
+      // hanya append file baru jika user upload
+      if (formData.imageSrc instanceof File) {
+        form.append("imageSrc", formData.imageSrc);
+      }
+
+      const res = await fetch(`${API}/products/${id}`, {
+        method: "PUT",
+        body: form,
+      });
+
+      if (!res.ok) throw new Error("Gagal update produk");
+
+      alert("Produk berhasil diperbarui!");
+      navigate("/admin/item");
+    } catch (err) {
+      console.error(err);
+      alert("Terjadi kesalahan saat update produk");
+    }
   };
 
-  const handleDragOver = (event: React.DragEvent) => event.preventDefault();
-
-  const handleDrop = (event: React.DragEvent) => {
-    event.preventDefault();
-    const file = event.dataTransfer.files[0];
-    if (file) setFormData((prev) => ({ ...prev, imageSrc: file }));
-  };
+  if (loading || !formData) {
+    return (
+      <DashboardLayout>
+        <div className="p-6 text-gray-600">Memuat data produk...</div>
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout>
-      {/* Breadcrumb */}
-      <div className="px-6 mt-2 mb-4 ml-2">
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Link to="/admin/item" className="hover:underline hover:text-gray-800 transition">
-            Produk
-          </Link>
-          <ChevronRight className="w-4 h-4" />
-          <span className="font-semibold text-gray-800">Edit</span>
-        </div>
-      </div>
+      <Breadcrumb
+        items={[{ label: "Item", to: "/admin/item" }, { label: "Edit" }]}
+      />
 
-      {/* Title */}
+    
       <div className="px-6 mb-6 ml-2">
         <h1 className="text-3xl font-bold text-gray-900">Edit Produk</h1>
       </div>
 
-      {/* Form */}
+    
       <div className="bg-white rounded-lg shadow-sm p-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Kolom Kiri */}
+          
           <div className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="title">Nama Produk</Label>
-              <Input
-                id="title"
-                value={formData.title}
-                onChange={(e) => handleChange("title", e.target.value)}
-              />
-            </div>
+            <InputField
+              id="title"
+              label="Nama Produk"
+              value={formData.title}
+              onChange={(value) => handleChange("title", value)}
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="description">Deskripsi Singkat</Label>
-              <Textarea
-                id="description"
-                value={formData.description}
-                onChange={(e) => handleChange("description", e.target.value)}
-                className="min-h-[120px] resize-none"
-              />
-            </div>
+            <InputField
+              id="description"
+              label="Deskripsi"
+              value={formData.description}
+              onChange={(value) => handleChange("description", value)}
+            />
 
             <div className="space-y-2">
               <Label htmlFor="info">Informasi Lengkap</Label>
@@ -114,78 +132,37 @@ export default function EditItemPage() {
             </div>
           </div>
 
-          {/* Kolom Kanan */}
           <div className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="price">Harga (Rp)</Label>
-              <Input
-                id="price"
-                type="number"
-                value={formData.price}
-                onChange={(e) => handleChange("price", e.target.value)}
-              />
-            </div>
+            <InputField
+              id="price"
+              label="Harga (Rp)"
+              value={formData.price}
+              onChange={(value) => handleChange("price", value)}
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="whatsappNumber">Nomor WhatsApp</Label>
-              <Input
-                id="whatsappNumber"
-                type="tel"
-                value={formData.whatsappNumber}
-                onChange={(e) => handleChange("whatsappNumber", e.target.value)}
-              />
-            </div>
+            <InputField
+              id="whatsappNumber"
+              label="Nomor WhatsApp"
+              value={formData.whatsappNumber}
+              onChange={(value) => handleChange("whatsappNumber", value)}
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="imageSrc">Gambar Produk</Label>
-              <div
-                className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400"
-                onDragOver={handleDragOver}
-                onDrop={handleDrop}
-              >
-                <input
-                  type="file"
-                  id="imageSrc"
-                  className="hidden"
-                  accept="image/*"
-                  onChange={handleFileUpload}
-                />
-                <label htmlFor="imageSrc" className="cursor-pointer">
-                  <div className="text-gray-500">
-                    <p>
-                      Drag & Drop atau {" "}
-                      <span className="text-blue-600 font-semibold">Browse</span>
-                    </p>
-                  </div>
-                </label>
-                {typeof formData.imageSrc === "string" && (
-                  <p className="mt-2 text-sm text-gray-600">
-                    <img
-                      src={formData.imageSrc}
-                      alt="preview"
-                      className="w-32 h-32 object-cover mx-auto mt-2 rounded"
-                    />
-                  </p>
-                )}
-                {formData.imageSrc instanceof File && (
-                  <p className="mt-2 text-sm text-gray-600">
-                    Terpilih: {formData.imageSrc.name}
-                  </p>
-                )}
-              </div>
-            </div>
+            <ImageUpload
+              _id="imageSrc"
+              label="Gambar Produk"
+              value={formData.imageSrc} 
+              onChange={(file) => handleChange("imageSrc", file)}
+            />
           </div>
         </div>
 
         {/* Tombol Aksi */}
-        <div className="flex gap-4 mt-8 pt-6 border-t">
-          <Button className="bg-green-600 hover:bg-green-700 text-white px-6">
-            Simpan Perubahan
-          </Button>
-          <Button variant="outline" className="px-6">
-            Cancel
-          </Button>
-        </div>
+        <FormActions
+          onSubmit={handleSubmit}
+          onCancel={() => navigate("/admin/item")}
+          submitLabel="Simpan Perubahan"
+          cancelLabel="Batal"
+        />
       </div>
     </DashboardLayout>
   );

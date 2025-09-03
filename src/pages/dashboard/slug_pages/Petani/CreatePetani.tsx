@@ -1,70 +1,65 @@
-// File: src/pages/dashboard/slug_pages/Produk/CreateItem.tsx
-
-import type React from "react";
 import { useState } from "react";
-import { ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { DashboardLayout } from "@/components/Layout/DashboardLayout";
-import { Link } from "react-router-dom";
+import { Breadcrumb } from "@/components/Breadcrumb";
+import { InputField } from "@/components/InputField";
+import ImageUpload from "@/components/ImageUpload";
+import { FormActions } from "@/components/FormActions";
+import { useNavigate } from "react-router-dom";
 
-// Tipe untuk data form produk
-type ProductForm = {
-  title: string;
-  price: string;
-  imageSrc: File | null;
-  description: string;
-  info: string;
-  whatsappNumber: string;
+type PetaniForm = {
+  nama: string;
+  alamat: string;
+  nomorKontak: string;
+  foto: File | null;
 };
 
 export default function CreatePetaniPage() {
-  const [formData, setFormData] = useState<ProductForm>({
-    title: "",
-    price: "",
-    imageSrc: null,
-    description: "",
-    info: "",
-    whatsappNumber: "",
+  const [formData, setFormData] = useState<PetaniForm>({
+    nama: "",
+    alamat: "",
+    nomorKontak: "",
+    foto: null,
   });
 
-  // Fungsi generik untuk menangani perubahan pada input teks dan textarea
-  const handleChange = (field: keyof ProductForm, value: string | number) => {
+  const handleChange = (field: keyof PetaniForm, value: string | number) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  // Fungsi untuk menangani unggahan file melalui dialog "Browse"
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) setFormData((prev) => ({ ...prev, imageSrc: file }));
+  const API = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate();
+
+   const handleSubmit = async () => {
+    try {
+      const form = new FormData();
+      form.append("nama", formData.nama);
+      form.append("alamat", formData.alamat);
+      form.append("nomorKontak", formData.nomorKontak);
+      if (formData.foto) {
+        form.append("foto", formData.foto);
+      }
+
+      const response = await fetch(`${API}/petanis`, {
+        method: "POST",
+        body: form,
+      });
+
+      if (!response.ok) throw new Error("Gagal membuat data petani");
+      await response.json();
+      alert("Data petani berhasil disimpan!");
+      navigate("/admin/petani");
+    } catch (error) {
+      console.error(error);
+      alert("Terjadi kesalahan saat menyimpan data petani");
+    }
   };
 
-  // Fungsi untuk menangani event drag over
-  const handleDragOver = (event: React.DragEvent) => event.preventDefault();
-
-  // Fungsi untuk menangani event drop file
-  const handleDrop = (event: React.DragEvent) => {
-    event.preventDefault();
-    const file = event.dataTransfer.files[0];
-    if (file) setFormData((prev) => ({ ...prev, imageSrc: file }));
-  };
 
   return (
     <DashboardLayout>
       {/* Breadcrumb */}
-      <div className="px-6 mt-2 mb-4 ml-2">
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Link
-            to="/admin/petani"
-            className="hover:underline hover:text-gray-800 transition"
-          >
-            Petani
-          </Link>
-          <ChevronRight className="w-4 h-4" />
-          <span className="font-semibold text-gray-800">Create</span>
-        </div>
-      </div>
+      <Breadcrumb
+        items={[{ label: "Petani", to: "/admin/petani" }, { label: "Create" }]}
+      />
 
       {/* Title */}
       <div className="px-6 mb-6 ml-2">
@@ -76,89 +71,54 @@ export default function CreatePetaniPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Kolom Kiri */}
           <div className="space-y-6">
-            {/* Nama Produk */}
-            <div className="space-y-2">
-              <Label htmlFor="title">Nama Petani</Label>
-              <Input
-                id="title"
-                value={formData.title}
-                onChange={(e) => handleChange("title", e.target.value)}
-              />
-            </div>
+            {/* Nama Petani */}
+            <InputField
+              id="nama"
+              label="Nama Petani"
+              type="text"
+              value={formData.nama}
+              onChange={(val) => handleChange("nama", val)}
+              required
+            />
 
             {/* Alamat */}
-            <div className="space-y-2">
-              <Label htmlFor="title">Alamat Petani</Label>
-              <Input
-                id="title"
-                value={formData.title}
-                onChange={(e) => handleChange("title", e.target.value)}
-              />
-            </div>
+            <InputField
+              id="alamat"
+              label="Alamat"
+              type="text"
+              value={formData.alamat}
+              onChange={(val) => handleChange("alamat", val)}
+              required
+            />
           </div>
 
           {/* Kolom Kanan */}
           <div className="space-y-6">
-
-
             {/* WhatsApp */}
-            <div className="space-y-2">
-              <Label htmlFor="whatsappNumber">Nomor WhatsApp</Label>
-              <Input
-                id="whatsappNumber"
-                type="tel"
-                value={formData.whatsappNumber}
-                onChange={(e) => handleChange("whatsappNumber", e.target.value)}
-              />
-            </div>
+            <InputField
+              id="nomorKontak"
+              label="Nomor Kontak"
+              type="text"
+              value={formData.nomorKontak}
+              onChange={(val) => handleChange("nomorKontak", val)}
+              required
+            />
 
-            {/* Gambar Produk */}
-            <div className="space-y-2">
-              <Label htmlFor="imageSrc">Gambar Petani</Label>
-              <div
-                className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400"
-                onDragOver={handleDragOver}
-                onDrop={handleDrop}
-              >
-                <input
-                  type="file"
-                  id="imageSrc"
-                  className="hidden"
-                  accept="image/*"
-                  onChange={handleFileUpload}
-                />
-                <label htmlFor="imageSrc" className="cursor-pointer">
-                  <div className="text-gray-500">
-                    <p>
-                      Drag & Drop atau{" "}
-                      <span className="text-blue-600 font-semibold">
-                        Browse
-                      </span>
-                    </p>
-                  </div>
-                </label>
-                {formData.imageSrc && (
-                  <p className="mt-2 text-sm text-gray-600">
-                    Terpilih: {formData.imageSrc.name}
-                  </p>
-                )}
-              </div>
-            </div>
+            {/* Foto Petani */}
+            <ImageUpload
+              _id="foto"
+              label="Foto Petani"
+              value={formData.foto}
+              onChange={(file) => setFormData({ ...formData, foto: file })}
+            />
           </div>
         </div>
 
         {/* Tombol Aksi */}
-        <div className="flex gap-4 mt-8 pt-6 border-t">
-          <Button className="bg-green-600 hover:bg-green-700 text-white px-6">
-            Create
-          </Button>
-          <Button variant="outline" className="px-6">
-            Create & create another
-          </Button>
-          <Button variant="outline" className="px-6">
-            Cancel
-          </Button>
-        </div>
+        <FormActions
+          onSubmit={handleSubmit}
+          onCancel={() => navigate("/admin/petani")}
+        />
       </div>
     </DashboardLayout>
   );
