@@ -1,76 +1,113 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { ChevronRight } from "lucide-react";
+import { useParams, useNavigate } from "react-router-dom";
 import { DashboardLayout } from "@/components/Layout/DashboardLayout";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-
-type BlogCategory = "News" | "Recipes";
+import { Breadcrumb } from "@/components/Breadcrumb";
+import { InputField } from "@/components/InputField";
+import { SelectField } from "@/components/SelectField";
+import ImageUpload from "@/components/ImageUpload";
+import { FormActions } from "@/components/FormActions";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 type BlogPost = {
-  id: string;
+  _id: string;
   title: string;
-  category: BlogCategory;
+  category: string;
   date: string;
-  image: string;
+  image: string | File | null;
   author: string;
+  authorImage: string | File | null;
   content: string;
   tags: string[];
 };
 
 export default function EditPostsPage() {
-  const { id } = useParams(); // ambil blog id dari URL
+  const { id } = useParams();
   const [post, setPost] = useState<BlogPost | null>(null);
+  const API = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetch("/data/post.json")
-      .then((res) => res.json())
-      .then((data) => {
-        const withId: BlogPost[] = data.map(
-          (item: Omit<BlogPost, "id">, index: number) => ({
-            ...item,
-            id: `blog-${index + 1}`,
-          })
-        );
-        const found = withId.find((p) => p.id === id); // aman sekarang
-
-        if (found) setPost(found);
+    if (!id) return;
+    setLoading(true);
+    fetch(`${API}/posts/${id}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Gagal fetch blog");
+        return res.json();
       })
-      .catch((err) => console.error("Failed to load post:", err));
+      .then((data) => {
+        setPost({
+          _id: data._id,
+          title: data.title || "",
+          category: data.category || "",
+          date: data.date || "",
+          image: data.image || null,
+          author: data.author || "",
+          authorImage: data.authorImage || null,
+          content: data.content || "",
+          tags: data.tags || [],
+        });
+      })
+      .catch((err) => console.error("Gagal memuat produk:", err))
+      .finally(() => setLoading(false));
   }, [id]);
 
-  if (!post) {
+  const handleSubmit = async () => {
+    if (!post) return;
+    try {
+      const form = new FormData();
+      form.append("title", post.title);
+      form.append("category", post.category);
+      form.append("date", post.date);
+      form.append("author", post.author);
+      form.append("content", post.content);
+      form.append("tags", JSON.stringify(post.tags));
+
+      if (post.image instanceof File) {
+        form.append("image", post.image);
+      }
+
+      if (post.authorImage instanceof File) {
+        form.append("authorImage", post.authorImage);
+      }
+
+      const res = await fetch(`${API}/posts/${id}`, {
+        method: "PUT",
+        body: form,
+      });
+
+      if (!res.ok) throw new Error("Gagal update post");
+
+      alert("Post berhasil diperbarui!");
+      navigate("/admin/posts");
+    } catch (err) {
+      console.error(err);
+      alert("Terjadi kesalahan saat update post");
+    }
+  };
+
+  if (loading || !post) {
     return (
       <DashboardLayout>
-        <div className="p-6 text-gray-600">Memuat data post...</div>
+        <div className="p-6 text-gray-600">Memuat data blog...</div>
       </DashboardLayout>
     );
   }
 
+  const handleChange = (
+    field: keyof BlogPost,
+    value: string | File | null | string[]
+  ) => {
+    setPost((prev) => (prev ? { ...prev, [field]: value } : prev));
+  };
+
   return (
     <DashboardLayout>
       {/* Breadcrumb */}
-      <div className="px-6 mt-2 mb-4 ml-2">
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Link
-            to="/admin/posts"
-            className="hover:underline hover:text-gray-800"
-          >
-            Blog
-          </Link>
-          <ChevronRight className="w-4 h-4" />
-          <span className="font-semibold text-gray-800">Edit</span>
-        </div>
-      </div>
+      <Breadcrumb
+        items={[{ label: "Blog", to: "/admin/posts" }, { label: "Edit" }]}
+      />
 
       {/* Title */}
       <div className="px-6 mb-6 ml-2">
@@ -82,62 +119,82 @@ export default function EditPostsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Kolom kiri */}
           <div className="space-y-6">
-            <div className="space-y-2">
-              <Label>Judul</Label>
-              <Input value={post.title} readOnly />
-            </div>
+            <InputField
+              id="title"
+              label="Judul"
+              value={post.title}
+              onChange={(value) => handleChange("title", value)}
+            />
 
-            <div className="space-y-2">
-              <Label>Kategori</Label>
-              <Select value={post.category} disabled>
-                <SelectTrigger className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="News">News</SelectItem>
-                  <SelectItem value="Recipes">Recipes</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            <SelectField
+              id="category"
+              label="Kategori"
+              required
+              value={post.category}
+              placeholder="Pilih kategori"
+              options={[
+                { value: "News", label: "News" },
+                { value: "Recipe", label: "Recipe" },
+              ]}
+              onChange={(v: string) => handleChange("category", v)}
+            />
 
-            <div className="space-y-2">
-              <Label>Tanggal</Label>
-              <Input type="date" value={post.date} readOnly />
-            </div>
+            <InputField
+              id="date"
+              label="Tanggal"
+              type="date"
+              value={post.date}
+              onChange={(value) => handleChange("date", value)}
+            />
 
-            <div className="space-y-2">
-              <Label>Tags</Label>
-              <Input value={post.tags.join(", ")} readOnly />
-            </div>
+            <InputField
+              id="tags"
+              label="Tags"
+              value={post.tags.join(", ")}
+              onChange={(value) => handleChange("tags", value.split(", "))}
+            />
+
+            <InputField
+              id="author"
+              label="Penulis"
+              value={post.author}
+              onChange={(value) => handleChange("author", value)}
+            />
           </div>
 
           {/* Kolom kanan */}
-          <div className="space-y-6">
-            <div className="space-y-2">
-              <Label>Konten</Label>
-              <Textarea value={post.content} readOnly />
-            </div>
 
-            <div className="space-y-2">
-              <Label>Gambar</Label>
-              <img
-                src={post.image}
-                alt="Preview"
-                className="w-64 h-auto rounded border"
-              />
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="content">Konten</Label>
+            <Textarea
+              id="content"
+              value={post.content}
+              onChange={(e) => handleChange("content", e.target.value)}
+              className="min-h-[160px] resize-none"
+            />
           </div>
+          <ImageUpload
+            _id="image"
+            label="Gambar Blog"
+            value={post.image}
+            onChange={(file) => handleChange("image", file)}
+          />
+
+          <ImageUpload
+            _id="authorImage"
+            label="Gambar Penulis"
+            value={post.authorImage}
+            onChange={(file) => handleChange("authorImage", file)}
+          />
         </div>
 
         {/* Tombol aksi (disabled untuk preview) */}
-        <div className="flex gap-4 pt-6 border-t">
-          <Button className="bg-gray-500 cursor-not-allowed" disabled>
-            Update (preview)
-          </Button>
-          <Link to="/admin/posts">
-            <Button variant="outline">Kembali</Button>
-          </Link>
-        </div>
+        <FormActions
+          onSubmit={handleSubmit}
+          onCancel={() => navigate("/admin/posts")}
+          submitLabel="Simpan Perubahan"
+          cancelLabel="Batal"
+        />
       </div>
     </DashboardLayout>
   );
