@@ -148,7 +148,6 @@ export default function CreateItemPage() {
           onSubmit={handleSubmit}
           onCancel={() => navigate("/admin/item")}
         />
-        ;
       </div>
     </DashboardLayout>
   );

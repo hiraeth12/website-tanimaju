@@ -5,6 +5,7 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { InputField } from "@/components/InputField";
 import { SelectField } from "@/components/SelectField";
 import { FormActions } from "@/components/FormActions";
+import { LoadingScreen } from "@/components/LoadingSpinner";
 
 type TanamanForm = {
   _id: string;
@@ -67,7 +68,7 @@ export default function EditTanamanPage() {
   if (loading || !formData) {
     return (
       <DashboardLayout>
-        <div className="p-6 text-gray-600">Memuat data tanaman...</div>
+        <LoadingScreen />
       </DashboardLayout>
     );
   }

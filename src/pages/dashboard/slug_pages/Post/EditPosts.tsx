@@ -8,6 +8,7 @@ import ImageUpload from "@/components/ImageUpload";
 import { FormActions } from "@/components/FormActions";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { LoadingScreen } from "@/components/LoadingSpinner";
 
 type BlogPost = {
   _id: string;
@@ -90,7 +91,7 @@ export default function EditPostsPage() {
   if (loading || !post) {
     return (
       <DashboardLayout>
-        <div className="p-6 text-gray-600">Memuat data blog...</div>
+        <LoadingScreen />
       </DashboardLayout>
     );
   }

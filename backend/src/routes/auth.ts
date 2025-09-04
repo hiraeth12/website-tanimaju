@@ -27,7 +27,8 @@ router.post("/login", async (req, res) => {
       { expiresIn: "1h" }
     );
 
-    res.json({
+    // kirim response sekali saja
+    return res.json({
       token,
       user: {
         id: user._id,
@@ -35,15 +36,13 @@ router.post("/login", async (req, res) => {
         email: user.email,
       },
     });
-
-    res.json({ token });
   } catch (err) {
-    res
-      .status(500)
-      .json({
-        error: err instanceof Error ? err.message : "An unknown error occurred",
-      });
+    console.error("Login error:", err);
+    return res.status(500).json({
+      error: err instanceof Error ? err.message : "An unknown error occurred",
+    });
   }
 });
+
 
 export default router;

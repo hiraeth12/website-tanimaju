@@ -5,6 +5,7 @@ import { ActionButtons } from "@/components/ActionButton";
 import { TableFooter } from "@/components/TableFooter";
 import { BibitTable } from "./BibitTable";
 import { Alert } from "@/components/Alert";
+import { ConfirmAlert } from "@/components/ConfirmAlert";
 
 interface BibitItem {
   _id: string;
@@ -26,6 +27,7 @@ export default function BibitPage() {
     title: string;
     message: string;
   } | null>(null);
+  const [confirmId, setConfirmId] = useState<string | null>(null);
 
   const fetchBibitData = async () => {
     setLoading(true);
@@ -61,10 +63,14 @@ export default function BibitPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Yakin ingin menghapus bibit ini?")) return;
+    setConfirmId(id); 
+  };
+
+  const confirmDelete = async () => {
+    if (!confirmId) return;
 
     try {
-      const res = await fetch(`${API_URL}/bibits/${id}`, {
+      const res = await fetch(`${API_URL}/bibits/${confirmId}`, {
         method: "DELETE",
       });
 
@@ -72,18 +78,18 @@ export default function BibitPage() {
 
       setAlert({
         variant: "success",
-        title: "Berhasil!",
-        message: "Bibit berhasil dihapus.",
+        title: "Berhasil",
+        message: "Bibit berhasil dihapus!",
       });
-
       fetchBibitData();
     } catch (err) {
-      console.error("Error deleting bibit:", err);
       setAlert({
         variant: "error",
-        title: "Gagal!",
-        message: "Terjadi kesalahan saat menghapus bibit.",
+        title: "Gagal",
+        message: "Terjadi kesalahan saat menghapus bibit",
       });
+    } finally {
+      setConfirmId(null); // tutup modal
     }
   };
 
@@ -95,7 +101,7 @@ export default function BibitPage() {
 
   return (
     <DashboardLayout>
-      <div className="px-6 py-4">
+      <div className="px-6 py-4 font-cascadia">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-3xl font-bold text-gray-800">Bibit</h1>
         </div>
@@ -120,12 +126,21 @@ export default function BibitPage() {
             <Alert
               variant={alert.variant}
               title={alert.title}
-              duration={5000} 
+              duration={5000}
               onClose={() => setAlert(null)}
             >
               {alert.message}
             </Alert>
           </div>
+        )}
+
+        {confirmId && (
+          <ConfirmAlert
+            title="Konfirmasi Hapus"
+            message="Yakin ingin menghapus bibit ini?"
+            onConfirm={confirmDelete}
+            onCancel={() => setConfirmId(null)}
+          />
         )}
 
         <BibitTable

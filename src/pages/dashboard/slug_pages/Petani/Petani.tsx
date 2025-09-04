@@ -6,6 +6,8 @@ import { SearchBar } from "@/components/SearchBarProps";
 import { ActionButtons } from "@/components/ActionButton";
 import PetaniTable from "./PetaniTable";
 import { TableFooter } from "@/components/TableFooter";
+import { Alert } from "@/components/Alert";
+import { ConfirmAlert } from "@/components/ConfirmAlert";
 
 interface PetaniItem {
   _id: string;
@@ -22,6 +24,12 @@ export default function PetaniPage() {
   const [loading, setLoading] = useState(false);
   const [perPage, setPerPage] = useState(10);
   const API_URL = import.meta.env.VITE_API_URL;
+  const [alert, setAlert] = useState<{
+    variant: "success" | "error";
+    title: string;
+    message: string;
+  } | null>(null);
+  const [confirmId, setConfirmId] = useState<string | null>(null);
 
   const fetchPetaniData = async () => {
     setLoading(true);
@@ -63,23 +71,33 @@ export default function PetaniPage() {
   );
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm("Yakin ingin menghapus data ini?")) return;
+    setConfirmId(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!confirmId) return;
 
     try {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/petanis/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
+      const res = await fetch(`${API_URL}/petanis/${confirmId}`, {
+        method: "DELETE",
+      });
 
-      if (!res.ok) throw new Error("Gagal menghapus data Petani !");
+      if (!res.ok) throw new Error("Gagal menghapus petani ");
 
-      setPetaniData((prev) => prev.filter((item) => item._id !== id));
-      alert("Data Petani berhasil dihapus!");
+      setAlert({
+        variant: "success",
+        title: "Berhasil",
+        message: "Data Petani berhasil dihapus!",
+      });
+      fetchPetaniData();
     } catch (err) {
-      console.error(err);
-      alert("Terjadi kesalahan saat menghapus data Petani");
+      setAlert({
+        variant: "error",
+        title: "Gagal",
+        message: "Terjadi kesalahan saat menghapus data petani",
+      });
+    } finally {
+      setConfirmId(null); 
     }
   };
 
@@ -106,6 +124,28 @@ export default function PetaniPage() {
             ]}
           />
         </div>
+
+        {alert && (
+          <div className="mb-4">
+            <Alert
+              variant={alert.variant}
+              title={alert.title}
+              duration={5000}
+              onClose={() => setAlert(null)}
+            >
+              {alert.message}
+            </Alert>
+          </div>
+        )}
+
+        {confirmId && (
+          <ConfirmAlert
+            title="Konfirmasi Hapus"
+            message="Yakin ingin menghapus data petani ini?"
+            onConfirm={confirmDelete}
+            onCancel={() => setConfirmId(null)}
+          />
+        )}
 
         <PetaniTable
           petaniData={petaniData}

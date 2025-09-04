@@ -7,12 +7,13 @@ import ImageUpload from "@/components/ImageUpload";
 import { FormActions } from "@/components/FormActions";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { LoadingScreen } from "@/components/LoadingSpinner";
 
 type ProductForm = {
   _id: string;
   title: string;
   price: string;
-  imageSrc: string | File | null; 
+  imageSrc: string | File | null;
   description: string;
   info: string;
   whatsappNumber: string;
@@ -38,7 +39,7 @@ export default function EditItemPage() {
           _id: data._id,
           title: data.title || "",
           price: data.price || "",
-          imageSrc: data.imageSrc || null, 
+          imageSrc: data.imageSrc || null,
           description: data.description || "",
           info: data.info || "",
           whatsappNumber: data.whatsappNumber || "",
@@ -48,7 +49,10 @@ export default function EditItemPage() {
       .finally(() => setLoading(false));
   }, [id]);
 
-  const handleChange = (field: keyof ProductForm, value: string | File | null) => {
+  const handleChange = (
+    field: keyof ProductForm,
+    value: string | File | null
+  ) => {
     setFormData((prev) => (prev ? { ...prev, [field]: value } : prev));
   };
 
@@ -86,26 +90,22 @@ export default function EditItemPage() {
   if (loading || !formData) {
     return (
       <DashboardLayout>
-        <div className="p-6 text-gray-600">Memuat data produk...</div>
+        <LoadingScreen />
       </DashboardLayout>
     );
   }
-
   return (
     <DashboardLayout>
       <Breadcrumb
         items={[{ label: "Item", to: "/admin/item" }, { label: "Edit" }]}
       />
 
-    
       <div className="px-6 mb-6 ml-2">
         <h1 className="text-3xl font-bold text-gray-900">Edit Produk</h1>
       </div>
 
-    
       <div className="bg-white rounded-lg shadow-sm p-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          
           <div className="space-y-6">
             <InputField
               id="title"
@@ -150,7 +150,7 @@ export default function EditItemPage() {
             <ImageUpload
               _id="imageSrc"
               label="Gambar Produk"
-              value={formData.imageSrc} 
+              value={formData.imageSrc}
               onChange={(file) => handleChange("imageSrc", file)}
             />
           </div>

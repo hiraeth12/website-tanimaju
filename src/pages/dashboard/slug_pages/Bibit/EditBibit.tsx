@@ -4,6 +4,7 @@ import { DashboardLayout } from "@/components/Layout/DashboardLayout";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { InputField } from "@/components/InputField";
 import { FormActions } from "@/components/FormActions";
+import { LoadingScreen } from "@/components/LoadingSpinner";
 
 type BibitForm = {
   _id: string;
@@ -74,7 +75,7 @@ export default function EditBibitPage() {
   if (loading || !formData) {
     return (
       <DashboardLayout>
-        <div className="p-6 text-gray-600">Memuat data tanaman...</div>
+        <LoadingScreen />
       </DashboardLayout>
     );
   }
