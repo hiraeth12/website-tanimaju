@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,6 +19,7 @@ type ProductForm = {
 
 export default function EditItemPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<ProductForm>({
     title: "",
     price: "",
@@ -27,25 +28,83 @@ export default function EditItemPage() {
     info: "",
     whatsappNumber: "",
   });
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  const [currentImageSrc, setCurrentImageSrc] = useState<string>('');
 
   useEffect(() => {
-    fetch("/data/product.json")
+    fetch(`${API_URL}/products/${id}`)
       .then((res) => res.json())
       .then((data) => {
-        const item = data.find((p: any) => p.id === id);
-        if (item) {
+        if (data) {
           setFormData({
-            ...item,
-            price: String(item.price),
-            imageSrc: item.imageSrc, // keep URL for preview
+            ...data,
+            price: String(data.price),
+            imageSrc: null, // Reset for new file upload
           });
+          setCurrentImageSrc(data.imageSrc || ''); // Keep current image for preview
         }
       })
       .catch((err) => console.error("Failed to fetch product:", err));
-  }, [id]);
+  }, [id, API_URL]);
 
   const handleChange = (field: keyof ProductForm, value: string | number) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = async () => {
+    try {
+      // Check if a new file was uploaded
+      if (formData.imageSrc instanceof File) {
+        // Use FormData for file upload
+        const formDataToSend = new FormData();
+        formDataToSend.append('title', formData.title);
+        formDataToSend.append('price', formData.price);
+        formDataToSend.append('imageSrc', formData.imageSrc);
+        formDataToSend.append('description', formData.description);
+        formDataToSend.append('info', formData.info);
+        formDataToSend.append('whatsappNumber', formData.whatsappNumber);
+
+        const response = await fetch(`${API_URL}/products/${id}`, {
+          method: 'PUT',
+          body: formDataToSend,
+        });
+
+        if (response.ok) {
+          alert('Produk berhasil diperbarui!');
+          navigate('/admin/item');
+        } else {
+          alert('Gagal memperbarui produk!');
+        }
+      } else {
+        // Use JSON for text-only updates
+        const updateData = {
+          title: formData.title,
+          price: Number(formData.price),
+          description: formData.description,
+          info: formData.info,
+          whatsappNumber: formData.whatsappNumber
+        };
+
+        const response = await fetch(`${API_URL}/products/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updateData),
+        });
+
+        if (response.ok) {
+          alert('Produk berhasil diperbarui!');
+          navigate('/admin/item');
+        } else {
+          alert('Gagal memperbarui produk!');
+        }
+      }
+    } catch (error) {
+      console.error('Error updating product:', error);
+      alert('Terjadi kesalahan saat memperbarui produk!');
+    }
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -158,19 +217,35 @@ export default function EditItemPage() {
                     </p>
                   </div>
                 </label>
-                {typeof formData.imageSrc === "string" && (
-                  <p className="mt-2 text-sm text-gray-600">
+                
+                {/* Display current image if no new file selected */}
+                {!formData.imageSrc && currentImageSrc && (
+                  <div className="mt-4">
+                    <p className="text-sm text-gray-600 mb-2">Gambar saat ini:</p>
                     <img
-                      src={formData.imageSrc}
-                      alt="preview"
-                      className="w-32 h-32 object-cover mx-auto mt-2 rounded"
+                      src={currentImageSrc.startsWith('/uploads') ? `${API_URL.replace('/api', '')}${currentImageSrc}` : currentImageSrc}
+                      alt="Current product"
+                      className="w-32 h-32 object-cover mx-auto rounded"
+                      onError={(e) => {
+                        e.currentTarget.src = '/images/product-placeholder-5.jpg';
+                      }}
                     />
-                  </p>
+                  </div>
                 )}
+                
+                {/* Display preview of new uploaded file */}
                 {formData.imageSrc instanceof File && (
-                  <p className="mt-2 text-sm text-gray-600">
-                    Terpilih: {formData.imageSrc.name}
-                  </p>
+                  <div className="mt-4">
+                    <p className="text-sm text-gray-600 mb-2">Gambar baru:</p>
+                    <img
+                      src={URL.createObjectURL(formData.imageSrc)}
+                      alt="New preview"
+                      className="w-32 h-32 object-cover mx-auto rounded"
+                    />
+                    <p className="mt-2 text-sm text-gray-500">
+                      {formData.imageSrc.name}
+                    </p>
+                  </div>
                 )}
               </div>
             </div>
@@ -179,12 +254,17 @@ export default function EditItemPage() {
 
         {/* Tombol Aksi */}
         <div className="flex gap-4 mt-8 pt-6 border-t">
-          <Button className="bg-green-600 hover:bg-green-700 text-white px-6">
+          <Button 
+            className="bg-green-600 hover:bg-green-700 text-white px-6"
+            onClick={handleSubmit}
+          >
             Simpan Perubahan
           </Button>
-          <Button variant="outline" className="px-6">
-            Cancel
-          </Button>
+          <Link to="/admin/item">
+            <Button variant="outline" className="px-6">
+              Cancel
+            </Button>
+          </Link>
         </div>
       </div>
     </DashboardLayout>

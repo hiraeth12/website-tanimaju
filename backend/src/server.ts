@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
+import path from "path";
 
 dotenv.config();
 
@@ -9,11 +10,14 @@ const app = express();
 
 // === Middleware ===
 app.use(cors({
-  origin: "http://localhost:5173", // izinkan frontend dev
+  origin: ["http://localhost:5173", "http://localhost:5174"], // izinkan frontend dev dari kedua port
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
 app.use(express.json());
+
+// Serve static files from uploads directory
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 // === Routes ===
 import bibitRoutes from "./routes/bibitRoutes.js";

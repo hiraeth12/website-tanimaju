@@ -10,11 +10,12 @@ import {
 import { ProductDialog } from "@/pages/home/ProductDialog";
 
 interface Product {
-  id: string;
+  _id?: string;
+  id?: string;
   title: string;
   price: number;
   imageSrc: string;
-  sku: string;
+  sku?: string;
   description: string;
   info: string;
 }
@@ -25,6 +26,11 @@ export function ProductCarousel() {
   const [openDialogId, setOpenDialogId] = useState<string | null>(null);
 
   const API_URL = import.meta.env.VITE_API_URL; 
+
+  // Helper function to get unique id
+  const getProductId = (product: Product): string => {
+    return product.id || product._id || '';
+  }; 
 
   useEffect(() => {
     fetch(`${API_URL}/products`)
@@ -59,33 +65,38 @@ export function ProductCarousel() {
     <div className="relative w-full mx-auto">
       <Carousel className="w-full touch-pan-x">
         <CarouselContent>
-          {products.map((product) => (
-            <CarouselItem
-              key={product.id}
-              className="basis-full sm:basis-1/2 lg:basis-1/3"
-            >
-              <div className="p-4">
-                <ProductDialog
-                  open={openDialogId === product.id}
-                  onOpenChange={(open) =>
-                    setOpenDialogId(open ? product.id : null)
-                  }
-                  title={product.title}
-                  price={product.price}
-                  sku={product.sku}
-                  imageSrc={product.imageSrc}
-                  description={product.description}
-                  info={product.info}
-                />
-                <Card
-                  onClick={() => setOpenDialogId(product.id)}
-                  className="overflow-hidden group relative cursor-pointer"
-                >
+          {products.map((product) => {
+            const productId = getProductId(product);
+            return (
+              <CarouselItem
+                key={productId}
+                className="basis-full sm:basis-1/2 lg:basis-1/3"
+              >
+                <div className="p-4">
+                  <ProductDialog
+                    open={openDialogId === productId}
+                    onOpenChange={(open) =>
+                      setOpenDialogId(open ? productId : null)
+                    }
+                    title={product.title}
+                    price={product.price}
+                    sku={product.sku || ''}
+                    imageSrc={product.imageSrc}
+                    description={product.description}
+                    info={product.info}
+                  />
+                  <Card
+                    onClick={() => setOpenDialogId(productId)}
+                    className="overflow-hidden group relative cursor-pointer"
+                  >
                   <CardContent className="p-0 relative">
                     <img
-                      src={product.imageSrc}
+                      src={product.imageSrc?.startsWith('/uploads') ? `${import.meta.env.VITE_API_URL.replace('/api', '')}${product.imageSrc}` : product.imageSrc}
                       alt={product.title}
                       className="w-full h-full object-cover aspect-square transition-transform duration-500 ease-in-out group-hover:scale-110"
+                      onError={(e) => {
+                        e.currentTarget.src = '/images/product-placeholder-5.jpg';
+                      }}
                     />
                     <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <span className="text-white text-lg font-semibold font-body">
@@ -104,7 +115,8 @@ export function ProductCarousel() {
                 </div>
               </div>
             </CarouselItem>
-          ))}
+            );
+          })}
         </CarouselContent>
 
         {/* Panah hanya tampil di desktop */}

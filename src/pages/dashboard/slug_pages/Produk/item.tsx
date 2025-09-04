@@ -24,6 +24,7 @@ import { Search, ChevronDown, ChevronRight, Copy } from "lucide-react";
 import { DashboardLayout } from "@/components/Layout/DashboardLayout";
 
 interface ProductItem {
+  _id: string;
   id: string;
   title: string;
   price: number;
@@ -45,10 +46,30 @@ export default function ItemPage() {
       .then((data) => setProductData(data))
       .catch((err) => console.error("Failed to load product data:", err));
   }, []);
+
+  const handleDelete = async (id: string) => {
+    if (confirm("Apakah Anda yakin ingin menghapus produk ini?")) {
+      try {
+        const response = await fetch(`${API_URL}/products/${id}`, {
+          method: "DELETE",
+        });
+
+        if (response.ok) {
+          setProductData(prev => prev.filter(item => item._id !== id));
+          alert("Produk berhasil dihapus!");
+        } else {
+          alert("Gagal menghapus produk!");
+        }
+      } catch (error) {
+        console.error("Error deleting product:", error);
+        alert("Terjadi kesalahan saat menghapus produk!");
+      }
+    }
+  };
   
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedRows(productData.map((item) => item.id));
+      setSelectedRows(productData.map((item) => item._id));
     } else {
       setSelectedRows([]);
     }
@@ -140,20 +161,23 @@ export default function ItemPage() {
             </TableHeader>
             <TableBody>
               {filteredData.map((item) => (
-                <TableRow key={item.id} className="hover:bg-gray-50">
+                <TableRow key={item._id} className="hover:bg-gray-50">
                   <TableCell>
                     <Checkbox
-                      checked={selectedRows.includes(item.id)}
+                      checked={selectedRows.includes(item._id)}
                       onCheckedChange={(checked) =>
-                        handleSelectRow(item.id, checked as boolean)
+                        handleSelectRow(item._id, checked as boolean)
                       }
                     />
                   </TableCell>
                   <TableCell>
                     <img
-                      src={item.imageSrc}
+                      src={item.imageSrc?.startsWith('/uploads') ? `${import.meta.env.VITE_API_URL.replace('/api', '')}${item.imageSrc}` : item.imageSrc}
                       alt={item.title}
                       className="w-12 h-12 object-cover rounded-md"
+                      onError={(e) => {
+                        e.currentTarget.src = '/images/product-placeholder-5.jpg';
+                      }}
                     />
                   </TableCell>
                   <TableCell className="font-medium text-gray-800">
@@ -179,12 +203,16 @@ export default function ItemPage() {
 
                   <TableCell>
                     <div className="flex gap-2">
-                      <Link to={`/admin/item/edit/${item.id}`}>
+                      <Link to={`/admin/item/edit/${item._id}`}>
                         <Button variant="outline" size="sm">
                           Edit
                         </Button>
                       </Link>
-                      <Button variant="destructive" size="sm">
+                      <Button 
+                        variant="destructive" 
+                        size="sm"
+                        onClick={() => handleDelete(item._id)}
+                      >
                         Hapus
                       </Button>
                     </div>

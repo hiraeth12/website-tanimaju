@@ -1,76 +1,134 @@
-// File: src/pages/dashboard/slug_pages/Produk/EditPetaniPage.tsx
+// File: src/pages/dashboard/slug_pages/Petani/EditPetani.tsx
 
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { DashboardLayout } from "@/components/Layout/DashboardLayout";
 import { Link } from "react-router-dom";
 
-type ProductForm = {
-  id: string;
-  title: string;
-  address: string;
-  whatsappNumber: string;
-  imageSrc: File | null;
+// Tipe untuk data form petani
+type PetaniForm = {
+  nama: string;
+  alamat: string;
+  nomorKontak: string;
+  foto: string | File | null;
+  currentFoto?: string; // To store current image URL
 };
 
 export default function EditPetaniPage() {
-  const { id } = useParams(); // misal id: petani-1
-  const [formData, setFormData] = useState<ProductForm | null>(null);
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState<PetaniForm>({
+    nama: "",
+    alamat: "",
+    nomorKontak: "",
+    foto: null,
+    currentFoto: "",
+  });
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    fetch("/data/petani.json")
+    fetch(`${API_URL}/petanis/${id}`)
       .then((res) => res.json())
-      .then((data: any[]) => {
-        const withIds = data.map((item, index) => ({
-          id: `petani-${index + 1}`,
-          title: item.nama,
-          address: item.alamat,
-          whatsappNumber: item.nomorKontak,
-          imageSrc: null, // Untuk upload baru (jika diperlukan)
-        }));
-
-        const found = withIds.find((item) => item.id === id);
-        if (found) {
-          setFormData(found);
-        } else {
-          console.warn("Petani tidak ditemukan");
+      .then((data) => {
+        if (data) {
+          setFormData({
+            nama: data.nama,
+            alamat: data.alamat,
+            nomorKontak: data.nomorKontak,
+            foto: null, // Reset foto to null for new uploads
+            currentFoto: data.foto, // Store current image URL
+          });
         }
       })
-      .catch((err) => console.error("Gagal memuat data petani:", err));
-  }, [id]);
+      .catch((err) => console.error("Failed to fetch petani:", err));
+  }, [id, API_URL]);
 
-  const handleChange = (field: keyof ProductForm, value: string | File | null) => {
-    if (!formData) return;
-    setFormData((prev) => prev ? { ...prev, [field]: value } : null);
+  // Fungsi untuk handle perubahan input teks
+  const handleInputChange = (field: keyof PetaniForm, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Fungsi untuk handle upload file
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) handleChange("imageSrc", file);
+    if (file) {
+      setFormData((prev) => ({ ...prev, foto: file }));
+    }
   };
 
-  const handleDragOver = (event: React.DragEvent) => event.preventDefault();
+  // Fungsi untuk handle drag over
+  const handleDragOver = (event: React.DragEvent) => {
+    event.preventDefault();
+  };
 
+  // Fungsi untuk handle drop file
   const handleDrop = (event: React.DragEvent) => {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
-    if (file) handleChange("imageSrc", file);
+    if (file && file.type.startsWith('image/')) {
+      setFormData((prev) => ({ ...prev, foto: file }));
+    }
   };
 
-  if (!formData) {
-    return (
-      <DashboardLayout>
-        <div className="p-6">Memuat data petani...</div>
-      </DashboardLayout>
-    );
-  }
+  const handleSubmit = async () => {
+    try {
+      // If there's a new file upload, use FormData, otherwise use JSON
+      if (formData.foto instanceof File) {
+        const formDataToSend = new FormData();
+        formDataToSend.append('nama', formData.nama);
+        formDataToSend.append('alamat', formData.alamat);
+        formDataToSend.append('nomorKontak', formData.nomorKontak);
+        formDataToSend.append('foto', formData.foto);
+
+        const response = await fetch(`${API_URL}/petanis/${id}`, {
+          method: 'PUT',
+          body: formDataToSend, // Use FormData for file upload
+        });
+
+        if (response.ok) {
+          alert('Petani berhasil diperbarui!');
+          navigate('/admin/petani');
+        } else {
+          alert('Gagal memperbarui petani!');
+        }
+      } else {
+        // No new file, just update text fields and keep current foto
+        const updateData = {
+          nama: formData.nama,
+          alamat: formData.alamat,
+          nomorKontak: formData.nomorKontak,
+          foto: formData.currentFoto, // Keep current foto
+        };
+
+        const response = await fetch(`${API_URL}/petanis/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updateData),
+        });
+
+        if (response.ok) {
+          alert('Petani berhasil diperbarui!');
+          navigate('/admin/petani');
+        } else {
+          alert('Gagal memperbarui petani!');
+        }
+      }
+    } catch (error) {
+      console.error('Error updating petani:', error);
+      alert('Terjadi kesalahan saat memperbarui petani!');
+    }
+  };
 
   return (
     <DashboardLayout>
+      {/* Breadcrumb */}
       <div className="px-6 mt-2 mb-4 ml-2">
         <div className="flex items-center gap-2 text-sm text-gray-600">
           <Link to="/admin/petani" className="hover:underline hover:text-gray-800 transition">
@@ -81,45 +139,70 @@ export default function EditPetaniPage() {
         </div>
       </div>
 
+      {/* Title */}
       <div className="px-6 mb-6 ml-2">
         <h1 className="text-3xl font-bold text-gray-900">Edit Petani</h1>
       </div>
 
+      {/* Form */}
       <div className="bg-white rounded-lg shadow-sm p-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Kolom Kiri */}
           <div className="space-y-6">
+            {/* Nama Petani */}
             <div className="space-y-2">
-              <Label htmlFor="title">Nama Petani</Label>
-              <Input
-                id="title"
-                value={formData.title}
-                onChange={(e) => handleChange("title", e.target.value)}
+              <Label htmlFor="nama">Nama Petani</Label>
+              <Input 
+                id="nama" 
+                value={formData.nama} 
+                onChange={(e) => handleInputChange("nama", e.target.value)} 
+                placeholder="Masukkan nama petani"
               />
             </div>
 
+            {/* Nomor Kontak */}
             <div className="space-y-2">
-              <Label htmlFor="address">Alamat Petani</Label>
-              <Input
-                id="address"
-                value={formData.address}
-                onChange={(e) => handleChange("address", e.target.value)}
+              <Label htmlFor="nomorKontak">Nomor Kontak</Label>
+              <Input 
+                id="nomorKontak" 
+                value={formData.nomorKontak} 
+                onChange={(e) => handleInputChange("nomorKontak", e.target.value)} 
+                placeholder="Masukkan nomor kontak"
               />
             </div>
           </div>
 
+          {/* Kolom Kanan */}
           <div className="space-y-6">
+            {/* Alamat */}
             <div className="space-y-2">
-              <Label htmlFor="whatsappNumber">Nomor WhatsApp</Label>
-              <Input
-                id="whatsappNumber"
-                type="tel"
-                value={formData.whatsappNumber}
-                onChange={(e) => handleChange("whatsappNumber", e.target.value)}
+              <Label htmlFor="alamat">Alamat</Label>
+              <Textarea
+                id="alamat"
+                value={formData.alamat}
+                onChange={(e) => handleInputChange("alamat", e.target.value)}
+                className="min-h-[120px] resize-none"
+                placeholder="Masukkan alamat lengkap"
               />
             </div>
 
+            {/* Upload Foto */}
             <div className="space-y-2">
-              <Label htmlFor="imageSrc">Gambar Petani</Label>
+              <Label htmlFor="foto">Foto Petani</Label>
+              
+              {/* Display current image if exists */}
+              {formData.currentFoto && !formData.foto && (
+                <div className="mb-4">
+                  <p className="text-sm text-gray-600 mb-2">Foto saat ini:</p>
+                  <img
+                    src={formData.currentFoto?.startsWith('/uploads') ? `${API_URL.replace('/api', '')}${formData.currentFoto}` : formData.currentFoto}
+                    alt="Foto petani saat ini"
+                    className="w-32 h-32 object-cover rounded-md border"
+                  />
+                </div>
+              )}
+
+              {/* Drag & Drop Upload Area */}
               <div
                 className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400"
                 onDragOver={handleDragOver}
@@ -127,32 +210,52 @@ export default function EditPetaniPage() {
               >
                 <input
                   type="file"
-                  id="imageSrc"
+                  id="foto"
                   className="hidden"
                   accept="image/*"
-                  onChange={handleFileUpload}
+                  onChange={handleFileChange}
                 />
-                <label htmlFor="imageSrc" className="cursor-pointer text-gray-600">
-                  Drag & Drop atau{" "}
-                  <span className="text-blue-600 font-semibold">Browse</span>
+                <label htmlFor="foto" className="cursor-pointer">
+                  <div className="text-gray-500">
+                    <p>
+                      Drag & Drop atau{" "}
+                      <span className="text-blue-600 font-semibold">
+                        Browse
+                      </span>
+                    </p>
+                    <p className="text-sm mt-1">untuk mengganti foto</p>
+                  </div>
                 </label>
-                {formData.imageSrc && (
-                  <p className="mt-2 text-sm text-gray-600">
-                    Terpilih: {formData.imageSrc.name}
-                  </p>
+                {formData.foto && formData.foto instanceof File && (
+                  <div className="mt-4">
+                    <p className="text-sm text-green-600 mb-2">
+                      File baru dipilih: {formData.foto.name}
+                    </p>
+                    <img
+                      src={URL.createObjectURL(formData.foto)}
+                      alt="Preview foto baru"
+                      className="w-32 h-32 object-cover rounded-md border mx-auto"
+                    />
+                  </div>
                 )}
               </div>
             </div>
           </div>
         </div>
 
+        {/* Tombol Aksi */}
         <div className="flex gap-4 mt-8 pt-6 border-t">
-          <Button className="bg-green-600 hover:bg-green-700 text-white px-6">
-            Simpan
+          <Button 
+            className="bg-green-600 hover:bg-green-700 text-white px-6"
+            onClick={handleSubmit}
+          >
+            Simpan Perubahan
           </Button>
-          <Button variant="outline" className="px-6">
-            Batal
-          </Button>
+          <Link to="/admin/petani">
+            <Button variant="outline" className="px-6">
+              Cancel
+            </Button>
+          </Link>
         </div>
       </div>
     </DashboardLayout>

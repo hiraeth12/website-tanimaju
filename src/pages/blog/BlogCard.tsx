@@ -32,9 +32,12 @@ export default function BlogCard({
       <div className="aspect-[16/9] overflow-hidden items-center relative">
         <Link to={`/blog/${slug}`} className="block w-full h-full">
           <img
-            src={image}
+            src={image?.startsWith('/uploads') ? `${import.meta.env.VITE_API_URL.replace('/api', '')}${image}` : image}
             alt={title}
             className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+            onError={(e) => {
+              e.currentTarget.src = '/images/blog/blog-placeholder-1.jpg';
+            }}
           />
         </Link>
       </div>

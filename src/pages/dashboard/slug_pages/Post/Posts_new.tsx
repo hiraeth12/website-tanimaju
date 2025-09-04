@@ -159,12 +159,9 @@ export default function PostsPage() {
 
                   <TableCell>
                     <img
-                      src={item.image?.startsWith('/uploads') ? `${import.meta.env.VITE_API_URL.replace('/api', '')}${item.image}` : item.image}
+                      src={item.image}
                       alt={item.title}
                       className="w-16 h-12 object-cover rounded-md"
-                      onError={(e) => {
-                        e.currentTarget.src = '/images/blog/post-placeholder-1.jpg';
-                      }}
                     />
                   </TableCell>
 

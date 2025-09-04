@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { DashboardLayout } from "@/components/Layout/DashboardLayout";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // Tipe untuk data form produk
 type ProductForm = {
@@ -21,6 +21,7 @@ type ProductForm = {
 };
 
 export default function CreateItemPage() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<ProductForm>({
     title: "",
     price: "",
@@ -29,6 +30,7 @@ export default function CreateItemPage() {
     info: "",
     whatsappNumber: "",
   });
+  const API_URL = import.meta.env.VITE_API_URL;
 
   // Fungsi generik untuk menangani perubahan pada input teks dan textarea
   const handleChange = (
@@ -52,6 +54,36 @@ export default function CreateItemPage() {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
     if (file) setFormData((prev) => ({ ...prev, imageSrc: file }));
+  };
+
+  // Fungsi untuk submit form
+  const handleSubmit = async () => {
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append('title', formData.title);
+      formDataToSend.append('price', formData.price);
+      formDataToSend.append('description', formData.description);
+      formDataToSend.append('info', formData.info);
+      formDataToSend.append('whatsappNumber', formData.whatsappNumber);
+      if (formData.imageSrc) {
+        formDataToSend.append('imageSrc', formData.imageSrc);
+      }
+
+      const response = await fetch(`${API_URL}/products`, {
+        method: 'POST',
+        body: formDataToSend, // Menggunakan FormData untuk upload file
+      });
+
+      if (response.ok) {
+        alert('Produk berhasil dibuat!');
+        navigate('/admin/item');
+      } else {
+        alert('Gagal membuat produk!');
+      }
+    } catch (error) {
+      console.error('Error creating product:', error);
+      alert('Terjadi kesalahan saat membuat produk!');
+    }
   };
 
   return (
@@ -157,15 +189,35 @@ export default function CreateItemPage() {
 
         {/* Tombol Aksi */}
         <div className="flex gap-4 mt-8 pt-6 border-t">
-          <Button className="bg-green-600 hover:bg-green-700 text-white px-6">
+          <Button 
+            className="bg-green-600 hover:bg-green-700 text-white px-6"
+            onClick={handleSubmit}
+          >
             Create
           </Button>
-          <Button variant="outline" className="px-6">
+          <Button 
+            variant="outline" 
+            className="px-6"
+            onClick={() => {
+              handleSubmit();
+              // Reset form untuk create another
+              setFormData({
+                title: "",
+                price: "",
+                imageSrc: null,
+                description: "",
+                info: "",
+                whatsappNumber: "",
+              });
+            }}
+          >
             Create & create another
           </Button>
-          <Button variant="outline" className="px-6">
-            Cancel
-          </Button>
+          <Link to="/admin/item">
+            <Button variant="outline" className="px-6">
+              Cancel
+            </Button>
+          </Link>
         </div>
       </div>
     </DashboardLayout>

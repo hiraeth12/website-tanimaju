@@ -45,9 +45,12 @@ export default function ProductDialog({
         <div className="flex flex-col md:flex-row gap-6 mt-4">
           <div className="w-full md:w-1/2 aspect-square rounded-md overflow-hidden">
             <img
-              src={imageSrc}
+              src={imageSrc?.startsWith('/uploads') ? `${import.meta.env.VITE_API_URL.replace('/api', '')}${imageSrc}` : imageSrc}
               alt={title}
               className="w-full h-full object-cover"
+              onError={(e) => {
+                e.currentTarget.src = '/images/product-placeholder-5.jpg';
+              }}
             />
           </div>
           <div className="flex-1 flex flex-col justify-between">

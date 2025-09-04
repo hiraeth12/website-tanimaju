@@ -32,15 +32,25 @@ const MapSection = () => {
     });
 
     map.on("load", () => {
-
       map.resize();
+    });
+
+    // Handle any potential media errors in Mapbox
+    map.on("error", (e) => {
+      console.debug("Mapbox error handled:", e);
     });
 
     new Marker({ color: "#16A34A" })
       .setLngLat([107.75, -7.04])
       .addTo(map);
 
-    return () => map.remove();
+    return () => {
+      try {
+        map.remove();
+      } catch (error) {
+        console.debug("Map cleanup error handled:", error);
+      }
+    };
   }, []); 
 
   return (

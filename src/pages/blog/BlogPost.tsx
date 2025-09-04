@@ -29,7 +29,7 @@ const BlogPost: React.FC = () => {
 
   useEffect(() => {
     setIsLoaded(false);
-    fetch("/data/post.json")
+    fetch(`${import.meta.env.VITE_API_URL}/posts`)
       .then((res) => res.json())
       .then((posts: Post[]) => {
         const foundPost = posts
@@ -66,9 +66,12 @@ const BlogPost: React.FC = () => {
                   <div className="flex-1">
                     <div className="relative w-full mb-6 rounded-lg overflow-hidden aspect-video">
                       <img
-                        src={post.image}
+                        src={post.image?.startsWith('/uploads') ? `${import.meta.env.VITE_API_URL.replace('/api', '')}${post.image}` : post.image}
                         alt={post.title}
                         className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.currentTarget.src = '/images/blog/blog-placeholder-1.jpg';
+                        }}
                       />
                     </div>
 

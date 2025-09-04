@@ -26,8 +26,8 @@ const Tanaman = lazy(() => import("@/pages/dashboard/slug_pages/Tanaman/Tanaman"
 const CreateTanaman = lazy(() => import("@/pages/dashboard/slug_pages/Tanaman/CreateTanaman"));
 const EditTanaman = lazy(() => import("@/pages/dashboard/slug_pages/Tanaman/EditTanaman"));
 const Posts = lazy(() => import("@/pages/dashboard/slug_pages/Post/Posts"));
-const CreatePosts = lazy(() => import("@/pages/dashboard/slug_pages/Post/CreatePosts"));
-const EditPosts = lazy(() => import("@/pages/dashboard/slug_pages/Post/EditPosts"));
+const CreatePost = lazy(() => import("@/pages/dashboard/slug_pages/Post/CreatePost"));
+const EditPost = lazy(() => import("@/pages/dashboard/slug_pages/Post/EditPost"));
 const Login = lazy(() => import("@/pages/Login"));
 // You can create a more sophisticated loading component if you like
 const LoadingSpinner = () => <div>Loading...</div>;
@@ -60,8 +60,8 @@ function App() {
           <Route path="/admin/tanaman/create" element={<CreateTanaman />} />
           <Route path="/admin/tanaman/edit/:id" element={<EditTanaman />} />
           <Route path="/admin/posts" element={<Posts />} />
-          <Route path="/admin/posts/create" element={<CreatePosts />} />
-          <Route path="/admin/posts/edit/:id" element={<EditPosts />} />
+          <Route path="/admin/posts/create" element={<CreatePost />} />
+          <Route path="/admin/posts/edit/:id" element={<EditPost />} />
           {/* Catch-all route for 404 Not Found */}
           <Route path="*" element={<NotFound />} />
           <Route path="/login" element={<Login />} />

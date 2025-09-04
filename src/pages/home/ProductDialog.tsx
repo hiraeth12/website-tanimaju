@@ -34,9 +34,12 @@ export function ProductDialog({
           {/* Gambar Produk */}
           <div className="relative w-full h-full max-h-[400px] md:max-h-none overflow-hidden">
             <img
-              src={imageSrc}
+              src={imageSrc?.startsWith('/uploads') ? `${import.meta.env.VITE_API_URL.replace('/api', '')}${imageSrc}` : imageSrc}
               alt={title}
               className="w-full h-full object-cover"
+              onError={(e) => {
+                e.currentTarget.src = '/images/product-placeholder-5.jpg';
+              }}
             />
           </div>
 

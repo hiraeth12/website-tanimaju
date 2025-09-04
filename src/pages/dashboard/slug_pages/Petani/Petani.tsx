@@ -1,4 +1,4 @@
-// src/pages/dashboard/item/ItemPage.tsx
+// src/pages/dashboard/petani/PetaniPage.tsx
 
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -24,7 +24,7 @@ import { Search, ChevronDown, ChevronRight, Copy } from "lucide-react";
 import { DashboardLayout } from "@/components/Layout/DashboardLayout";
 
 interface PetaniItem {
-  id: string;
+  _id: string;
   nama: string;
   nomorKontak: string;
   foto: string;
@@ -41,21 +41,34 @@ export default function PetaniPage() {
     fetch(`${API_URL}/petanis`)
       .then((res) => res.json())
       .then((data) => {
-        // Tambahkan id unik berdasarkan index
-        const withIds = data.map(
-          (item: Omit<PetaniItem, "id">, index: number) => ({
-            ...item,
-            id: `petani-${index + 1}`,
-          })
-        );
-        setPetaniData(withIds);
+        setPetaniData(data);
       })
       .catch((err) => console.error("Failed to load petani data:", err));
-  }, []);
+  }, [API_URL]);
 
+  const handleDelete = async (id: string) => {
+    if (confirm("Apakah Anda yakin ingin menghapus petani ini?")) {
+      try {
+        const response = await fetch(`${API_URL}/petanis/${id}`, {
+          method: "DELETE",
+        });
+
+        if (response.ok) {
+          setPetaniData(prev => prev.filter(item => item._id !== id));
+          alert("Petani berhasil dihapus!");
+        } else {
+          alert("Gagal menghapus petani!");
+        }
+      } catch (error) {
+        console.error("Error deleting petani:", error);
+        alert("Terjadi kesalahan saat menghapus petani!");
+      }
+    }
+  };
+  
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedRows(petaniData.map((item) => item.id));
+      setSelectedRows(petaniData.map((item) => item._id));
     } else {
       setSelectedRows([]);
     }
@@ -134,12 +147,12 @@ export default function PetaniPage() {
             </TableHeader>
             <TableBody>
               {filteredData.map((item) => (
-                <TableRow key={item.id} className="hover:bg-gray-50">
+                <TableRow key={item._id} className="hover:bg-gray-50">
                   <TableCell>
                     <Checkbox
-                      checked={selectedRows.includes(item.id)}
+                      checked={selectedRows.includes(item._id)}
                       onCheckedChange={(checked) =>
-                        handleSelectRow(item.id, checked as boolean)
+                        handleSelectRow(item._id, checked as boolean)
                       }
                     />
                   </TableCell>
@@ -167,20 +180,27 @@ export default function PetaniPage() {
 
                   <TableCell>
                     <img
-                      src={item.foto}
+                      src={item.foto?.startsWith('/uploads') ? `${import.meta.env.VITE_API_URL.replace('/api', '')}${item.foto}` : item.foto}
                       alt={item.nama}
                       className="w-12 h-12 object-cover rounded-md"
+                      onError={(e) => {
+                        e.currentTarget.src = '/images/petani/petani-placeholder.jpg';
+                      }}
                     />
                   </TableCell>
 
                   <TableCell>
                     <div className="flex gap-2">
-                      <Link to={`/admin/petani/edit/${item.id}`}>
+                      <Link to={`/admin/petani/edit/${item._id}`}>
                         <Button variant="outline" size="sm">
                           Edit
                         </Button>
                       </Link>
-                      <Button variant="destructive" size="sm">
+                      <Button 
+                        variant="destructive" 
+                        size="sm"
+                        onClick={() => handleDelete(item._id)}
+                      >
                         Hapus
                       </Button>
                     </div>
