@@ -10,8 +10,8 @@ type FormActionsProps = {
 export function FormActions({
   onSubmit,
   onCancel,
-  submitLabel = "Create",
-  cancelLabel = "Cancel",
+  submitLabel = "Buat",
+  cancelLabel = "Batal",
 }: FormActionsProps) {
   return (
     <div className="flex gap-4 mt-8 pt-6 border-t">

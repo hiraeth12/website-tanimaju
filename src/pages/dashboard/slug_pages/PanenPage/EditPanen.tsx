@@ -5,6 +5,7 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { InputField } from "@/components/InputField";
 import { SelectField } from "@/components/SelectField";
 import { FormActions } from "@/components/FormActions";
+import { LoadingScreen } from "@/components/LoadingSpinner";
 
 interface HarvestItem {
   _id: string;
@@ -101,7 +102,13 @@ export default function EditPanenPage() {
     }
   };
 
-  if (loading || !data) return <div className="p-6">Loading...</div>;
+  if (loading || !data) {
+    return (
+      <DashboardLayout>
+        <LoadingScreen />
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout>

@@ -142,7 +142,7 @@ export default function EditPetaniPage() {
 
         <FormActions
           onSubmit={handleSubmit}
-          onCancel={() => navigate("/admin/item")}
+          onCancel={() => navigate("/admin/petani")}
           submitLabel="Simpan Perubahan"
           cancelLabel="Batal"
         />

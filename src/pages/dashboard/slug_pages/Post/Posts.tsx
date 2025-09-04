@@ -4,6 +4,8 @@ import { SearchBar } from "@/components/SearchBarProps";
 import { ActionButtons } from "@/components/ActionButton";
 import { TableFooter } from "@/components/TableFooter";
 import BlogTable from "./PostTable";
+import { Alert } from "@/components/Alert";
+import { ConfirmAlert } from "@/components/ConfirmAlert";
 
 interface BlogPost {
   _id: string;
@@ -22,6 +24,12 @@ export default function PostsPage() {
   const API_URL = import.meta.env.VITE_API_URL;
   const [loading, setLoading] = useState(false);
   const [perPage, setPerPage] = useState(10);
+  const [alert, setAlert] = useState<{
+    variant: "success" | "error";
+    title: string;
+    message: string;
+  } | null>(null);
+  const [confirmId, setConfirmId] = useState<string | null>(null);
 
   const fetchBlogData = async () => {
     setLoading(true);
@@ -63,20 +71,33 @@ export default function PostsPage() {
   );
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm("Yakin ingin menghapus data ini?")) return;
+    setConfirmId(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!confirmId) return;
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/posts/${id}`, {
+      const res = await fetch(`${API_URL}/posts/${confirmId}`, {
         method: "DELETE",
       });
 
-      if (!res.ok) throw new Error("Gagal menghapus data Post !");
+      if (!res.ok) throw new Error("Gagal menghapus post");
 
-      setBlogData((prev) => prev.filter((item) => item._id !== id));
-      alert("Data Post berhasil dihapus!");
+      setAlert({
+        variant: "success",
+        title: "Berhasil",
+        message: "Data Posts berhasil dihapus!",
+      });
+      fetchBlogData();
     } catch (err) {
-      console.error(err);
-      alert("Terjadi kesalahan saat menghapus data Post");
+      setAlert({
+        variant: "error",
+        title: "Gagal",
+        message: "Terjadi kesalahan saat menghapus data Posts",
+      });
+    } finally {
+      setConfirmId(null);
     }
   };
 
@@ -101,6 +122,28 @@ export default function PostsPage() {
             ]}
           />
         </div>
+
+        {alert && (
+          <div className="mb-4">
+            <Alert
+              variant={alert.variant}
+              title={alert.title}
+              duration={5000}
+              onClose={() => setAlert(null)}
+            >
+              {alert.message}
+            </Alert>
+          </div>
+        )}
+
+        {confirmId && (
+          <ConfirmAlert
+            title="Konfirmasi Hapus"
+            message="Yakin ingin menghapus blog ini?"
+            onConfirm={confirmDelete}
+            onCancel={() => setConfirmId(null)}
+          />
+        )}
 
         <BlogTable
           blogData={blogData}

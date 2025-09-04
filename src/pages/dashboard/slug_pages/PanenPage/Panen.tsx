@@ -12,6 +12,8 @@ import { ActionButtons } from "@/components/ActionButton";
 import { PanenTableHeader } from "./PanenTableHeader";
 import { PanenTableRow } from "./PanenTableRow";
 import { TableFooter } from "@/components/TableFooter";
+import { Alert } from "@/components/Alert";
+import { ConfirmAlert } from "@/components/ConfirmAlert";
 
 interface HarvestItem {
   _id: string;
@@ -33,6 +35,12 @@ export default function PanenPage() {
   const [loading, setLoading] = useState(false);
   const [perPage, setPerPage] = useState(10);
   const API_URL = import.meta.env.VITE_API_URL;
+  const [alert, setAlert] = useState<{
+    variant: "success" | "error";
+    title: string;
+    message: string;
+  } | null>(null);
+  const [confirmId, setConfirmId] = useState<string | null>(null);
 
   const mapApiData = (item: any): HarvestItem => ({
     _id: item._id,
@@ -79,18 +87,33 @@ export default function PanenPage() {
   );
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Apakah Anda yakin ingin menghapus data ini?")) return;
+    setConfirmId(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!confirmId) return;
 
     try {
-      const res = await fetch(`${API_URL}/panens/${id}`, {
+      const res = await fetch(`${API_URL}/panens/${confirmId}`, {
         method: "DELETE",
       });
-      if (!res.ok) throw new Error("Gagal menghapus data");
 
-      setHarvestData((prev) => prev.filter((item) => item._id !== id));
+      if (!res.ok) throw new Error("Gagal menghapus panen ");
+
+      setAlert({
+        variant: "success",
+        title: "Berhasil",
+        message: "Data Panen berhasil dihapus!",
+      });
+      fetchHarvestData();
     } catch (err) {
-      console.error("Error delete:", err);
-      alert("Gagal menghapus data");
+      setAlert({
+        variant: "error",
+        title: "Gagal",
+        message: "Terjadi kesalahan saat menghapus panen",
+      });
+    } finally {
+      setConfirmId(null); // tutup modal
     }
   };
 
@@ -116,6 +139,28 @@ export default function PanenPage() {
             ]}
           />
         </div>
+
+        {alert && (
+          <div className="mb-4">
+            <Alert
+              variant={alert.variant}
+              title={alert.title}
+              duration={5000}
+              onClose={() => setAlert(null)}
+            >
+              {alert.message}
+            </Alert>
+          </div>
+        )}
+
+        {confirmId && (
+          <ConfirmAlert
+            title="Konfirmasi Hapus"
+            message="Yakin ingin menghapus data panen ini?"
+            onConfirm={confirmDelete}
+            onCancel={() => setConfirmId(null)}
+          />
+        )}
 
         {/* Table */}
         <div className="bg-white border rounded-lg shadow-sm mb-6">
