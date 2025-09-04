@@ -4,25 +4,50 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
-  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const API = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const res = await fetch(`${API}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("token", data.token);
+      navigate("/admin");
+    } else {
+      setError(data.message || "Login gagal");
+    }
   };
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-md shadow-lg border-0 bg-white">
         <CardHeader className="space-y-6 pb-8 pt-8">
-          {/* Company Logo */}
+          {/* Logo */}
           <div className="flex justify-center">
             <img src="/images/tnmj.png" alt="Logo" className="w-20 h-auto" />
           </div>
 
-          {/* Header Text */}
           <div className="text-center space-y-2">
             <h1 className="text-2xl font-semibold text-gray-900 font-cascadia">
               Welcome !
@@ -34,8 +59,8 @@ export default function LoginPage() {
         </CardHeader>
 
         <CardContent className="space-y-6 pb-8 font-body">
-          <form className="space-y-4">
-            {/* Email Input */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Email */}
             <div className="space-y-2">
               <Label
                 htmlFor="email"
@@ -49,10 +74,12 @@ export default function LoginPage() {
                 placeholder="Enter your email"
                 className="h-11 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500"
                 required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
 
-            {/* Password Input */}
+            {/* Password */}
             <div className="space-y-2">
               <Label
                 htmlFor="password"
@@ -67,6 +94,8 @@ export default function LoginPage() {
                   placeholder="Enter your password"
                   className="h-11 pr-10 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500"
                   required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <Button
                   type="button"
@@ -85,21 +114,12 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {/* Remember Me Checkbox */}
-            <div className="flex items-center space-x-2 pt-2">
-              <Checkbox
-                id="remember"
-                className="border-gray-300 data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
-              />
-              <Label
-                htmlFor="remember"
-                className="text-sm text-gray-600 font-normal cursor-pointer"
-              >
-                Remember me
-              </Label>
-            </div>
+            {/* Remember Me */}
+          
+            {/* Error Message */}
+            {error && <p className="text-red-500 text-sm">{error}</p>}
 
-            {/* Sign In Button */}
+            {/* Submit */}
             <Button
               type="submit"
               className="w-full h-11 bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 text-white font-medium transition-all duration-200 shadow-md hover:shadow-lg"

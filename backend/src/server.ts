@@ -13,10 +13,11 @@ const __dirname = path.dirname(__filename);
 
 // === Middleware ===
 app.use(cors({
-  origin: "http://localhost:5173", // izinkan frontend dev
+  origin: process.env.CLIENT_URL || "*", // fallback ke * kalau belum di-set
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
+
 app.use(express.json());
 
 // === Routes ===
@@ -26,9 +27,11 @@ import petaniRoutes from "./routes/petaniRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import tanamanRoutes from "./routes/tanamanRoutes.js";
+import authRoutes from "./routes/auth.js";
 
 app.use("/api/bibits", bibitRoutes);
 app.use("/api/panens", panenRoutes);
+app.use("/api/auth", authRoutes);
 app.use("/api/petanis", petaniRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/products", productRoutes);

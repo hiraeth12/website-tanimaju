@@ -6,10 +6,9 @@ export const Plan: React.FC = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Optional: hapus data auth jika ada
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    navigate("/"); // redirect ke halaman utama
+    localStorage.clear(); // hapus semua localStorage
+    navigate("/");
+    window.location.reload(); // optional
   };
 
   return (
