@@ -1,4 +1,20 @@
+import { useEffect, useState } from "react";
+
+type User = {
+  username: string;
+  email: string;
+};
+
 export const TopBar = () => {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
   const getGreeting = () => {
     const currentHour = new Date().getHours();
     if (currentHour < 11) {
@@ -26,15 +42,15 @@ export const TopBar = () => {
       <div className="flex items-center justify-between">
         <div className="min-w-0 flex-1">
           <span className="text-sm font-bold block truncate">
-            🚀 {getGreeting()}, Tom!
+            🚀 {getGreeting()}, {user?.username || "Pengguna"}!
           </span>
           <span className="text-xs block text-stone-500 truncate">{formattedDate}</span>
         </div>
 
-        {/* Ganti button dengan logo */}
+        {/* Logo */}
         <img
           src="/images/tnmj.png"
-          alt="Logo Taman Maju Jaya"
+          alt="Logo TaniMaju"
           className="w-8 h-8 lg:w-10 lg:h-10 object-contain rounded flex-shrink-0"
         />
       </div>

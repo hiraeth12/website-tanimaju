@@ -41,19 +41,13 @@ const About = () => {
             </h2>
             <div className="w-14 h-0.5 bg-[#2A4D3E] mb-6" />
             <p className="text-slate-700 text-sm md:text-md mb-8 leading-relaxed text-justify font-body">
-              <span className="font-bold text-black">TaniMaju</span> adalah
-              sebuah aplikasi manajemen hasil panen yang dirancang untuk
-              meningkatkan efisiensi dan produktivitas pertanian di Desa
-              Sukamaju, Bandung, Jawa Barat. Nama{" "}
-              <span className="font-bold text-black">TaniMaju</span> sendiri
-              merupakan gabungan dari kata{" "}
-              <span className="font-bold text-black">Tani</span> yang berarti
-              pertanian dan <span className="font-bold text-black">Maju</span>{" "}
-              yang mencerminkan kemajuan.{" "}
+              <span className="font-bold text-black">TaniMaju</span>  adalah aplikasi pertanian yang dirancang untuk membantu petani dan masyarakat dalam mengelola hasil tani 
+              secara efisien dan terarah. Melalui aplikasi ini, pengguna dapat dengan mudah melakukan jual beli hasil pertanian, memperoleh informasi mengenai kebutuhan tani seperti pupuk, bibit, dan perlengkapan, 
+              serta mengakses blog berbagi informasi yang berisi pengetahuan, pengalaman, dan tips seputar pertanian.
             </p>
             <p className="text-slate-700 text-sm md:text-md mb-8 leading-relaxed text-justify font-body">
-              Nama ini mencerminkan visi utama aplikasi, yaitu memajukan sektor
-              pertanian lokal melalui pemanfaatan teknologi.
+               Nama <span className="font-bold text-black">TaniMaju</span> berasal dari kombinasi kata <span className="font-bold text-black">“Tani”</span> yang berarti pertanian dan <span className="font-bold text-black">“Maju”</span> yang berarti kemajuan, mencerminkan visi untuk mendorong kemajuan sektor pertanian di Desa Sukamaju, Bandung, Jawa Barat, melalui pemanfaatan teknologi. Dengan hadirnya TaniMaju,
+               pertanian desa diharapkan dapat berkembang menjadi lebih modern, mandiri, berdaya saing, dan berkelanjutan, sehingga mampu meningkatkan kesejahteraan bersama.
             </p>
           </div>
           {/* Gambar */}

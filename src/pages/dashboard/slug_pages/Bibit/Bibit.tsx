@@ -4,6 +4,7 @@ import { SearchBar } from "@/components/SearchBarProps";
 import { ActionButtons } from "@/components/ActionButton";
 import { TableFooter } from "@/components/TableFooter";
 import { BibitTable } from "./BibitTable";
+import { Alert } from "@/components/Alert";
 
 interface BibitItem {
   _id: string;
@@ -20,6 +21,11 @@ export default function BibitPage() {
   const API_URL = import.meta.env.VITE_API_URL;
   const [loading, setLoading] = useState(false);
   const [perPage, setPerPage] = useState(10);
+  const [alert, setAlert] = useState<{
+    variant: "success" | "error";
+    title: string;
+    message: string;
+  } | null>(null);
 
   const fetchBibitData = async () => {
     setLoading(true);
@@ -54,7 +60,7 @@ export default function BibitPage() {
     }
   };
 
-   const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string) => {
     if (!confirm("Yakin ingin menghapus bibit ini?")) return;
 
     try {
@@ -64,11 +70,20 @@ export default function BibitPage() {
 
       if (!res.ok) throw new Error("Gagal menghapus bibit");
 
-      alert("Bibit berhasil dihapus!");
-      fetchBibitData(); 
+      setAlert({
+        variant: "success",
+        title: "Berhasil!",
+        message: "Bibit berhasil dihapus.",
+      });
+
+      fetchBibitData();
     } catch (err) {
       console.error("Error deleting bibit:", err);
-      alert("Terjadi kesalahan saat menghapus Bibit");
+      setAlert({
+        variant: "error",
+        title: "Gagal!",
+        message: "Terjadi kesalahan saat menghapus bibit.",
+      });
     }
   };
 
@@ -99,6 +114,19 @@ export default function BibitPage() {
             ]}
           />
         </div>
+
+        {alert && (
+          <div className="mb-4">
+            <Alert
+              variant={alert.variant}
+              title={alert.title}
+              duration={5000} 
+              onClose={() => setAlert(null)}
+            >
+              {alert.message}
+            </Alert>
+          </div>
+        )}
 
         <BibitTable
           data={filteredData}
