@@ -36,25 +36,37 @@ export default function PanenPage() {
 
   const mapApiData = (item: any): HarvestItem => ({
     _id: item._id,
-    date: item.tanggalPanen,
-    farmer: item.petani?.nama ?? "-",
-    field: item.lahan,
-    seedProvider: item.bibit?.namaPenyedia ?? "-",
-    plant: item.tanaman?.namaTanaman ?? "-",
-    fertilizer: item.pupuk,
-    amount: item.jumlahHasilPanen ?? 0,
-    salesStatus: item.statusPenjualan,
-    buyerName: item.namaPembeli ?? "-",
+    date: item.date || item.tanggalPanen || "-",
+    farmer: item.farmer || item.petani?.nama || "-",
+    field: item.field || item.lahan || "Default Field",
+    seedProvider: item.seedProvider || item.bibit?.namaPenyedia || "Default Provider",
+    plant: item.plant || item.tanaman?.namaTanaman || "-",
+    fertilizer: item.fertilizer || item.pupuk || "Default Fertilizer",
+    amount: item.amount || item.jumlahHasilPanen || 0,
+    salesStatus: item.salesStatus || item.statusPenjualan || "-",
+    buyerName: item.buyerName || item.namaPembeli || "-",
   });
 
   const fetchHarvestData = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/panens`);
+      console.log("🔄 Fetching panen data from:", `${API_URL}/panen`);
+      const res = await fetch(`${API_URL}/panen`);
+      
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      
       const raw = await res.json();
-      setHarvestData(raw.map(mapApiData));
+      console.log("📊 Raw API response:", raw);
+      
+      const mapped = raw.map(mapApiData);
+      console.log("🗂️ Mapped data:", mapped);
+      
+      setHarvestData(mapped);
     } catch (err) {
-      console.error("Failed to load data:", err);
+      console.error("❌ Failed to load data:", err);
+      alert("Gagal memuat data panen. Silakan refresh halaman.");
     } finally {
       setLoading(false);
     }
@@ -82,7 +94,7 @@ export default function PanenPage() {
     if (!confirm("Apakah Anda yakin ingin menghapus data ini?")) return;
 
     try {
-      const res = await fetch(`${API_URL}/panens/${id}`, {
+      const res = await fetch(`${API_URL}/panen/${id}`, {
         method: "DELETE",
       });
       if (!res.ok) throw new Error("Gagal menghapus data");

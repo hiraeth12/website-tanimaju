@@ -22,7 +22,7 @@ export default function EditTanamanPage() {
   useEffect(() => {
     if (!id) return;
     setLoading(true);
-    fetch(`${API}/tanamans/${id}`)
+    fetch(`${API}/tanaman/${id}`)
       .then((res) => {
         if (!res.ok) throw new Error("Gagal fetch tanaman");
         return res.json();
@@ -45,7 +45,7 @@ export default function EditTanamanPage() {
   const handleSubmit = async () => {
     if (!formData) return;
     try {
-      const res = await fetch(`${API}/tanamans/${id}`, {
+      const res = await fetch(`${API}/tanaman/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

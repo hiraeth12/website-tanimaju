@@ -30,7 +30,7 @@ export default function EditPetaniPage() {
   const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    fetch(`${API_URL}/petanis/${id}`)
+    fetch(`${API_URL}/petani/${id}`)
       .then((res) => res.json())
       .then((data) => {
         if (data) {
@@ -51,7 +51,7 @@ export default function EditPetaniPage() {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch(`${API_URL}/petanis/${id}`, {
+      const response = await fetch(`${API_URL}/petani/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

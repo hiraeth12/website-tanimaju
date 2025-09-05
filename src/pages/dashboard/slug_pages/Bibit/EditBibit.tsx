@@ -23,7 +23,7 @@ export default function EditBibitPage() {
   useEffect(() => {
     if (!id) return;
     setLoading(true);
-    fetch(`${API}/bibits/${id}`)
+    fetch(`${API}/bibit/${id}`)
       .then((res) => {
         if (!res.ok) throw new Error("Gagal fetch bibit");
         return res.json();
@@ -35,7 +35,23 @@ export default function EditBibitPage() {
           sumber: data.sumber || "",
           namaPenyedia: data.namaPenyedia || "",
           tanggalPemberian: data.tanggalPemberian
-            ? new Date(data.tanggalPemberian).toISOString().split("T")[0]
+            ? (() => {
+                try {
+                  const date = new Date(data.tanggalPemberian);
+                  if (isNaN(date.getTime())) {
+                    console.warn("Invalid date:", data.tanggalPemberian);
+                    return "";
+                  }
+                  // Convert to local time for input field
+                  const year = date.getFullYear();
+                  const month = String(date.getMonth() + 1).padStart(2, '0');
+                  const day = String(date.getDate()).padStart(2, '0');
+                  return `${year}-${month}-${day}`;
+                } catch (error) {
+                  console.error("Error parsing date:", error);
+                  return "";
+                }
+              })()
             : "",
         });
       })
@@ -50,7 +66,7 @@ export default function EditBibitPage() {
   const handleSubmit = async () => {
     if (!formData) return;
     try {
-      const res = await fetch(`${API}/bibits/${id}`, {
+      const res = await fetch(`${API}/bibit/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -133,7 +149,7 @@ export default function EditBibitPage() {
         {/* Tombol Aksi */}
         <FormActions
           onSubmit={handleSubmit}
-          onCancel={() => navigate("/admin/tanaman")}
+          onCancel={() => navigate("/admin/bibit")}
           submitLabel="Simpan Perubahan"
           cancelLabel="Batal"
         />

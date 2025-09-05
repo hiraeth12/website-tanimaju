@@ -35,7 +35,7 @@ export default function CreatePetaniPage() {
   // Fungsi untuk submit form
   const handleSubmit = async () => {
     try {
-      const response = await fetch(`${API_URL}/petanis`, {
+      const response = await fetch(`${API_URL}/petani`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

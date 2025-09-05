@@ -1,4 +1,4 @@
-// src/components/tables/TanamanTable.tsx
+// src/components/tables/BibitTable.tsx
 
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -47,7 +47,7 @@ export function BibitTable({
                 onCheckedChange={onSelectAll}
               />
             </TableHead>
-            {["Tanaman", "Sumber", "Nama Penyedia", "Tanggal Pemberian"].map(
+            {["Tanaman", "Sumber", "Nama Penyedia", "Tanggal Pemberian", "Aksi"].map(
               (header) => (
                 <TableHead key={header} className="text-gray-700">
                   <div className="flex items-center space-x-1">
@@ -76,8 +76,10 @@ export function BibitTable({
               <TableCell className="text-gray-700">
                 {item.namaPenyedia}
               </TableCell>
-              <TableCell className="text-gray-600">
-                {new Date(item.tanggalPemberian).toLocaleDateString("id-ID")}
+              <TableCell className="text-sm text-gray-600">
+                {new Date(item.tanggalPemberian).toLocaleDateString("id-ID", {
+                  timeZone: 'Asia/Jakarta'
+                })}
               </TableCell>
               <TableCell>
                 <div className="flex gap-2">

@@ -11,7 +11,7 @@ interface Post {
   image: string;
   date: string;
   category?: string;
-  content?: string[];
+  content?: string;  // Changed from string[] to string
   tags?: string[];
   author: string;
   authorImage?: string;
@@ -100,9 +100,16 @@ const BlogPost: React.FC = () => {
                     </div>
 
                     <div className="space-y-3 text-gray-700 mb-8 font-body text-sm sm:text-base text-justify">
-                      {post.content?.map((para, idx) => (
-                        <p key={idx}>{para}</p>
-                      ))}
+                      {post.content ? (
+                        // Split content by double line breaks for paragraphs, or treat as single paragraph
+                        post.content.includes('\n\n') 
+                          ? post.content.split('\n\n').map((para, idx) => (
+                              <p key={idx}>{para.trim()}</p>
+                            ))
+                          : <p>{post.content}</p>
+                      ) : (
+                        <p>No content available.</p>
+                      )}
                     </div>
 
                     <div className="mb-4">

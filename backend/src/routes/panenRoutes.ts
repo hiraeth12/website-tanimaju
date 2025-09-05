@@ -40,7 +40,50 @@ router.get("/:id", async (req, res) => {
 });
 
 // POST new
-router.post("/", createPanen);
+router.post("/", async (req, res) => {
+  try {
+    console.log("🔄 Received POST data:", req.body);
+    
+    // Handle both frontend and API formats
+    const {
+      tanggalPanen, date,
+      petani, farmer,
+      lahan, field, 
+      bibit, seedProvider,
+      tanaman, plant,
+      pupuk, fertilizer,
+      jumlahHasilPanen, amount,
+      statusPenjualan, salesStatus,
+      namaPembeli, buyerName
+    } = req.body;
+
+    const panenData = {
+      date: tanggalPanen || date || new Date(),
+      farmer: petani || farmer || "",
+      field: lahan || field || "Default Field",
+      seedProvider: bibit || seedProvider || "Default Provider", 
+      plant: tanaman || plant || "",
+      fertilizer: pupuk || fertilizer || "Default Fertilizer",
+      amount: jumlahHasilPanen || amount || 0,
+      salesStatus: statusPenjualan || salesStatus || "Tersedia",
+      buyerName: namaPembeli || buyerName || ""
+    };
+
+    console.log("💾 Saving panen data:", panenData);
+    
+    const panen = new Panen(panenData);
+    const savedPanen = await panen.save();
+    
+    console.log("✅ Panen saved:", savedPanen);
+    res.status(201).json({ message: "Panen created successfully", id: savedPanen._id });
+  } catch (error: any) {
+    console.error("❌ Error creating panen:", error);
+    res.status(500).json({ 
+      error: error.message,
+      details: "Failed to create panen record"
+    });
+  }
+});
 
 // ✅ PUT update by ID
 router.put("/:id", async (req, res) => {

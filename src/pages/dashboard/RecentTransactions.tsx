@@ -41,7 +41,7 @@ export const RecentTransactions = () => {
   });
 
   useEffect(() => {
-    fetch(`${API_URL}/panens`)
+    fetch(`${API_URL}/panen`)
       .then((res) => res.json())
       .then((data) => setHarvestData(data.map(mapApiData))) // <-- pakai mapper
       .catch((err) => console.error("Failed to load data:", err));
@@ -106,6 +106,7 @@ export const RecentTransactions = () => {
                       day: "numeric",
                       month: "long",
                       year: "numeric",
+                      timeZone: 'Asia/Jakarta'
                     })}
                   </TableCell>
                   <TableCell>{item.farmer}</TableCell>

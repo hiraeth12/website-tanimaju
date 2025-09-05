@@ -32,7 +32,7 @@ export default function CreateBibitPage() {
     try {
       const payload = { ...formData };
 
-      const response = await fetch(`${API}/bibits`, {
+      const response = await fetch(`${API}/bibit`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

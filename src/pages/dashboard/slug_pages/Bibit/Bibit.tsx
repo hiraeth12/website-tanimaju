@@ -24,7 +24,7 @@ export default function BibitPage() {
   const fetchBibitData = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/bibits`);
+      const res = await fetch(`${API_URL}/bibit`);
       const data = await res.json();
       setBibitData(data);
     } catch (err) {
@@ -58,7 +58,7 @@ export default function BibitPage() {
     if (!confirm("Yakin ingin menghapus bibit ini?")) return;
 
     try {
-      const res = await fetch(`${API_URL}/bibits/${id}`, {
+      const res = await fetch(`${API_URL}/bibit/${id}`, {
         method: "DELETE",
       });
 

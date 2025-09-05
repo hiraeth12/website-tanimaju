@@ -22,10 +22,17 @@ type PostForm = {
 
 export default function CreatePostPage() {
   const navigate = useNavigate();
+  // Helper function to get current date in GMT+7
+  const getCurrentDateGMT7 = (): string => {
+    const now = new Date();
+    const gmt7Time = new Date(now.getTime() + (7 * 60 * 60 * 1000));
+    return gmt7Time.toISOString().split('T')[0];
+  };
+
   const [formData, setFormData] = useState<PostForm>({
     title: "",
     image: null,
-    date: new Date().toISOString().split('T')[0], // Default today
+    date: getCurrentDateGMT7(), // Default today in GMT+7
     category: "",
     author: "",
     content: [""],
@@ -278,7 +285,7 @@ export default function CreatePostPage() {
               setFormData({
                 title: "",
                 image: null,
-                date: new Date().toISOString().split('T')[0],
+                date: getCurrentDateGMT7(),
                 category: "",
                 author: "",
                 content: [""],

@@ -23,7 +23,7 @@ export default function TanamanPage() {
   const fetchTanamanData = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/tanamans`);
+      const res = await fetch(`${API_URL}/tanaman`);
       const data = await res.json();
       setTanamanData(data); 
     } catch (err) {
@@ -63,7 +63,7 @@ export default function TanamanPage() {
     if (!confirm("Yakin ingin menghapus tanaman ini?")) return;
 
     try {
-      const res = await fetch(`${API_URL}/tanamans/${id}`, {
+      const res = await fetch(`${API_URL}/tanaman/${id}`, {
         method: "DELETE",
       });
 

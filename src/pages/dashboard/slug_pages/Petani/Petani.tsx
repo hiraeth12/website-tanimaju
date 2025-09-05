@@ -38,7 +38,7 @@ export default function PetaniPage() {
   const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    fetch(`${API_URL}/petanis`)
+    fetch(`${API_URL}/petani`)
       .then((res) => res.json())
       .then((data) => {
         setPetaniData(data);
@@ -49,7 +49,7 @@ export default function PetaniPage() {
   const handleDelete = async (id: string) => {
     if (confirm("Apakah Anda yakin ingin menghapus petani ini?")) {
       try {
-        const response = await fetch(`${API_URL}/petanis/${id}`, {
+        const response = await fetch(`${API_URL}/petani/${id}`, {
           method: "DELETE",
         });
 

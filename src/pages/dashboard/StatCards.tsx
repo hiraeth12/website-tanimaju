@@ -13,7 +13,7 @@ export const StatCards = () => {
       .then((data) => setProductCount(data.length));
 
     // Fetch petani
-    fetch(`${API_URL}/petanis`)
+    fetch(`${API_URL}/petani`)
       .then((res) => res.json())
       .then((data) => setPetaniCount(data.length));
 

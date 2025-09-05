@@ -30,7 +30,7 @@ export default function CreateTanamanPage() {
     try {
       const payload = { ...formData };
 
-      const response = await fetch(`${API}/tanamans`, {
+      const response = await fetch(`${API}/tanaman`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

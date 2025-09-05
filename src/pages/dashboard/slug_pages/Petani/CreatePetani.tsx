@@ -65,7 +65,7 @@ export default function CreatePetaniPage() {
         formDataToSend.append('foto', formData.foto);
       }
 
-      const response = await fetch(`${API_URL}/petanis`, {
+      const response = await fetch(`${API_URL}/petani`, {
         method: 'POST',
         body: formDataToSend, // Menggunakan FormData untuk upload file
       });

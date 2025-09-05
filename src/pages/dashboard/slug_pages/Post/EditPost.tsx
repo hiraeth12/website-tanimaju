@@ -127,7 +127,7 @@ export default function EditPostPage() {
 
         if (response.ok) {
           alert('Post berhasil diperbarui!');
-          navigate('/dashboard/posts');
+          navigate('/admin/posts');
         } else {
           alert('Gagal memperbarui post!');
         }
@@ -152,7 +152,7 @@ export default function EditPostPage() {
 
         if (response.ok) {
           alert('Post berhasil diperbarui!');
-          navigate('/dashboard/posts');
+          navigate('/admin/posts');
         } else {
           alert('Gagal memperbarui post!');
         }

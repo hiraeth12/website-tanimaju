@@ -32,7 +32,7 @@ export default function EditPetaniPage() {
   const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    fetch(`${API_URL}/petanis/${id}`)
+    fetch(`${API_URL}/petani/${id}`)
       .then((res) => res.json())
       .then((data) => {
         if (data) {
@@ -85,7 +85,7 @@ export default function EditPetaniPage() {
         formDataToSend.append('nomorKontak', formData.nomorKontak);
         formDataToSend.append('foto', formData.foto);
 
-        const response = await fetch(`${API_URL}/petanis/${id}`, {
+        const response = await fetch(`${API_URL}/petani/${id}`, {
           method: 'PUT',
           body: formDataToSend, // Use FormData for file upload
         });
@@ -105,7 +105,7 @@ export default function EditPetaniPage() {
           foto: formData.currentFoto, // Keep current foto
         };
 
-        const response = await fetch(`${API_URL}/petanis/${id}`, {
+        const response = await fetch(`${API_URL}/petani/${id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

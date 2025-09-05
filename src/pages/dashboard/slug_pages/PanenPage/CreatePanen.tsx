@@ -44,14 +44,20 @@ export default function CreatePanenPage() {
   const handleSubmit = async () => {
     try {
       const payload = {
-        ...formData,
+        tanggalPanen: formData.tanggalPanen, // Send as string, not Date object
+        petani: formData.petani,
+        lahan: formData.lahan,
+        bibit: formData.bibit,
+        tanaman: formData.tanaman,
+        pupuk: formData.pupuk,
         jumlahHasilPanen: Number(formData.jumlahHasilPanen),
-        tanggalPanen: new Date(formData.tanggalPanen),
-        statusPenjualan:
-          formData.statusPenjualan === "terjual" ? "Terjual" : "Belum Terjual",
+        statusPenjualan: formData.statusPenjualan === "terjual" ? "Terjual" : "Tersedia",
+        namaPembeli: formData.namaPembeli,
       };
 
-      const response = await fetch(`${API}/panens`, {
+      console.log("🚀 Sending payload:", payload);
+
+      const response = await fetch(`${API}/panen`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -59,10 +65,14 @@ export default function CreatePanenPage() {
         body: JSON.stringify(payload),
       });
 
-      if (!response.ok) throw new Error("Gagal membuat panen");
+      if (!response.ok) {
+        const errorData = await response.text();
+        console.error("❌ Error response:", errorData);
+        throw new Error("Gagal membuat panen");
+      }
 
       const data = await response.json();
-      console.log("Berhasil buat panen:", data);
+      console.log("✅ Berhasil buat panen:", data);
       alert("Data panen berhasil disimpan!");
 
       // reset form
@@ -89,9 +99,9 @@ export default function CreatePanenPage() {
     const fetchOptions = async () => {
       try {
         const [petaniRes, bibitRes, tanamanRes] = await Promise.all([
-          fetch(`${API}/petanis`).then((r) => r.json()),
-          fetch(`${API}/bibits`).then((r) => r.json()),
-          fetch(`${API}/tanamans`).then((r) => r.json()),
+          fetch(`${API}/petani`).then((r) => r.json()),
+          fetch(`${API}/bibit`).then((r) => r.json()),
+          fetch(`${API}/tanaman`).then((r) => r.json()),
         ]);
 
         setPetanis(petaniRes);

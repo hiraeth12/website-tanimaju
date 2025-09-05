@@ -183,7 +183,9 @@ export default function PostsPage() {
                   </TableCell>
 
                   <TableCell className="text-sm text-gray-600">
-                    {new Date(item.date).toLocaleDateString('id-ID')}
+                    {new Date(item.date).toLocaleDateString('id-ID', {
+                      timeZone: 'Asia/Jakarta'
+                    })}
                   </TableCell>
 
                   <TableCell className="text-sm text-gray-600">
