@@ -1,8 +1,5 @@
 import express from "express";
-import mysql from "mysql2/promise";
 import mysqlPool from "../../config/mysql-database.js";
-import { adaptMongoToMySQL } from "../../utils/dataAdapter.js";
-import { adaptPanenMySQLToMongo } from "../../utils/fieldAdapters.js";
 import { getCurrentDateGMT7 } from "../../utils/timezone.js";
 
 const router = express.Router();
@@ -12,9 +9,9 @@ router.get("/", async (req, res) => {
   try {
     const [rows] = await mysqlPool.execute(`
       SELECT p.*, 
-             pt.nama as petani_nama, 
-             t.nama as tanaman_nama,
-             b.nama_penyedia as bibit_nama_penyedia
+             pt.nama AS petani_nama, 
+             t.nama AS tanaman_nama,
+             b.nama_penyedia AS bibit_nama_penyedia
       FROM panen p
       LEFT JOIN petani pt ON p.petani_id = pt.id
       LEFT JOIN tanaman t ON p.tanaman_id = t.id
@@ -22,10 +19,9 @@ router.get("/", async (req, res) => {
       ORDER BY p.id DESC
     `);
     console.log("✅ MySQL Panen found:", (rows as any[]).length, "items");
-    const adaptedData = adaptPanenMySQLToMongo(rows);
-    res.json(adaptedData);
+    res.json(rows);
   } catch (error) {
-    console.error("Error fetching panen:", error);
+    console.error("❌ Error fetching panen:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
@@ -33,12 +29,12 @@ router.get("/", async (req, res) => {
 // Get panen by ID
 router.get("/:id", async (req, res) => {
   try {
-    const id = adaptMongoToMySQL(req.params.id);
+    const id = req.params.id;
     const [rows] = await mysqlPool.execute(`
       SELECT p.*, 
-             pt.nama as petani_nama, 
-             t.nama as tanaman_nama,
-             b.nama_penyedia as bibit_nama_penyedia
+             pt.nama AS petani_nama, 
+             t.nama AS tanaman_nama,
+             b.nama_penyedia AS bibit_nama_penyedia
       FROM panen p
       LEFT JOIN petani pt ON p.petani_id = pt.id
       LEFT JOIN tanaman t ON p.tanaman_id = t.id
@@ -52,7 +48,7 @@ router.get("/:id", async (req, res) => {
     
     res.json((rows as any[])[0]);
   } catch (error) {
-    console.error("Error fetching panen:", error);
+    console.error("❌ Error fetching panen:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
@@ -61,43 +57,19 @@ router.get("/:id", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     console.log("📝 Creating panen with data:", req.body);
-    
-    // Support both frontend format and API format
+
     const { 
-      // Frontend format
       tanggalPanen, 
-      petani, 
+      petani_id, 
+      tanaman_id,
       lahan,
-      bibit,
-      tanaman, 
+      bibit_id,
       pupuk,
       jumlahHasilPanen, 
       statusPenjualan, 
-      namaPembeli,
-      // API format (fallback)
-      date, 
-      farmer, 
-      field,
-      seedProvider,
-      plant, 
-      fertilizer,
-      amount, 
-      salesStatus, 
-      buyerName
+      namaPembeli
     } = req.body;
 
-    // Convert to MySQL format with fallbacks and GMT+7 timezone
-    const tanggal_panen = tanggalPanen || date || getCurrentDateGMT7();
-    const petani_id = petani || farmer || null; // Frontend sends ID as string
-    const lahan_value = lahan || field || null;
-    const bibit_id = bibit || seedProvider || null; // Frontend sends ID as string
-    const tanaman_id = tanaman || plant || null; // Frontend sends ID as string
-    const pupuk_value = pupuk || fertilizer || null;
-    const jumlah = jumlahHasilPanen || amount || 0;
-    const status_penjualan = statusPenjualan || salesStatus || 'Tersedia';
-    const nama_pembeli = namaPembeli || buyerName || '';
-    
-    // Insert with all the available columns including the newly added ones
     const query = `
       INSERT INTO panen (
         petani_id,
@@ -105,10 +77,10 @@ router.post("/", async (req, res) => {
         lahan,
         bibit_id,
         pupuk,
-        jumlah, 
-        tanggal_panen, 
-        status_penjualan, 
-        nama_pembeli,
+        jumlahHasilPanen, 
+        tanggalPanen, 
+        statusPenjualan, 
+        namaPembeli,
         created_at, 
         updated_at
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
@@ -117,21 +89,21 @@ router.post("/", async (req, res) => {
     const values = [
       petani_id,
       tanaman_id, 
-      lahan_value,
+      lahan,
       bibit_id,
-      pupuk_value,
-      jumlah, 
-      tanggal_panen, 
-      status_penjualan, 
-      nama_pembeli
+      pupuk,
+      jumlahHasilPanen, 
+      tanggalPanen || getCurrentDateGMT7(), 
+      statusPenjualan || 'Belum Terjual', 
+      namaPembeli || null
     ];
     
     console.log("🔍 SQL Query:", query);
     console.log("🔍 Values:", values);
     
     const [result] = await mysqlPool.execute(query, values);
-    
     const insertId = (result as any).insertId;
+
     console.log("✅ Panen created with ID:", insertId);
     
     res.status(201).json({ 
@@ -147,42 +119,46 @@ router.post("/", async (req, res) => {
 // Update panen
 router.put("/:id", async (req, res) => {
   try {
-    const id = adaptMongoToMySQL(req.params.id);
+    const id = req.params.id;
     console.log("📝 Updating panen ID:", id, "with data:", req.body);
-    
-    // Support both frontend format and API format
+
     const { 
-      // Frontend format
       tanggalPanen, 
-      petani, 
-      tanaman, 
+      petani_id, 
+      tanaman_id,
+      lahan,
+      bibit_id,
+      pupuk,
       jumlahHasilPanen, 
       statusPenjualan, 
-      namaPembeli,
-      // API format (fallback)
-      date, 
-      farmer, 
-      plant, 
-      amount, 
-      salesStatus, 
-      buyerName
+      namaPembeli
     } = req.body;
 
-    // Convert to MySQL format with fallbacks
-    const tanggal_panen = tanggalPanen || date;
-    const jumlah = jumlahHasilPanen || amount;
-    const status_penjualan = statusPenjualan || salesStatus;
-    const nama_pembeli = namaPembeli || buyerName;
-    
     const [result] = await mysqlPool.execute(`
       UPDATE panen SET 
-        jumlah = ?, 
-        tanggal_panen = ?, 
-        status_penjualan = ?, 
-        nama_pembeli = ?,
+        petani_id = ?, 
+        tanaman_id = ?, 
+        lahan = ?, 
+        bibit_id = ?, 
+        pupuk = ?, 
+        jumlahHasilPanen = ?, 
+        tanggalPanen = ?, 
+        statusPenjualan = ?, 
+        namaPembeli = ?,
         updated_at = NOW()
       WHERE id = ?
-    `, [jumlah, tanggal_panen, status_penjualan, nama_pembeli, id]);
+    `, [
+      petani_id, 
+      tanaman_id, 
+      lahan, 
+      bibit_id, 
+      pupuk, 
+      jumlahHasilPanen, 
+      tanggalPanen, 
+      statusPenjualan, 
+      namaPembeli, 
+      id
+    ]);
     
     if ((result as any).affectedRows === 0) {
       return res.status(404).json({ error: "Panen not found" });
@@ -199,7 +175,7 @@ router.put("/:id", async (req, res) => {
 // Delete panen
 router.delete("/:id", async (req, res) => {
   try {
-    const id = adaptMongoToMySQL(req.params.id);
+    const id = req.params.id;
     console.log("🗑️ Deleting panen ID:", id);
     
     const [result] = await mysqlPool.execute("DELETE FROM panen WHERE id = ?", [id]);

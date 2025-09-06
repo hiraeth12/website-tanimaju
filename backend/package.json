@@ -24,6 +24,7 @@
     "express": "^5.1.0",
     "mongoose": "^8.18.0",
     "multer": "^2.0.2",
+    "mysql": "^2.18.1",
     "mysql2": "^3.14.4"
   },
   "devDependencies": {

@@ -4,7 +4,6 @@ import multer from "multer";
 import path from "path";
 import { PetaniRepository } from "../../repositories/PetaniRepository.js";
 import { adaptMySQLToMongo, adaptMongoToMySQL } from "../../utils/dataAdapter.js";
-import { getCurrentDateGMT7, formatTimestampGMT7 } from "../../utils/timezone.js";
 
 const router = express.Router();
 
