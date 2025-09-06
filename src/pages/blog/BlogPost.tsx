@@ -11,7 +11,8 @@ interface Post {
   image: string;
   date: string;
   category?: string;
-  content?: string;  // Changed from string[] to string
+  content?: string;
+
   tags?: string[];
   author: string;
   authorImage?: string;
@@ -22,6 +23,7 @@ const BlogPost: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const [post, setPost] = useState<Post | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const API = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -29,7 +31,7 @@ const BlogPost: React.FC = () => {
 
   useEffect(() => {
     setIsLoaded(false);
-    fetch(`${import.meta.env.VITE_API_URL}/posts`)
+    fetch(`${API}/posts`)
       .then((res) => res.json())
       .then((posts: Post[]) => {
         const foundPost = posts
@@ -39,7 +41,7 @@ const BlogPost: React.FC = () => {
         setIsLoaded(true);
       })
       .catch((error) => {
-        console.error("Error fetching post:", error);
+        console.error("Error fetching posts:", error);
         setPost(null);
         setIsLoaded(true);
       });
@@ -66,12 +68,9 @@ const BlogPost: React.FC = () => {
                   <div className="flex-1">
                     <div className="relative w-full mb-6 rounded-lg overflow-hidden aspect-video">
                       <img
-                        src={post.image?.startsWith('/uploads') ? `${import.meta.env.VITE_API_URL.replace('/api', '')}${post.image}` : post.image}
+                        src={`${import.meta.env.VITE_API_URL_IMAGE}${post.image}`}
                         alt={post.title}
                         className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.currentTarget.src = '/images/blog/blog-placeholder-1.jpg';
-                        }}
                       />
                     </div>
 
@@ -100,16 +99,10 @@ const BlogPost: React.FC = () => {
                     </div>
 
                     <div className="space-y-3 text-gray-700 mb-8 font-body text-sm sm:text-base text-justify">
-                      {post.content ? (
-                        // Split content by double line breaks for paragraphs, or treat as single paragraph
-                        post.content.includes('\n\n') 
-                          ? post.content.split('\n\n').map((para, idx) => (
-                              <p key={idx}>{para.trim()}</p>
-                            ))
-                          : <p>{post.content}</p>
-                      ) : (
-                        <p>No content available.</p>
-                      )}
+                      {post.content &&
+                        post.content
+                          .split(/\r?\n\r?\n/)
+                          .map((para, idx) => <p key={idx}>{para}</p>)}
                     </div>
 
                     <div className="mb-4">

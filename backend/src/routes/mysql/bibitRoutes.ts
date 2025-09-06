@@ -38,13 +38,13 @@ router.post("/", async (req, res) => {
   try {
     const { tanaman, sumber, namaPenyedia, tanggalPemberian } = req.body;
 
-    if (!tanaman || !tanggalPemberian) {
-      return res.status(400).json({ error: "Tanaman dan tanggalPemberian wajib diisi" });
+    if (!namaPenyedia) {
+      return res.status(400).json({ error: "Nama penyedia wajib diisi" });
     }
 
     const [result] = await mysqlPool.execute(
       "INSERT INTO bibit (tanaman, sumber, namaPenyedia, tanggalPemberian) VALUES (?, ?, ?, ?)",
-      [tanaman, sumber || null, namaPenyedia || null, tanggalPemberian]
+      [tanaman || null, sumber || null, namaPenyedia, tanggalPemberian || null]
     );
 
     const insertId = (result as any).insertId;

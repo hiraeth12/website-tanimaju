@@ -1,5 +1,5 @@
 // backend/src/repositories/PetaniRepository.ts
-import { executeQuery } from '../config/mysql-database.js';
+import { executeQuery, executeModifyQuery } from '../config/mysql-database.js';
 import { Petani } from '../models/mysql/interfaces.js';
 
 export class PetaniRepository {
@@ -21,7 +21,7 @@ export class PetaniRepository {
       VALUES (?, ?, ?, ?)
     `;
     
-    const result = await executeQuery(query, [
+    const result = await executeModifyQuery(query, [
       petaniData.nama,
       petaniData.alamat,
       petaniData.nomorKontak,
@@ -47,13 +47,13 @@ export class PetaniRepository {
     const query = `UPDATE petani SET ${fields.join(', ')} WHERE id = ?`;
     values.push(id);
     
-    const result = await executeQuery(query, values);
+    const result = await executeModifyQuery(query, values);
     return result.affectedRows > 0;
   }
 
   static async delete(id: number): Promise<boolean> {
     const query = 'DELETE FROM petani WHERE id = ?';
-    const result = await executeQuery(query, [id]);
+    const result = await executeModifyQuery(query, [id]);
     return result.affectedRows > 0;
   }
 

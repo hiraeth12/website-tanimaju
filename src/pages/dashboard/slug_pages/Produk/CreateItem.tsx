@@ -1,14 +1,15 @@
 // File: src/pages/dashboard/slug_pages/Produk/CreateItem.tsx
 
-import type React from "react";
 import { useState } from "react";
-import { ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { DashboardLayout } from "@/components/Layout/DashboardLayout";
-import { Link, useNavigate } from "react-router-dom";
+import { Breadcrumb } from "@/components/Breadcrumb";
+import { InputField } from "@/components/InputField";
+import ImageUpload from "@/components/ImageUpload";
+import { FormActions } from "@/components/FormActions";
+import { useNavigate } from "react-router-dom";
+import { useNotificationContext } from "@/context/NotificationContext";
 
 // Tipe untuk data form produk
 type ProductForm = {
@@ -21,7 +22,6 @@ type ProductForm = {
 };
 
 export default function CreateItemPage() {
-  const navigate = useNavigate();
   const [formData, setFormData] = useState<ProductForm>({
     title: "",
     price: "",
@@ -30,74 +30,58 @@ export default function CreateItemPage() {
     info: "",
     whatsappNumber: "",
   });
-  const API_URL = import.meta.env.VITE_API_URL;
 
-  // Fungsi generik untuk menangani perubahan pada input teks dan textarea
-  const handleChange = (
-    field: keyof ProductForm,
-    value: string | number
-  ) => {
+  const handleChange = (field: keyof ProductForm, value: string | number) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
+  const API = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate();
+  const { addNotification } = useNotificationContext();
 
-  // Fungsi untuk menangani unggahan file melalui dialog "Browse"
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) setFormData((prev) => ({ ...prev, imageSrc: file }));
-  };
-
-  // Fungsi untuk menangani event drag over
-  const handleDragOver = (event: React.DragEvent) => event.preventDefault();
-
-  // Fungsi untuk menangani event drop file
-  const handleDrop = (event: React.DragEvent) => {
-    event.preventDefault();
-    const file = event.dataTransfer.files[0];
-    if (file) setFormData((prev) => ({ ...prev, imageSrc: file }));
-  };
-
-  // Fungsi untuk submit form
   const handleSubmit = async () => {
     try {
-      const formDataToSend = new FormData();
-      formDataToSend.append('title', formData.title);
-      formDataToSend.append('price', formData.price);
-      formDataToSend.append('description', formData.description);
-      formDataToSend.append('info', formData.info);
-      formDataToSend.append('whatsappNumber', formData.whatsappNumber);
+      const form = new FormData();
+      form.append("title", formData.title);
+      form.append("price", formData.price);
+      form.append("description", formData.description);
+      form.append("info", formData.info);
+      form.append("whatsappNumber", formData.whatsappNumber);
       if (formData.imageSrc) {
-        formDataToSend.append('imageSrc', formData.imageSrc);
+        form.append("imageSrc", formData.imageSrc);
       }
 
-      const response = await fetch(`${API_URL}/products`, {
-        method: 'POST',
-        body: formDataToSend, // Menggunakan FormData untuk upload file
+      const response = await fetch(`${API}/products`, {
+        method: "POST",
+        body: form,
       });
 
-      if (response.ok) {
-        alert('Produk berhasil dibuat!');
-        navigate('/admin/item');
-      } else {
-        alert('Gagal membuat produk!');
-      }
+      if (!response.ok) throw new Error("Gagal membuat produk");
+      await response.json();
+      
+      addNotification({
+        variant: "success",
+        title: "Berhasil!",
+        message: "Data produk berhasil disimpan!",
+        duration: 4000,
+      });
+      navigate("/admin/item");
     } catch (error) {
-      console.error('Error creating product:', error);
-      alert('Terjadi kesalahan saat membuat produk!');
+      console.error(error);
+      addNotification({
+        variant: "error",
+        title: "Error!",
+        message: "Terjadi kesalahan saat menyimpan produk",
+        duration: 5000,
+      });
     }
   };
 
   return (
     <DashboardLayout>
       {/* Breadcrumb */}
-      <div className="px-6 mt-2 mb-4 ml-2">
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Link to="/admin/item" className="hover:underline hover:text-gray-800 transition">
-            Produk
-          </Link>
-          <ChevronRight className="w-4 h-4" />
-          <span className="font-semibold text-gray-800">Create</span>
-        </div>
-      </div>
+      <Breadcrumb
+        items={[{ label: "Item", to: "/admin/item" }, { label: "Create" }]}
+      />
 
       {/* Title */}
       <div className="px-6 mb-6 ml-2">
@@ -110,21 +94,24 @@ export default function CreateItemPage() {
           {/* Kolom Kiri */}
           <div className="space-y-6">
             {/* Nama Produk */}
-            <div className="space-y-2">
-              <Label htmlFor="title">Nama Produk</Label>
-              <Input id="title" value={formData.title} onChange={(e) => handleChange("title", e.target.value)} />
-            </div>
+            <InputField
+              id="title"
+              label="Nama Produk"
+              type="text"
+              value={formData.title}
+              onChange={(val) => handleChange("title", val)}
+              required
+            />
 
             {/* Deskripsi */}
-            <div className="space-y-2">
-              <Label htmlFor="description">Deskripsi Singkat</Label>
-              <Textarea
-                id="description"
-                value={formData.description}
-                onChange={(e) => handleChange("description", e.target.value)}
-                className="min-h-[120px] resize-none"
-              />
-            </div>
+            <InputField
+              id="description"
+              label="Deskripsi"
+              type="text"
+              value={formData.description}
+              onChange={(val) => handleChange("description", val)}
+              required
+            />
 
             {/* Info */}
             <div className="space-y-2">
@@ -141,84 +128,39 @@ export default function CreateItemPage() {
           {/* Kolom Kanan */}
           <div className="space-y-6">
             {/* Harga */}
-            <div className="space-y-2">
-              <Label htmlFor="price">Harga (Rp)</Label>
-              <Input id="price" type="number" value={formData.price} onChange={(e) => handleChange("price", e.target.value)} />
-            </div>
+            <InputField
+              id="price"
+              label="Harga (Rp)"
+              type="number"
+              value={formData.price}
+              onChange={(val) => handleChange("price", val)}
+              required
+            />
 
             {/* WhatsApp */}
-            <div className="space-y-2">
-              <Label htmlFor="whatsappNumber">Nomor WhatsApp</Label>
-              <Input id="whatsappNumber" type="tel" value={formData.whatsappNumber} onChange={(e) => handleChange("whatsappNumber", e.target.value)} />
-            </div>
+            <InputField
+              id="whatsappnumber"
+              label="Nomor WhatsApp"
+              type="text"
+              value={formData.whatsappNumber}
+              onChange={(val) => handleChange("whatsappNumber", val)}
+              required
+            />
 
             {/* Gambar Produk */}
-            <div className="space-y-2">
-              <Label htmlFor="imageSrc">Gambar Produk</Label>
-              <div
-                className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400"
-                onDragOver={handleDragOver}
-                onDrop={handleDrop}
-              >
-                <input
-                  type="file"
-                  id="imageSrc"
-                  className="hidden"
-                  accept="image/*"
-                  onChange={handleFileUpload}
-                />
-                <label htmlFor="imageSrc" className="cursor-pointer">
-                  <div className="text-gray-500">
-                    <p>
-                      Drag & Drop atau{" "}
-                      <span className="text-blue-600 font-semibold">
-                        Browse
-                      </span>
-                    </p>
-                  </div>
-                </label>
-                {formData.imageSrc && (
-                  <p className="mt-2 text-sm text-gray-600">
-                    Terpilih: {formData.imageSrc.name}
-                  </p>
-                )}
-              </div>
-            </div>
+            <ImageUpload
+              _id="imageSrc"
+              label="Gambar Produk"
+              value={formData.imageSrc}
+              onChange={(file) => setFormData({ ...formData, imageSrc: file })}
+            />
           </div>
         </div>
-
         {/* Tombol Aksi */}
-        <div className="flex gap-4 mt-8 pt-6 border-t">
-          <Button 
-            className="bg-green-600 hover:bg-green-700 text-white px-6"
-            onClick={handleSubmit}
-          >
-            Create
-          </Button>
-          <Button 
-            variant="outline" 
-            className="px-6"
-            onClick={() => {
-              handleSubmit();
-              // Reset form untuk create another
-              setFormData({
-                title: "",
-                price: "",
-                imageSrc: null,
-                description: "",
-                info: "",
-                whatsappNumber: "",
-              });
-            }}
-          >
-            Create & create another
-          </Button>
-          <Link to="/admin/item">
-            <Button variant="outline" className="px-6">
-              Cancel
-            </Button>
-          </Link>
-        </div>
+        <FormActions
+          onSubmit={handleSubmit}
+          onCancel={() => navigate("/admin/item")}
+        />
       </div>
     </DashboardLayout>
   );

@@ -12,10 +12,8 @@ interface ProductDialogProps {
   onOpenChange: (open: boolean) => void;
   title: string;
   price: number;
-  sku: string;
   imageSrc: string;
   description: string;
-  info: string;
 }
 
 export function ProductDialog({
@@ -25,7 +23,7 @@ export function ProductDialog({
   price,
   imageSrc,
   description,
-  info,
+
 }: ProductDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -34,12 +32,9 @@ export function ProductDialog({
           {/* Gambar Produk */}
           <div className="relative w-full h-full max-h-[400px] md:max-h-none overflow-hidden">
             <img
-              src={imageSrc?.startsWith('/uploads') ? `${import.meta.env.VITE_API_URL.replace('/api', '')}${imageSrc}` : imageSrc}
+              src={`${import.meta.env.VITE_API_URL_IMAGE}${imageSrc}`}
               alt={title}
               className="w-full h-full object-cover"
-              onError={(e) => {
-                e.currentTarget.src = '/images/product-placeholder-5.jpg';
-              }}
             />
           </div>
 
@@ -60,9 +55,6 @@ export function ProductDialog({
               </DialogDescription>
 
               {/* Info Produk Langsung */}
-              <div className="mt-4 text-sm text-justify text-gray-800 leading-relaxed">
-                {info}
-              </div>
             </div>
 
             {/* Tombol Aksi */}

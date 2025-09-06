@@ -4,12 +4,12 @@ import AboutParallax from "@/pages/about/AboutParallax";
 import { useInView } from "../../hooks/useInView";
 import { useEffect } from "react";
 import MeetOurTeam from "./MeetOurTeam";
-import MapSection from "./MapSection"; // Pastikan path ini benar
+import MapSection from "./MapSection"; 
 
 const About = () => {
   const textInView = useInView();
   const imageInView = useInView();
-  const mapTextInView = useInView(); // Gunakan ref terpisah untuk teks di sebelah peta
+  const mapTextInView = useInView(); 
 
   useEffect(() => {
     window.scrollTo(0, 0);

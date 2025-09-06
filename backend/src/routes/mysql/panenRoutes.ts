@@ -10,8 +10,8 @@ router.get("/", async (req, res) => {
     const [rows] = await mysqlPool.execute(`
       SELECT p.*, 
              pt.nama AS petani_nama, 
-             t.nama AS tanaman_nama,
-             b.nama_penyedia AS bibit_nama_penyedia
+             t.namaTanaman AS tanaman_nama,
+             b.namaPenyedia AS bibit_nama_penyedia
       FROM panen p
       LEFT JOIN petani pt ON p.petani_id = pt.id
       LEFT JOIN tanaman t ON p.tanaman_id = t.id
@@ -33,8 +33,8 @@ router.get("/:id", async (req, res) => {
     const [rows] = await mysqlPool.execute(`
       SELECT p.*, 
              pt.nama AS petani_nama, 
-             t.nama AS tanaman_nama,
-             b.nama_penyedia AS bibit_nama_penyedia
+             t.namaTanaman AS tanaman_nama,
+             b.namaPenyedia AS bibit_nama_penyedia
       FROM panen p
       LEFT JOIN petani pt ON p.petani_id = pt.id
       LEFT JOIN tanaman t ON p.tanaman_id = t.id
@@ -60,15 +60,44 @@ router.post("/", async (req, res) => {
 
     const { 
       tanggalPanen, 
-      petani_id, 
-      tanaman_id,
+      petani, 
+      tanaman,
       lahan,
-      bibit_id,
+      bibit,
       pupuk,
       jumlahHasilPanen, 
       statusPenjualan, 
       namaPembeli
     } = req.body;
+
+    // First, get the IDs from names
+    let petani_id = null;
+    let tanaman_id = null;
+    let bibit_id = null;
+
+    // Get petani ID by name
+    if (petani) {
+      const [petaniRows] = await mysqlPool.execute("SELECT id FROM petani WHERE nama = ?", [petani]);
+      if ((petaniRows as any[]).length > 0) {
+        petani_id = (petaniRows as any[])[0].id;
+      }
+    }
+
+    // Get tanaman ID by name
+    if (tanaman) {
+      const [tanamanRows] = await mysqlPool.execute("SELECT id FROM tanaman WHERE namaTanaman = ?", [tanaman]);
+      if ((tanamanRows as any[]).length > 0) {
+        tanaman_id = (tanamanRows as any[])[0].id;
+      }
+    }
+
+    // Get bibit ID by namaPenyedia
+    if (bibit) {
+      const [bibitRows] = await mysqlPool.execute("SELECT id FROM bibit WHERE namaPenyedia = ?", [bibit]);
+      if ((bibitRows as any[]).length > 0) {
+        bibit_id = (bibitRows as any[])[0].id;
+      }
+    }
 
     const query = `
       INSERT INTO panen (
@@ -124,15 +153,44 @@ router.put("/:id", async (req, res) => {
 
     const { 
       tanggalPanen, 
-      petani_id, 
-      tanaman_id,
+      petani, 
+      tanaman,
       lahan,
-      bibit_id,
+      bibit,
       pupuk,
       jumlahHasilPanen, 
       statusPenjualan, 
       namaPembeli
     } = req.body;
+
+    // Get IDs from names
+    let petani_id = null;
+    let tanaman_id = null;
+    let bibit_id = null;
+
+    // Get petani ID by name
+    if (petani) {
+      const [petaniRows] = await mysqlPool.execute("SELECT id FROM petani WHERE nama = ?", [petani]);
+      if ((petaniRows as any[]).length > 0) {
+        petani_id = (petaniRows as any[])[0].id;
+      }
+    }
+
+    // Get tanaman ID by name
+    if (tanaman) {
+      const [tanamanRows] = await mysqlPool.execute("SELECT id FROM tanaman WHERE namaTanaman = ?", [tanaman]);
+      if ((tanamanRows as any[]).length > 0) {
+        tanaman_id = (tanamanRows as any[])[0].id;
+      }
+    }
+
+    // Get bibit ID by namaPenyedia
+    if (bibit) {
+      const [bibitRows] = await mysqlPool.execute("SELECT id FROM bibit WHERE namaPenyedia = ?", [bibit]);
+      if ((bibitRows as any[]).length > 0) {
+        bibit_id = (bibitRows as any[])[0].id;
+      }
+    }
 
     const [result] = await mysqlPool.execute(`
       UPDATE panen SET 

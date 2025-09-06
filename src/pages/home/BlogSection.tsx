@@ -67,7 +67,7 @@ export default function BlogSection({
   // Proses data setelah di-fetch
   const postsWithSlug = posts.map((post) => ({
     ...post,
-    slug: post.slug || slugify(post.title), // Use existing slug from API or create new one
+    slug: slugify(post.title),
   }));
 
   const filteredPosts = postsWithSlug
@@ -79,7 +79,6 @@ export default function BlogSection({
         .includes(searchQuery.toLowerCase());
       return matchesCategory && matchesSearch;
     })
-    // Sort posts by date (newest first) with GMT+7 consideration
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const limitedPosts =
@@ -113,6 +112,7 @@ export default function BlogSection({
             author={post.author}
             authorImage={post.authorImage}
           />
+          
         ))}
         {!loading && limitedPosts.length === 0 && (
           <div className="text-center col-span-full py-16">

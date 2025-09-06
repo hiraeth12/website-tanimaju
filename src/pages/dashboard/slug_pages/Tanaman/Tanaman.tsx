@@ -6,9 +6,11 @@ import { SearchBar } from "@/components/SearchBarProps";
 import { ActionButtons } from "@/components/ActionButton";
 import { TanamanTable } from "./TanamanTable";
 import { TableFooter } from "@/components/TableFooter";
+import { Alert } from "@/components/Alert";
+import { ConfirmAlert } from "@/components/ConfirmAlert";
 
 interface TanamanItem {
-  _id: string;
+  id: string;
   namaTanaman: string;
   pupuk: string;
 }
@@ -20,12 +22,18 @@ export default function TanamanPage() {
   const [loading, setLoading] = useState(false);
   const [perPage, setPerPage] = useState(10);
   const API_URL = import.meta.env.VITE_API_URL;
+  const [alert, setAlert] = useState<{
+    variant: "success" | "error";
+    title: string;
+    message: string;
+  } | null>(null);
+  const [confirmId, setConfirmId] = useState<string | null>(null);
   const fetchTanamanData = async () => {
     setLoading(true);
     try {
       const res = await fetch(`${API_URL}/tanaman`);
       const data = await res.json();
-      setTanamanData(data); 
+      setTanamanData(data);
     } catch (err) {
       console.error("Failed to load tanaman data:", err);
     } finally {
@@ -39,7 +47,7 @@ export default function TanamanPage() {
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedRows(tanamanData.map((item) => item._id));
+      setSelectedRows(tanamanData.map((item) => item.id));
     } else {
       setSelectedRows([]);
     }
@@ -60,20 +68,33 @@ export default function TanamanPage() {
   );
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Yakin ingin menghapus tanaman ini?")) return;
+    setConfirmId(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!confirmId) return;
 
     try {
-      const res = await fetch(`${API_URL}/tanaman/${id}`, {
+      const res = await fetch(`${API_URL}/tanaman/${confirmId}`, {
         method: "DELETE",
       });
 
       if (!res.ok) throw new Error("Gagal menghapus tanaman");
 
-      alert("Tanaman berhasil dihapus!");
-      fetchTanamanData(); 
+      setAlert({
+        variant: "success",
+        title: "Berhasil",
+        message: "Data Tanaman berhasil dihapus!",
+      });
+      fetchTanamanData();
     } catch (err) {
-      console.error("Error deleting tanaman:", err);
-      alert("Terjadi kesalahan saat menghapus tanaman");
+      setAlert({
+        variant: "error",
+        title: "Gagal",
+        message: "Terjadi kesalahan saat menghapus data tanaman",
+      });
+    } finally {
+      setConfirmId(null);
     }
   };
 
@@ -99,12 +120,34 @@ export default function TanamanPage() {
           />
         </div>
 
+        {alert && (
+          <div className="mb-4">
+            <Alert
+              variant={alert.variant}
+              title={alert.title}
+              duration={5000}
+              onClose={() => setAlert(null)}
+            >
+              {alert.message}
+            </Alert>
+          </div>
+        )}
+
+        {confirmId && (
+          <ConfirmAlert
+            title="Konfirmasi Hapus"
+            message="Yakin ingin menghapus data tanaman ini?"
+            onConfirm={confirmDelete}
+            onCancel={() => setConfirmId(null)}
+          />
+        )}
+
         <TanamanTable
           data={filteredData}
           selectedRows={selectedRows}
           onSelectAll={handleSelectAll}
           onSelectRow={handleSelectRow}
-          onDelete={handleDelete} 
+          onDelete={handleDelete}
         />
 
         <TableFooter

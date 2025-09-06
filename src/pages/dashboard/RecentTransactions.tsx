@@ -28,22 +28,25 @@ export const RecentTransactions = () => {
   const [harvestData, setHarvestData] = useState<HarvestItem[]>([]);
   const API_URL = import.meta.env.VITE_API_URL;
   const mapApiData = (item: any): HarvestItem => ({
-    _id: item._id,
-    date: item.tanggalPanen,
-    farmer: item.petani?.nama ?? "-",
-    field: item.lahan,
-    seedProvider: item.bibit?.namaPenyedia ?? "-",
-    plant: item.tanaman?.namaTanaman ?? "-",
-    fertilizer: item.pupuk ?? "-",
-    amount: item.jumlahHasilPanen ?? "0",
-    salesStatus: item.statusPenjualan ?? "-",
-    buyerName: item.namaPembeli ?? "-",
+    _id: item.id?.toString() || item._id,
+    date: item.tanggalPanen || item.date,
+    farmer: item.petani_nama || item.petani?.nama || "-",
+    field: item.lahan || item.field || "-",
+    seedProvider: item.bibit_nama_penyedia || item.bibit?.namaPenyedia || "-",
+    plant: item.tanaman_nama || item.tanaman?.namaTanaman || "-",
+    fertilizer: item.pupuk || item.fertilizer || "-",
+    amount: item.jumlahHasilPanen?.toString() || item.amount || "0",
+    salesStatus: item.statusPenjualan || item.salesStatus || "-",
+    buyerName: item.namaPembeli || item.buyerName || "-",
   });
 
   useEffect(() => {
     fetch(`${API_URL}/panen`)
       .then((res) => res.json())
-      .then((data) => setHarvestData(data.map(mapApiData))) // <-- pakai mapper
+      .then((data) => {
+        console.log("RecentTransactions API Data:", data); // Debug log
+        setHarvestData(data.map(mapApiData));
+      })
       .catch((err) => console.error("Failed to load data:", err));
   }, [API_URL]);
 
@@ -85,9 +88,9 @@ export const RecentTransactions = () => {
                   "Jumlah",
                   "Status",
                   "Pembeli",
-                ].map((header) => (
+                ].map((header, index) => (
                   <TableHead
-                    key={header}
+                    key={`header-${index}-${header.replace(/\s+/g, '-').toLowerCase()}`}
                     className="text-gray-700 whitespace-nowrap"
                   >
                     <div className="flex items-center gap-1">
@@ -99,26 +102,42 @@ export const RecentTransactions = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {harvestData.map((item) => (
-                <TableRow key={item._id}>
-                  <TableCell>
-                    {new Date(item.date).toLocaleDateString("id-ID", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                      timeZone: 'Asia/Jakarta'
-                    })}
+              {harvestData.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={9} className="text-center text-gray-500">
+                    Tidak ada data panen
                   </TableCell>
-                  <TableCell>{item.farmer}</TableCell>
-                  <TableCell>{item.field}</TableCell>
-                  <TableCell>{item.seedProvider}</TableCell>
-                  <TableCell>{item.plant}</TableCell>
-                  <TableCell>{item.fertilizer}</TableCell>
-                  <TableCell>{item.amount}</TableCell>
-                  <TableCell>{item.salesStatus}</TableCell>
-                  <TableCell>{item.buyerName}</TableCell>
                 </TableRow>
-              ))}
+              ) : (
+                harvestData.map((item, index) => (
+                  <TableRow key={`harvest-${item._id}-${index}`}>
+                    <TableCell>
+                      {item.date ? new Date(item.date).toLocaleDateString("id-ID", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                        timeZone: 'Asia/Jakarta'
+                      }) : "-"}
+                    </TableCell>
+                    <TableCell>{item.farmer}</TableCell>
+                    <TableCell>{item.field}</TableCell>
+                    <TableCell>{item.seedProvider}</TableCell>
+                    <TableCell>{item.plant}</TableCell>
+                    <TableCell>{item.fertilizer}</TableCell>
+                    <TableCell>{item.amount} kg</TableCell>
+                    <TableCell>
+                      <span className={`px-2 py-1 rounded-full text-xs ${
+                        item.salesStatus === 'Terjual' 
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-yellow-100 text-yellow-800'
+                      }`}>
+                        {item.salesStatus}
+                      </span>
+                    </TableCell>
+                    <TableCell>{item.buyerName}</TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </div>

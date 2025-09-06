@@ -5,6 +5,7 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { InputField } from "@/components/InputField";
 import { SelectField } from "@/components/SelectField";
 import { FormActions } from "@/components/FormActions";
+import { LoadingScreen } from "@/components/LoadingSpinner";
 
 interface HarvestItem {
   _id: string;
@@ -28,70 +29,42 @@ export default function EditPanenPage() {
   const [petaniList, setPetaniList] = useState<any[]>([]);
   const [bibitList, setBibitList] = useState<any[]>([]);
   const [tanamanList, setTanamanList] = useState<any[]>([]);
-  const mapApiData = (item: any): HarvestItem => {
-    // Helper function to safely format date
-    const formatDate = (dateValue: any): string => {
-      if (!dateValue) return "";
-      
-      // Handle different date formats
-      const date = new Date(dateValue);
-      if (isNaN(date.getTime())) {
-        // If direct conversion fails, try parsing MySQL datetime format
-        if (typeof dateValue === 'string' && dateValue.includes('T')) {
-          const parsedDate = new Date(dateValue.split('T')[0]);
-          if (!isNaN(parsedDate.getTime())) {
-            return parsedDate.toISOString().split('T')[0];
-          }
-        }
-        return "";
-      }
-      
-      return date.toISOString().split('T')[0];
-    };
+  const mapApiData = (item: any): HarvestItem => ({
+    _id: item.id.toString(),
+    date: item.tanggalPanen,
+    farmer: item.petani_nama || "",
+    field: item.lahan,
+    seedProvider: item.bibit_nama_penyedia || "",
+    plant: item.tanaman_nama || "",
+    fertilizer: item.pupuk,
+    amount: item.jumlahHasilPanen ?? 0,
+    salesStatus: item.statusPenjualan,
+    buyerName: item.namaPembeli ?? "",
+  });
 
-    return {
-      _id: item._id || item.id,
-      date: formatDate(item.date || item.tanggalPanen || item.tanggal_panen),
-      farmer: item.farmer || item.petani?._id || item.petani_id?.toString() || "",
-      field: item.field || item.lahan || "",
-      seedProvider: item.seedProvider || item.bibit?._id || item.bibit_id?.toString() || "",
-      plant: item.plant || item.tanaman?._id || item.tanaman_id?.toString() || "",
-      fertilizer: item.fertilizer || item.pupuk || "",
-      amount: item.amount || item.jumlahHasilPanen || item.jumlah || 0,
-      salesStatus: item.salesStatus || item.statusPenjualan || item.status_penjualan || "",
-      buyerName: item.buyerName || item.namaPembeli || item.nama_pembeli || "",
-    };
-  };
-
-  // fetch data panen by id (hanya setelah reference data dimuat)
+  // fetch data panen by id
   useEffect(() => {
-    if (!id || petaniList.length === 0 || tanamanList.length === 0 || bibitList.length === 0) return;
-    
+    if (!id) return;
     setLoading(true);
     fetch(`${API}/panen/${id}`)
       .then((res) => res.json())
-      .then((json) => {
-        const mappedData = mapApiData(json);
-        setData(mappedData);
-      })
+      .then((json) => setData(mapApiData(json)))
       .catch((err) => console.error("Failed to fetch panen data:", err))
       .finally(() => setLoading(false));
-  }, [id, petaniList, tanamanList, bibitList]);
+  }, [id, API]);
 
   // fetch list petani, bibit, tanaman
   useEffect(() => {
-    Promise.all([
-      fetch(`${API}/petani`).then((res) => res.json()),
-      fetch(`${API}/bibit`).then((res) => res.json()),
-      fetch(`${API}/tanaman`).then((res) => res.json()),
-    ])
-      .then(([petani, bibit, tanaman]) => {
-        setPetaniList(petani);
-        setBibitList(bibit);
-        setTanamanList(tanaman);
-      })
-      .catch((err) => console.error("Failed to fetch reference data:", err));
-  }, []);
+    fetch(`${API}/petani`)
+      .then((res) => res.json())
+      .then(setPetaniList);
+    fetch(`${API}/bibit`)
+      .then((res) => res.json())
+      .then(setBibitList);
+    fetch(`${API}/tanaman`)
+      .then((res) => res.json())
+      .then(setTanamanList);
+  }, [API]);
 
   const handleChange = (field: keyof HarvestItem, value: string | number) => {
     if (!data) return;
@@ -101,8 +74,11 @@ export default function EditPanenPage() {
   const handleSubmit = async () => {
     if (!data) return;
     try {
+      // Format tanggal ke YYYY-MM-DD
+      const formattedDate = data.date ? new Date(data.date).toISOString().split('T')[0] : '';
+      
       const payload = {
-        tanggalPanen: data.date,
+        tanggalPanen: formattedDate,
         petani: data.farmer,
         lahan: data.field,
         bibit: data.seedProvider,
@@ -113,24 +89,31 @@ export default function EditPanenPage() {
         namaPembeli: data.buyerName,
       };
 
+      console.log("Updating panen with payload:", payload);
+
       const res = await fetch(`${API}/panen/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
-      if (!res.ok) {
-        throw new Error("Gagal update panen");
-      }
+      if (!res.ok) throw new Error("Gagal update panen");
 
       alert("Data panen berhasil diperbarui!");
       navigate("/admin/panen");
     } catch (err) {
+      console.error(err);
       alert("Terjadi kesalahan saat update panen");
     }
   };
 
-  if (loading || !data) return <div className="p-6">Loading...</div>;
+  if (loading || !data) {
+    return (
+      <DashboardLayout>
+        <LoadingScreen />
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout>
@@ -141,51 +124,18 @@ export default function EditPanenPage() {
       {/* Title */}
       <div className="px-6 mb-6 ml-2">
         <h1 className="text-3xl font-bold text-gray-900">Edit Hasil Panen</h1>
-        {data && (
-          <div className="text-sm text-gray-600 mt-2">
-            Data terakhir diperbarui: {new Date(data.date || '').toLocaleDateString('id-ID')}
-          </div>
-        )}
       </div>
 
-      {/* Loading State */}
-      {(loading || petaniList.length === 0 || tanamanList.length === 0 || bibitList.length === 0) && (
-        <div className="bg-white rounded-lg shadow-sm p-8 text-center">
-          <div className="flex items-center justify-center space-x-2">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
-            <p>Memuat data...</p>
-          </div>
-        </div>
-      )}
-
-      {/* Error State */}
-      {!loading && !data && petaniList.length > 0 && tanamanList.length > 0 && bibitList.length > 0 && (
-        <div className="bg-white rounded-lg shadow-sm p-8 text-center">
-          <p className="text-red-600">Gagal memuat data panen</p>
-        </div>
-      )}
-
       {/* Form */}
-      {!loading && data && petaniList.length > 0 && tanamanList.length > 0 && bibitList.length > 0 && (
-        <div className="bg-white rounded-lg shadow-sm p-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Kolom Kiri */}
-            <div className="space-y-6">
+      <div className="bg-white rounded-lg shadow-sm p-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Kolom Kiri */}
+          <div className="space-y-6">
             <InputField
               id="date"
               label="Tanggal Panen"
               type="date"
-              value={(() => {
-                if (!data.date || data.date === "") {
-                  return "";
-                }
-                const date = new Date(data.date);
-                if (isNaN(date.getTime())) {
-                  return "";
-                }
-                const gmt7Date = new Date(date.getTime() + (7 * 60 * 60 * 1000));
-                return gmt7Date.toISOString().split("T")[0];
-              })()}
+              value={new Date(data.date).toISOString().split("T")[0]}
               onChange={(v) => handleChange("date", v)}
             />
 
@@ -194,14 +144,9 @@ export default function EditPanenPage() {
               label="Petani"
               value={data.farmer}
               onChange={(v) => handleChange("farmer", v)}
-              options={petaniList.map((p) => ({ label: p.nama, value: p._id.toString() }))}
+              options={petaniList.map((p) => ({ label: p.nama, value: p.nama }))}
               placeholder="Pilih petani"
             />
-            {data.farmer && (
-              <div className="text-sm text-gray-600 mt-1">
-                Petani terpilih: {petaniList.find(p => p._id.toString() === data.farmer)?.nama || 'Data tidak ditemukan'}
-              </div>
-            )}
 
             <SelectField
               id="field"
@@ -212,6 +157,7 @@ export default function EditPanenPage() {
                 { label: "Sukabirus", value: "Sukabirus" },
                 { label: "Sukapura", value: "Sukapura" },
                 { label: "Cikoneng", value: "Cikoneng" },
+                { label: "Cibiru", value: "Cibiru" },
               ]}
               placeholder="Pilih lahan"
             />
@@ -222,16 +168,11 @@ export default function EditPanenPage() {
               value={data.seedProvider}
               onChange={(v) => handleChange("seedProvider", v)}
               options={bibitList.map((b) => ({
-                value: b._id.toString(),
+                value: b.namaPenyedia,
                 label: b.namaPenyedia,
               }))}
               placeholder="Pilih bibit"
             />
-            {data.seedProvider && (
-              <div className="text-sm text-gray-600 mt-1">
-                Bibit terpilih: {bibitList.find(b => b._id.toString() === data.seedProvider)?.namaPenyedia || 'Data tidak ditemukan'}
-              </div>
-            )}
           </div>
 
           {/* Kolom Kanan */}
@@ -242,16 +183,11 @@ export default function EditPanenPage() {
               value={data.plant}
               onChange={(v) => handleChange("plant", v)}
               options={tanamanList.map((t) => ({
-                value: t._id.toString(),
+                value: t.namaTanaman,
                 label: t.namaTanaman,
               }))}
               placeholder="Pilih tanaman"
             />
-            {data.plant && (
-              <div className="text-sm text-gray-600 mt-1">
-                Tanaman terpilih: {tanamanList.find(t => t._id.toString() === data.plant)?.namaTanaman || 'Data tidak ditemukan'}
-              </div>
-            )}
 
             <SelectField
               id="fertilizer"
@@ -303,8 +239,7 @@ export default function EditPanenPage() {
           submitLabel="Simpan Perubahan"
           cancelLabel="Batal"
         />
-        </div>
-      )}
+      </div>
     </DashboardLayout>
   );
 }

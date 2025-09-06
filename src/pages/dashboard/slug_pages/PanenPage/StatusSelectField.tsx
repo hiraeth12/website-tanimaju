@@ -23,8 +23,8 @@ export function StatusSelectField({ value, onChange }: StatusSelectFieldProps) {
           <SelectValue placeholder="Pilih status" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="terjual">Terjual</SelectItem>
-          <SelectItem value="belum-terjual">Belum Terjual</SelectItem>
+          <SelectItem value="Terjual">Terjual</SelectItem>
+          <SelectItem value="Belum Terjual">Belum Terjual</SelectItem>
         </SelectContent>
       </Select>
     </div>

@@ -6,6 +6,7 @@ import { InputField } from "@/components/InputField";
 import { SelectField } from "@/components/SelectField";
 import { FormActions } from "@/components/FormActions";
 import { StatusSelectField } from "./StatusSelectField";
+import { useNotificationContext } from "@/context/NotificationContext";
 
 type FormData = {
   tanggalPanen: string;
@@ -41,21 +42,22 @@ export default function CreatePanenPage() {
   const [tanamans, setTanamans] = useState<any[]>([]);
   const API = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
+  const { addNotification } = useNotificationContext();
+
   const handleSubmit = async () => {
     try {
       const payload = {
-        tanggalPanen: formData.tanggalPanen, // Send as string, not Date object
-        petani: formData.petani,
+        petani: formData.petani, // pakai nama / string
+        tanaman: formData.tanaman, // pakai namaTanaman (varchar)
+        bibit: formData.bibit, // pakai namaPenyedia (varchar)
         lahan: formData.lahan,
-        bibit: formData.bibit,
-        tanaman: formData.tanaman,
         pupuk: formData.pupuk,
         jumlahHasilPanen: Number(formData.jumlahHasilPanen),
-        statusPenjualan: formData.statusPenjualan === "terjual" ? "Terjual" : "Tersedia",
-        namaPembeli: formData.namaPembeli,
+        tanggalPanen: formData.tanggalPanen,
+        statusPenjualan:
+          formData.statusPenjualan === "Terjual" ? "Terjual" : "Belum Terjual",
+        namaPembeli: formData.namaPembeli || null,
       };
-
-      console.log("🚀 Sending payload:", payload);
 
       const response = await fetch(`${API}/panen`, {
         method: "POST",
@@ -65,15 +67,17 @@ export default function CreatePanenPage() {
         body: JSON.stringify(payload),
       });
 
-      if (!response.ok) {
-        const errorData = await response.text();
-        console.error("❌ Error response:", errorData);
-        throw new Error("Gagal membuat panen");
-      }
+      if (!response.ok) throw new Error("Gagal membuat panen");
 
       const data = await response.json();
-      console.log("✅ Berhasil buat panen:", data);
-      alert("Data panen berhasil disimpan!");
+      console.log("Berhasil buat panen:", data);
+      
+      addNotification({
+        variant: "success",
+        title: "Berhasil!",
+        message: "Data panen berhasil disimpan!",
+        duration: 4000,
+      });
 
       // reset form
       setFormData({
@@ -91,7 +95,12 @@ export default function CreatePanenPage() {
       navigate("/admin/panen");
     } catch (error) {
       console.error(error);
-      alert("Terjadi kesalahan saat menyimpan panen");
+      addNotification({
+        variant: "error",
+        title: "Error!",
+        message: "Terjadi kesalahan saat menyimpan panen",
+        duration: 5000,
+      });
     }
   };
 
@@ -104,9 +113,17 @@ export default function CreatePanenPage() {
           fetch(`${API}/tanaman`).then((r) => r.json()),
         ]);
 
-        setPetanis(petaniRes);
-        setPenyediaBibit(bibitRes);
-        setTanamans(tanamanRes);
+        console.log("Petani data:", petaniRes);
+        console.log("Bibit data:", bibitRes);
+        console.log("Tanaman data:", tanamanRes);
+
+        setPetanis(Array.isArray(petaniRes) ? petaniRes : petaniRes.data || []);
+        setPenyediaBibit(
+          Array.isArray(bibitRes) ? bibitRes : bibitRes.data || []
+        );
+        setTanamans(
+          Array.isArray(tanamanRes) ? tanamanRes : tanamanRes.data || []
+        );
       } catch (err) {
         console.error("Gagal fetch data dropdown", err);
       }
@@ -131,33 +148,33 @@ export default function CreatePanenPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Column */}
           <div className="space-y-6">
-            {/* Tanggal Panen */}
             <InputField
               id="tanggalPanen"
               label="Tanggal Panen"
               type="date"
               required
-              value={formData.tanggalPanen}
+              value={formData.tanggalPanen || ""}
               onChange={(val) => handleChange("tanggalPanen", val)}
             />
 
-            {/* Petani */}
             <SelectField
               id="petani"
               label="Petani"
               required
               value={formData.petani}
               placeholder="Pilih petani"
-              options={petanis.map((p) => ({ value: p._id, label: p.nama }))}
+              options={petanis.map((p) => ({
+                value: p.nama, // ⚡ ambil nama langsung
+                label: p.nama,
+              }))}
               onChange={(val) => handleChange("petani", val)}
             />
 
-            {/* Lahan */}
             <SelectField
               id="lahan"
               label="Lahan"
               required
-              value={formData.lahan}
+              value={formData.lahan || ""}
               placeholder="Pilih lahan"
               options={[
                 { value: "Sukabirus", label: "Sukabirus" },
@@ -168,7 +185,6 @@ export default function CreatePanenPage() {
               onChange={(val) => handleChange("lahan", val)}
             />
 
-            {/* Nama Penyedia Bibit */}
             <SelectField
               id="bibit"
               label="Nama Penyedia Bibit"
@@ -176,7 +192,7 @@ export default function CreatePanenPage() {
               value={formData.bibit}
               placeholder="Pilih penyedia bibit"
               options={penyediaBibit.map((pb) => ({
-                value: pb._id,
+                value: pb.namaPenyedia, // ⚡ ambil nama langsung
                 label: pb.namaPenyedia,
               }))}
               onChange={(val) => handleChange("bibit", val)}
@@ -185,7 +201,6 @@ export default function CreatePanenPage() {
 
           {/* Right Column */}
           <div className="space-y-6">
-            {/* Tanaman */}
             <SelectField
               id="tanaman"
               label="Tanaman"
@@ -193,19 +208,17 @@ export default function CreatePanenPage() {
               value={formData.tanaman}
               placeholder="Pilih tanaman"
               options={tanamans.map((t) => ({
-                value: t._id,
+                value: t.namaTanaman, // ⚡ ambil nama langsung
                 label: t.namaTanaman,
               }))}
               onChange={(val) => handleChange("tanaman", val)}
-              
             />
 
-            {/* Pupuk */}
             <SelectField
               id="pupuk"
               label="Pupuk"
               required
-              value={formData.pupuk}
+              value={formData.pupuk || ""}
               placeholder="Pilih pupuk"
               options={[
                 { value: "Urea", label: "Urea" },
@@ -214,22 +227,19 @@ export default function CreatePanenPage() {
                 { value: "Organik Cair", label: "Organik Cair" },
               ]}
               onChange={(val) => handleChange("pupuk", val)}
-              
             />
 
-            {/* Jumlah hasil panen */}
             <InputField
               id="jumlahHasilPanen"
               label="Jumlah hasil panen (kg)"
               type="number"
               required
-              value={formData.jumlahHasilPanen}
+              value={formData.jumlahHasilPanen || ""}
               onChange={(val) => handleChange("jumlahHasilPanen", val)}
             />
 
-            {/* Status penjualan */}
             <StatusSelectField
-              value={formData.statusPenjualan}
+              value={formData.statusPenjualan || ""}
               onChange={(val) => handleChange("statusPenjualan", val)}
             />
 
@@ -237,13 +247,12 @@ export default function CreatePanenPage() {
               id="namaPembeli"
               label="Nama Pembeli"
               type="text"
-              value={formData.namaPembeli}
+              value={formData.namaPembeli || ""}
               onChange={(val) => handleChange("namaPembeli", val)}
             />
           </div>
         </div>
 
-        {/* Tombol Aksi */}
         <FormActions
           onSubmit={handleSubmit}
           onCancel={() => navigate("/admin/panen")}

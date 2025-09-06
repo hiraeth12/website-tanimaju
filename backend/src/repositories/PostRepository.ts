@@ -1,5 +1,5 @@
 // backend/src/repositories/PostRepository.ts
-import { executeQuery, executeTransaction } from '../config/mysql-database.js';
+import { executeQuery, executeTransaction, executeModifyQuery } from '../config/mysql-database.js';
 import { Post, PostWithTags, Tag, PostTag } from '../models/mysql/interfaces.js';
 
 export class PostRepository {
@@ -160,7 +160,7 @@ export class PostRepository {
   // Delete post
   static async delete(id: number): Promise<boolean> {
     const query = 'DELETE FROM posts WHERE id = ?';
-    const result = await executeQuery(query, [id]);
+    const result = await executeModifyQuery(query, [id]);
     return result.affectedRows > 0;
   }
 

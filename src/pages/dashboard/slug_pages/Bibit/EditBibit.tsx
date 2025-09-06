@@ -4,9 +4,10 @@ import { DashboardLayout } from "@/components/Layout/DashboardLayout";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { InputField } from "@/components/InputField";
 import { FormActions } from "@/components/FormActions";
+import { LoadingScreen } from "@/components/LoadingSpinner";
 
 type BibitForm = {
-  _id: string;
+  id: string;
   tanaman: string;
   sumber: string;
   namaPenyedia: string;
@@ -30,28 +31,12 @@ export default function EditBibitPage() {
       })
       .then((data) => {
         setFormData({
-          _id: data._id,
+          id: data.id,
           tanaman: data.tanaman || "",
           sumber: data.sumber || "",
           namaPenyedia: data.namaPenyedia || "",
           tanggalPemberian: data.tanggalPemberian
-            ? (() => {
-                try {
-                  const date = new Date(data.tanggalPemberian);
-                  if (isNaN(date.getTime())) {
-                    console.warn("Invalid date:", data.tanggalPemberian);
-                    return "";
-                  }
-                  // Convert to local time for input field
-                  const year = date.getFullYear();
-                  const month = String(date.getMonth() + 1).padStart(2, '0');
-                  const day = String(date.getDate()).padStart(2, '0');
-                  return `${year}-${month}-${day}`;
-                } catch (error) {
-                  console.error("Error parsing date:", error);
-                  return "";
-                }
-              })()
+            ? new Date(data.tanggalPemberian).toISOString().split("T")[0]
             : "",
         });
       })
@@ -90,7 +75,7 @@ export default function EditBibitPage() {
   if (loading || !formData) {
     return (
       <DashboardLayout>
-        <div className="p-6 text-gray-600">Memuat data tanaman...</div>
+        <LoadingScreen />
       </DashboardLayout>
     );
   }

@@ -1,4 +1,8 @@
+import { useAuth } from "@/context/AuthContext";
+
 export const TopBar = () => {
+  const { user } = useAuth();
+  
   const getGreeting = () => {
     const currentHour = new Date().getHours();
     if (currentHour < 11) {
@@ -21,12 +25,20 @@ export const TopBar = () => {
   };
   const formattedDate = today.toLocaleDateString("id-ID", options);
 
+  // Get user name with proper loading state
+  const getUserDisplayName = () => {
+    if (!user) {
+      return "Loading...";
+    }
+    return user.username;
+  };
+
   return (
     <div className="border-b px-6 py-4 border-stone-200 bg-white">
       <div className="flex items-center justify-between">
         <div className="min-w-0 flex-1">
           <span className="text-sm font-bold block truncate">
-            🚀 {getGreeting()}, Tom!
+            🚀 {getGreeting()}, {getUserDisplayName()}!
           </span>
           <span className="text-xs block text-stone-500 truncate">{formattedDate}</span>
         </div>

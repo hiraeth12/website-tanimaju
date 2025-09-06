@@ -6,6 +6,7 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { InputField } from "@/components/InputField";
 import { FormActions } from "@/components/FormActions";
 import { useNavigate } from "react-router-dom";
+import { useNotificationContext } from "@/context/NotificationContext";
 
 type BibitForm = {
   tanaman: string;
@@ -25,7 +26,9 @@ export default function CreateBibitPage() {
   const handleChange = (field: keyof BibitForm, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
+  
   const navigate = useNavigate();
+  const { addNotification } = useNotificationContext();
   const API = import.meta.env.VITE_API_URL;
 
   const handleSubmit = async () => {
@@ -44,7 +47,14 @@ export default function CreateBibitPage() {
 
       const data = await response.json();
       console.log("Berhasil buat bibit !:", data);
-      alert("Data bibit berhasil disimpan!");
+      
+      // Show success notification
+      addNotification({
+        variant: "success",
+        title: "Berhasil!",
+        message: "Data bibit berhasil disimpan!",
+        duration: 4000,
+      });
 
       // reset form
       setFormData({
@@ -57,7 +67,14 @@ export default function CreateBibitPage() {
       navigate("/admin/bibit");
     } catch (error) {
       console.error(error);
-      alert("Terjadi kesalahan saat menyimpan bibit");
+      
+      // Show error notification
+      addNotification({
+        variant: "error",
+        title: "Error!",
+        message: "Terjadi kesalahan saat menyimpan bibit",
+        duration: 5000,
+      });
     }
   };
 

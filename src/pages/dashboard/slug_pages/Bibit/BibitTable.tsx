@@ -1,4 +1,4 @@
-// src/components/tables/BibitTable.tsx
+// src/components/tables/TanamanTable.tsx
 
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,7 @@ import {
 import { ChevronDown } from "lucide-react";
 
 interface BibitItem {
-  _id: string;
+  id: string;
   tanaman: string;
   sumber: string;
   namaPenyedia: string;
@@ -47,7 +47,7 @@ export function BibitTable({
                 onCheckedChange={onSelectAll}
               />
             </TableHead>
-            {["Tanaman", "Sumber", "Nama Penyedia", "Tanggal Pemberian", "Aksi"].map(
+            {["Tanaman", "Sumber", "Nama Penyedia", "Tanggal Pemberian"].map(
               (header) => (
                 <TableHead key={header} className="text-gray-700">
                   <div className="flex items-center space-x-1">
@@ -61,12 +61,12 @@ export function BibitTable({
         </TableHeader>
         <TableBody>
           {data.map((item) => (
-            <TableRow key={item._id} className="hover:bg-gray-50">
+            <TableRow key={item.id} className="hover:bg-gray-50">
               <TableCell>
                 <Checkbox
-                  checked={selectedRows.includes(item._id)}
+                  checked={selectedRows.includes(item.id)}
                   onCheckedChange={(checked) =>
-                    onSelectRow(item._id, checked as boolean)
+                    onSelectRow(item.id, checked as boolean)
                   }
                 />
               </TableCell>
@@ -76,14 +76,12 @@ export function BibitTable({
               <TableCell className="text-gray-700">
                 {item.namaPenyedia}
               </TableCell>
-              <TableCell className="text-sm text-gray-600">
-                {new Date(item.tanggalPemberian).toLocaleDateString("id-ID", {
-                  timeZone: 'Asia/Jakarta'
-                })}
+              <TableCell className="text-gray-600">
+                {new Date(item.tanggalPemberian).toLocaleDateString("id-ID")}
               </TableCell>
               <TableCell>
                 <div className="flex gap-2">
-                  <Link to={`/admin/bibit/edit/${item._id}`}>
+                  <Link to={`/admin/bibit/edit/${item.id}`}>
                     <Button variant="outline" size="sm">
                       Edit
                     </Button>
@@ -91,7 +89,7 @@ export function BibitTable({
                   <Button
                     variant="destructive"
                     size="sm"
-                    onClick={() => onDelete(item._id)}
+                    onClick={() => onDelete(item.id)}
                   >
                     Hapus
                   </Button>

@@ -7,7 +7,7 @@ interface Post {
   image: string;
   date: string;
   category?: string;
-  content?: string;  // Changed from string[] to string
+  content?: string[];
   tags?: string[];
   authorImage?: string;
   author: string;
@@ -59,7 +59,7 @@ export default function BlogGrid({
 
   const postsWithSlug = posts.map((post) => ({
     ...post,
-    slug: post.slug || slugify(post.title), // Use existing slug from API or create new one
+    slug: slugify(post.title),
   }));
 
   const filteredPosts = postsWithSlug
@@ -71,7 +71,6 @@ export default function BlogGrid({
         .includes(searchQuery.toLowerCase());
       return matchesCategory && matchesSearch;
     })
-    // Sort posts by date (newest first) with GMT+7 consideration
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const limitedPosts =

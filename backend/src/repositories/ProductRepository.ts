@@ -1,5 +1,5 @@
 // backend/src/repositories/ProductRepository.ts
-import { executeQuery } from '../config/mysql-database.js';
+import { executeQuery, executeModifyQuery } from '../config/mysql-database.js';
 import { Product } from '../models/mysql/interfaces.js';
 
 export class ProductRepository {
@@ -21,7 +21,7 @@ export class ProductRepository {
       VALUES (?, ?, ?, ?, ?, ?)
     `;
     
-    const result = await executeQuery(query, [
+    const result = await executeModifyQuery(query, [
       productData.title,
       productData.price,
       productData.imageSrc,
@@ -49,13 +49,13 @@ export class ProductRepository {
     const query = `UPDATE products SET ${fields.join(', ')} WHERE id = ?`;
     values.push(id);
     
-    const result = await executeQuery(query, values);
+    const result = await executeModifyQuery(query, values);
     return result.affectedRows > 0;
   }
 
   static async delete(id: number): Promise<boolean> {
     const query = 'DELETE FROM products WHERE id = ?';
-    const result = await executeQuery(query, [id]);
+    const result = await executeModifyQuery(query, [id]);
     return result.affectedRows > 0;
   }
 

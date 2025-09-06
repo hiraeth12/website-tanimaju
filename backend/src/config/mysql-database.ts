@@ -68,6 +68,17 @@ export const executeQuery = async <T = any>(query: string, params?: any[]): Prom
   }
 };
 
+// Execute query for INSERT/UPDATE/DELETE operations
+export const executeModifyQuery = async (query: string, params?: any[]): Promise<any> => {
+  try {
+    const [result] = await pool.execute(query, params);
+    return result;
+  } catch (error) {
+    console.error('❌ Query execution failed:', query, error);
+    throw error;
+  }
+};
+
 // Transaction helper
 export const executeTransaction = async (
   queries: Array<{ query: string; params?: any[] }>

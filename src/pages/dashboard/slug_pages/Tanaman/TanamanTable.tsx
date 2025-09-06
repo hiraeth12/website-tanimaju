@@ -14,7 +14,7 @@ import {
 import { ChevronDown } from "lucide-react";
 
 interface TanamanItem {
-  _id: string;
+  id: string;
   namaTanaman: string;
   pupuk: string;
 }
@@ -57,12 +57,12 @@ export function TanamanTable({
         </TableHeader>
         <TableBody>
           {data.map((item) => (
-            <TableRow key={item._id} className="hover:bg-gray-50">
+            <TableRow key={item.id} className="hover:bg-gray-50">
               <TableCell>
                 <Checkbox
-                  checked={selectedRows.includes(item._id)}
+                  checked={selectedRows.includes(item.id)}
                   onCheckedChange={(checked) =>
-                    onSelectRow(item._id, checked as boolean)
+                    onSelectRow(item.id, checked as boolean)
                   }
                 />
               </TableCell>
@@ -73,7 +73,7 @@ export function TanamanTable({
               <TableCell className="text-gray-700">{item.pupuk}</TableCell>
               <TableCell>
                 <div className="flex gap-2">
-                  <Link to={`/admin/tanaman/edit/${item._id}`}>
+                  <Link to={`/admin/tanaman/edit/${item.id}`}>
                     <Button variant="outline" size="sm">
                       Edit
                     </Button>
@@ -81,7 +81,7 @@ export function TanamanTable({
                   <Button
                     variant="destructive"
                     size="sm"
-                    onClick={() => onDelete(item._id)}
+                    onClick={() => onDelete(item.id)}
                   >
                     Hapus
                   </Button>

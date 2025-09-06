@@ -1,15 +1,23 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { LogOut } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 export const Plan: React.FC = () => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
-  const handleLogout = () => {
-    // Optional: hapus data auth jika ada
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    navigate("/"); // redirect ke halaman utama
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate("/"); // redirect ke halaman utama
+    } catch (error) {
+      console.error("Logout error:", error);
+      // Fallback: clear local storage and redirect anyway
+      localStorage.removeItem("user");
+      localStorage.removeItem("authToken");
+      navigate("/");
+    }
   };
 
   return (

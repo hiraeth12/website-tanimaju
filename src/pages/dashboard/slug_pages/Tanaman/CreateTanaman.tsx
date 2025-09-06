@@ -7,6 +7,7 @@ import { InputField } from "@/components/InputField";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { FormActions } from "@/components/FormActions";
 import { useNavigate } from "react-router-dom";
+import { useNotificationContext } from "@/context/NotificationContext";
 
 type TanamanForm = {
   namaTanaman: string;
@@ -24,6 +25,7 @@ export default function CreateTanamanPage() {
   };
 
   const navigate = useNavigate();
+  const { addNotification } = useNotificationContext();
   const API = import.meta.env.VITE_API_URL;
 
   const handleSubmit = async () => {
@@ -42,7 +44,13 @@ export default function CreateTanamanPage() {
 
       const data = await response.json();
       console.log("Berhasil buat tanaman:", data);
-      alert("Data tanaman berhasil disimpan!");
+      
+      addNotification({
+        variant: "success",
+        title: "Berhasil!",
+        message: "Data tanaman berhasil disimpan!",
+        duration: 4000,
+      });
 
       // reset form
       setFormData({
@@ -53,7 +61,12 @@ export default function CreateTanamanPage() {
       navigate("/admin/tanaman");
     } catch (error) {
       console.error(error);
-      alert("Terjadi kesalahan saat menyimpan tanaman");
+      addNotification({
+        variant: "error",
+        title: "Error!",
+        message: "Terjadi kesalahan saat menyimpan tanaman",
+        duration: 5000,
+      });
     }
   };
 

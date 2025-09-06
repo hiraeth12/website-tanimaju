@@ -11,24 +11,24 @@
     }
   },
   {
-    "name": "Sam Rivera",
+    "name": "Nur Ihsan Hidayat",
     "role": "Backend Engineer",
     "bio": "Bringing beautiful, functional designs to life with a focus on user experience.",
     "image": "/images/about/card-2.jpg",
     "social": {
-      "Instagram": "https://twitter.com",
-      "linkedin": "https://linkedin.com",
-      "github": "https://github.com"
+      "Instagram": "https://www.instagram.com/ihsanhidayaat",
+      "linkedin": "https://www.linkedin.com/in/ihsanhidayaat",
+      "github": "https://github.com/ihsanhidayaat"
     }
   },
   {
-    "name": "Taylor Chen",
-    "role": "UI/UX Designer",
+    "name": "Mija Ulina Tanjung",
+    "role": "Script Writer",
     "bio": "Building robust, scalable solutions with cutting-edge technologies.",
     "image": "/images/about/card-3.jpg",
     "social": {
-      "Instagram": "https://twitter.com",
-      "linkedin": "https://linkedin.com",
+      "Instagram": "https://www.instagram.com/lina_tnjg",
+      "linkedin": "https://www.linkedin.com/in/mija-ulina-tanjung-6625a4355",
       "github": "https://github.com"
     }
   }

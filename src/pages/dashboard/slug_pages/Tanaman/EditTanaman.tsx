@@ -5,9 +5,11 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { InputField } from "@/components/InputField";
 import { SelectField } from "@/components/SelectField";
 import { FormActions } from "@/components/FormActions";
+import { LoadingScreen } from "@/components/LoadingSpinner";
+import { useNotificationContext } from "@/context/NotificationContext";
 
 type TanamanForm = {
-  _id: string;
+  id: string;
   namaTanaman: string;
   pupuk: string;
 };
@@ -15,6 +17,7 @@ type TanamanForm = {
 export default function EditTanamanPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { addNotification } = useNotificationContext();
   const [formData, setFormData] = useState<TanamanForm | null>(null);
   const [loading, setLoading] = useState(false);
   const API = import.meta.env.VITE_API_URL;
@@ -29,7 +32,7 @@ export default function EditTanamanPage() {
       })
       .then((data) => {
         setFormData({
-          _id: data._id,
+          id: data.id,
           namaTanaman: data.namaTanaman,
           pupuk: data.pupuk,
         });
@@ -56,18 +59,28 @@ export default function EditTanamanPage() {
 
       if (!res.ok) throw new Error("Gagal update tanaman");
 
-      alert("Data tanaman berhasil diperbarui!");
+      addNotification({
+        variant: "success",
+        title: "Berhasil!",
+        message: "Data tanaman berhasil diperbarui!",
+        duration: 4000,
+      });
       navigate("/admin/tanaman");
     } catch (err) {
       console.error(err);
-      alert("Terjadi kesalahan saat update tanaman");
+      addNotification({
+        variant: "error",
+        title: "Error!",
+        message: "Terjadi kesalahan saat update tanaman",
+        duration: 5000,
+      });
     }
   };
 
   if (loading || !formData) {
     return (
       <DashboardLayout>
-        <div className="p-6 text-gray-600">Memuat data tanaman...</div>
+        <LoadingScreen />
       </DashboardLayout>
     );
   }

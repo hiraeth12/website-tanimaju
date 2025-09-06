@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import path from "path";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 const app = express();
@@ -10,11 +11,13 @@ const allowedOrigins = (process.env.CLIENT_URL || "").split(",");
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
+app.use(cookieParser()); // Add cookie parser middleware
 app.use(
   cors({
     origin: allowedOrigins,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true, // Enable credentials for cookies
   })
 );
 
@@ -43,6 +46,9 @@ const startServer = async () => {
     const { default: panenRoutesMysql } = await import(
       "./routes/mysql/panenRoutes.js"
     );
+    const { default: authRoutesMysql } = await import(
+      "./routes/mysql/authRoutes.js"
+    );
 
     app.use("/api/products", productRoutesMysql);
     app.use("/api/petani", petaniRoutesMysql);
@@ -50,6 +56,7 @@ const startServer = async () => {
     app.use("/api/bibit", bibitRoutesMysql);
     app.use("/api/tanaman", tanamanRoutesMysql);
     app.use("/api/panen", panenRoutesMysql);
+    app.use("/api/auth", authRoutesMysql); // Add auth routes
 
     // tes koneksi MySQL
     const connected = await testConnection();

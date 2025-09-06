@@ -63,7 +63,7 @@ const Home = () => {
             transition={{ delay: 0.3 }}
             className="text-white text-5xl md:text-7xl font-bold mb-4"
           >
-            Fresh Produce
+            Healthy & Sustainable
           </motion.h2>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -71,7 +71,7 @@ const Home = () => {
             transition={{ delay: 0.5 }}
             className="text-white text-5xl md:text-7xl font-bold mb-8"
           >
-            Delivery
+            Farm Fresh Goodness
           </motion.h2>
           <motion.p
             initial={{ opacity: 0 }}
@@ -79,7 +79,7 @@ const Home = () => {
             transition={{ delay: 0.7 }}
             className="text-white text-xl md:text-2xl mb-8"
           >
-            From Our Farm to Your Doorstep
+            Connecting Farmers with Communities
           </motion.p>
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}

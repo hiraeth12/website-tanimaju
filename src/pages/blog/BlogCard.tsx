@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Eye, Forward } from "lucide-react";
+import {  Forward } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ShareDialog } from "./ShareDialog"; // Impor komponen baru
 
@@ -20,11 +19,6 @@ export default function BlogCard({
   author,
   authorImage,
 }: BlogCardProps) {
-  const [views, setViews] = useState(0);
-
-  const handleTitleClick = () => {
-    setViews((prev) => prev + 1);
-  };
 
   return (
     <div className="bg-white rounded-lg overflow-hidden shadow-sm font-body transition-transform w-full max-w-[800px] flex flex-col">
@@ -32,12 +26,9 @@ export default function BlogCard({
       <div className="aspect-[16/9] overflow-hidden items-center relative">
         <Link to={`/blog/${slug}`} className="block w-full h-full">
           <img
-            src={image?.startsWith('/uploads') ? `${import.meta.env.VITE_API_URL.replace('/api', '')}${image}` : image}
+            src={`${import.meta.env.VITE_API_URL_IMAGE}${image}`}
             alt={title}
             className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-            onError={(e) => {
-              e.currentTarget.src = '/images/blog/blog-placeholder-1.jpg';
-            }}
           />
         </Link>
       </div>
@@ -50,7 +41,7 @@ export default function BlogCard({
             <div className="flex items-center">
               {authorImage ? (
                 <img
-                  src={authorImage}
+                  src={`${import.meta.env.VITE_API_URL_IMAGE}${authorImage}`}
                   alt="Admin"
                   className="w-8 h-8 rounded-full object-cover mr-3"
                 />
@@ -59,7 +50,13 @@ export default function BlogCard({
               )}
               <div>
                 <p className="text-sm font-medium">{author}</p>
-                <p className="text-xs text-gray-500">{date}</p>
+                <p className="text-xs text-gray-500">
+                  {new Date(date).toLocaleDateString("id-ID", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </p>
               </div>
             </div>
 
@@ -77,7 +74,7 @@ export default function BlogCard({
           <h3 className="text-xl font-medium text-slate-800 mb-6 cursor-pointer">
             <Link
               to={`/blog/${slug}`}
-              onClick={handleTitleClick}
+
               className="transition-all duration-300"
             >
               <span className="relative hover:bg-gradient-to-r from-cyan-500 to-emerald-600 hover:bg-clip-text hover:text-transparent text-base md:text-lg font-cascadia">
@@ -85,12 +82,6 @@ export default function BlogCard({
               </span>
             </Link>
           </h3>
-        </div>
-
-        {/* View Count */}
-        <div className="mt-auto flex items-center space-x-1">
-          <Eye className="w-4 h-4 text-gray-400" />
-          <span className="text-sm text-gray-500">{views}</span>
         </div>
       </div>
     </div>

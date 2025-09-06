@@ -74,29 +74,26 @@ CREATE TABLE post_tags (
 -- Bibit Table
 CREATE TABLE bibit (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nama VARCHAR(255) NOT NULL,
-    jenis VARCHAR(100),
-    harga DECIMAL(10,2),
-    stok INT DEFAULT 0,
-    deskripsi TEXT,
-    gambar VARCHAR(500),
+    tanaman VARCHAR(255),
+    sumber VARCHAR(255),
+    namaPenyedia VARCHAR(255) NOT NULL,
+    tanggalPemberian DATE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_nama (nama),
-    INDEX idx_jenis (jenis)
+    INDEX idx_nama_penyedia (namaPenyedia)
 );
 
 -- Tanaman Table
 CREATE TABLE tanaman (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nama VARCHAR(255) NOT NULL,
+    namaTanaman VARCHAR(255) NOT NULL,
     pupuk VARCHAR(255),
     musim_tanam VARCHAR(100),
     waktu_panen VARCHAR(100),
     deskripsi TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_nama (nama)
+    INDEX idx_nama_tanaman (namaTanaman)
 );
 
 -- Panen Table
@@ -104,17 +101,20 @@ CREATE TABLE panen (
     id INT AUTO_INCREMENT PRIMARY KEY,
     petani_id INT,
     tanaman_id INT,
-    jumlah DECIMAL(10,2),
-    satuan VARCHAR(50),
-    tanggal_panen DATE,
-    kualitas ENUM('A', 'B', 'C') DEFAULT 'B',
-    harga_per_satuan DECIMAL(10,2),
-    total_nilai DECIMAL(12,2) AS (jumlah * harga_per_satuan) STORED,
+    lahan VARCHAR(255),
+    bibit_id INT,
+    pupuk VARCHAR(255),
+    jumlahHasilPanen DECIMAL(10,2),
+    tanggalPanen DATE,
+    statusPenjualan ENUM('Terjual', 'Belum Terjual') DEFAULT 'Belum Terjual',
+    namaPembeli VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (petani_id) REFERENCES petani(id) ON DELETE SET NULL,
     FOREIGN KEY (tanaman_id) REFERENCES tanaman(id) ON DELETE SET NULL,
+    FOREIGN KEY (bibit_id) REFERENCES bibit(id) ON DELETE SET NULL,
     INDEX idx_petani_id (petani_id),
     INDEX idx_tanaman_id (tanaman_id),
-    INDEX idx_tanggal_panen (tanggal_panen)
+    INDEX idx_bibit_id (bibit_id),
+    INDEX idx_tanggal_panen (tanggalPanen)
 );
