@@ -26,7 +26,7 @@ export default function RegisterPage() {
     message: string;
   } | null>(null);
   const [loading, setLoading] = useState(false);
-  
+
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL;
 
@@ -35,12 +35,12 @@ export default function RegisterPage() {
   };
 
   const handleInputChange = (field: keyof RegisterForm, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.namaLengkap || !formData.email || !formData.password) {
       setAlert({
         variant: "error",
@@ -79,7 +79,8 @@ export default function RegisterPage() {
         setAlert({
           variant: "success",
           title: "Success",
-          message: "Registration successful! Please wait for admin approval. Redirecting to login...",
+          message:
+            "Registration successful! Please wait for admin approval. Redirecting to login...",
         });
 
         // Redirect to login after 3 seconds
@@ -153,7 +154,9 @@ export default function RegisterPage() {
                 placeholder="Masukkan nama username Anda"
                 className="h-11 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500"
                 value={formData.namaLengkap}
-                onChange={(e) => handleInputChange("namaLengkap", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("namaLengkap", e.target.value)
+                }
                 required
               />
             </div>
@@ -192,7 +195,9 @@ export default function RegisterPage() {
                   placeholder="Masukkan password Anda"
                   className="h-11 pr-10 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500"
                   value={formData.password}
-                  onChange={(e) => handleInputChange("password", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("password", e.target.value)
+                  }
                   required
                   minLength={6}
                 />

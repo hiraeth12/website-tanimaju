@@ -17,18 +17,27 @@ interface ActionButtonsProps {
 
 export function ActionButtons({ onRefresh, loading, actions }: ActionButtonsProps) {
   return (
-    <div className="flex gap-2">
+    <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
       {/* Tombol Refresh */}
-      <Button variant="outline" onClick={onRefresh} disabled={loading}>
+      <Button 
+        variant="outline" 
+        onClick={onRefresh} 
+        disabled={loading}
+        className="w-full sm:w-auto order-2 sm:order-1"
+      >
         <RefreshCw className={`w-4 h-4 mr-2 ${loading ? "animate-spin" : ""}`} />
-        {loading ? "Memuat..." : "Muat Ulang"}
+        <span className="hidden sm:inline">{loading ? "Memuat..." : "Muat Ulang"}</span>
+        <span className="sm:hidden">{loading ? "Loading..." : "Refresh"}</span>
       </Button>
 
       {/* Tombol Tambahan */}
       {actions?.map((action) => (
-        <Link key={action.to} to={action.to}>
-          <Button variant={action.variant ?? "default"} className={action.className}>
-            {action.label}
+        <Link key={action.to} to={action.to} className="w-full sm:w-auto order-1 sm:order-2">
+          <Button 
+            variant={action.variant ?? "default"} 
+            className={`w-full sm:w-auto ${action.className || ""}`}
+          >
+            <span className="text-sm sm:text-base">{action.label}</span>
           </Button>
         </Link>
       ))}

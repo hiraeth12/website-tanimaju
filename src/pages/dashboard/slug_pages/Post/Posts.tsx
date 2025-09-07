@@ -103,12 +103,12 @@ export default function PostsPage() {
 
   return (
     <DashboardLayout>
-      <div className="px-6 py-4">
+      <div className="px-4 sm:px-6 py-4">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold text-gray-800">Blog Posts</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Blog Posts</h1>
         </div>
 
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <SearchBar value={searchTerm} onChange={setSearchTerm} />
           <ActionButtons
             onRefresh={fetchBlogData}

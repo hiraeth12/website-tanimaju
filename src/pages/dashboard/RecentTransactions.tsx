@@ -44,7 +44,7 @@ export const RecentTransactions = () => {
     fetch(`${API_URL}/panen`)
       .then((res) => res.json())
       .then((data) => {
-        console.log("RecentTransactions API Data:", data); // Debug log
+        //console.log("RecentTransactions API Data:", data); // Debug log
         setHarvestData(data.map(mapApiData));
       })
       .catch((err) => console.error("Failed to load data:", err));

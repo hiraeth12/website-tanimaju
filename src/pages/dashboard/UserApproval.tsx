@@ -19,7 +19,7 @@ import { CheckCircle, XCircle, Clock } from "lucide-react";
 
 interface User {
   id: string;
-  nama: string;
+  username: string;
   email: string;
   status: "pending" | "approved" | "rejected";
   createdAt: string;
@@ -44,7 +44,7 @@ export default function UserApprovalPage() {
 
   const mapApiData = (item: any): User => ({
     id: item.id.toString(),
-    nama: item.nama || "",
+    username: item.username || "",
     email: item.email || "",
     status: item.status || "pending",
     createdAt: item.created_at || item.createdAt || "",
@@ -175,12 +175,12 @@ export default function UserApprovalPage() {
 
   return (
     <DashboardLayout>
-      <div className="px-6 py-4">
+      <div className="px-4 sm:px-6 py-4">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold">User Approval</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">User Approval</h1>
         </div>
 
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <SearchBar value={searchTerm} onChange={setSearchTerm} />
 
           <ActionButtons
@@ -215,7 +215,7 @@ export default function UserApprovalPage() {
         )}
 
         {/* Table */}
-        <div className="bg-white border rounded-lg shadow-sm mb-6">
+        <div className="bg-white border rounded-lg shadow-sm mb-6 overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
@@ -245,38 +245,41 @@ export default function UserApprovalPage() {
                 filteredUsers.map((user, index) => (
                   <TableRow key={user.id}>
                     <TableCell className="font-medium">{index + 1}</TableCell>
-                    <TableCell className="font-medium">{user.nama}</TableCell>
+                    <TableCell className="font-medium">{user.username}</TableCell>
                     <TableCell>{user.email}</TableCell>
                     <TableCell>{getStatusBadge(user.status)}</TableCell>
                     <TableCell>{formatDate(user.createdAt)}</TableCell>
                     <TableCell>
-                      <div className="flex items-center justify-center gap-2">
+                      <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
                         {user.status === "pending" && (
                           <>
                             <Button
                               size="sm"
                               onClick={() =>
-                                handleAction("approve", user.id, user.nama)
+                                handleAction("approve", user.id, user.username)
                               }
-                              className="bg-green-600 hover:bg-green-700 text-white"
+                              className="bg-green-600 hover:bg-green-700 text-white w-full sm:w-auto"
                             >
                               <CheckCircle className="w-4 h-4 mr-1" />
-                              Approve
+                              <span className="hidden sm:inline">Approve</span>
+                              <span className="sm:hidden">✓</span>
                             </Button>
                             <Button
                               size="sm"
                               variant="destructive"
                               onClick={() =>
-                                handleAction("reject", user.id, user.nama)
+                                handleAction("reject", user.id, user.username)
                               }
+                              className="w-full sm:w-auto"
                             >
                               <XCircle className="w-4 h-4 mr-1" />
-                              Reject
+                              <span className="hidden sm:inline">Reject</span>
+                              <span className="sm:hidden">✗</span>
                             </Button>
                           </>
                         )}
                         {user.status !== "pending" && (
-                          <span className="text-sm text-gray-500">
+                          <span className="text-xs sm:text-sm text-gray-500 text-center">
                             {user.status === "approved"
                               ? "Already approved"
                               : "Already rejected"}

@@ -1,6 +1,5 @@
 // src/components/admin/ItemTable.tsx
 import React from "react";
-import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -46,7 +45,7 @@ const ItemTable: React.FC<ItemTableProps> = ({
     <div className="bg-white border border-gray-200 rounded-lg shadow-sm mb-6 overflow-auto">
       <Table>
         <TableHeader>
-          <TableRow>
+          <TableRow key="header-row">
             <TableHead className="w-12">
               <Checkbox
                 checked={
@@ -65,8 +64,8 @@ const ItemTable: React.FC<ItemTableProps> = ({
               "Deskripsi",
               "WhatsApp",
               "Aksi",
-            ].map((header) => (
-              <TableHead key={header} className="text-gray-700">
+            ].map((header, index) => (
+              <TableHead key={`header-${index}-${header}`} className="text-gray-700">
                 <div className="flex items-center space-x-1">
                   <span>{header}</span>
                   <ChevronDown className="w-4 h-4 text-gray-400" />
@@ -115,11 +114,18 @@ const ItemTable: React.FC<ItemTableProps> = ({
               </TableCell>
               <TableCell>
                 <div className="flex gap-2">
-                  <Link to={`/admin/item/edit/${item.id}`}>
-                    <Button variant="outline" size="sm">
-                      Edit
-                    </Button>
-                  </Link>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      console.log("Edit clicked for item:", item.id);
+                      window.location.href = `/admin/item/edit/${item.id}`;
+                    }}
+                  >
+                    Edit
+                  </Button>
                   <Button
                     variant="destructive"
                     size="sm"

@@ -27,9 +27,10 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out
         lg:relative lg:transform-none lg:shadow-none lg:flex-shrink-0
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+        flex flex-col
       `}>
         {/* Mobile header - only show on mobile */}
-        <div className="flex items-center justify-between px-4 py-4 border-b lg:hidden">
+        <div className="flex items-center justify-between px-4 py-4 border-b lg:hidden flex-shrink-0">
           <span className="text-lg font-semibold">Dashboard</span>
           <button 
             onClick={() => setSidebarOpen(false)}
@@ -38,7 +39,9 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             ×
           </button>
         </div>
-        <Sidebar />
+        <div className="flex-1 min-h-0">
+          <Sidebar />
+        </div>
       </div>
 
       {/* Main content area - flex to fill remaining space */}

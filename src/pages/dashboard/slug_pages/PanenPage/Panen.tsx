@@ -61,7 +61,7 @@ export default function PanenPage() {
       const res = await fetch(`${API_URL}/panen`);
       const raw = await res.json();
       const mapped = raw.map(mapApiData);
-      console.log("🗂️ Mapped data:", mapped);
+      //console.log("🗂️ Mapped data:", mapped);
 
       setHarvestData(mapped);
     } catch (err) {
@@ -122,12 +122,12 @@ export default function PanenPage() {
 
   return (
     <DashboardLayout>
-      <div className="px-6 py-4">
+      <div className="px-4 sm:px-6 py-4">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold">Panen</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">Panen</h1>
         </div>
 
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <SearchBar value={searchTerm} onChange={setSearchTerm} />
 
           <ActionButtons
@@ -166,7 +166,7 @@ export default function PanenPage() {
         )}
 
         {/* Table */}
-        <div className="bg-white border rounded-lg shadow-sm mb-6">
+        <div className="bg-white border rounded-lg shadow-sm mb-6 overflow-x-auto">
           <Table>
             <TableHeader>
               <PanenTableHeader

@@ -23,7 +23,7 @@ export default function ProductCard({
         <div className="relative aspect-square w-full overflow-hidden bg-gray-50 rounded-t-lg">
           {imageSrc ? (
             <img
-              src={imageSrc?.startsWith('/uploads') ? `${import.meta.env.VITE_API_URL.replace('/api', '')}${imageSrc}` : imageSrc}
+              src={`${import.meta.env.VITE_API_URL_IMAGE}${imageSrc}`}
               alt={title}
               className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
               onError={(e) => {

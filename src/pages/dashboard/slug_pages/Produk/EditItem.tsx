@@ -11,7 +11,7 @@ import { LoadingScreen } from "@/components/LoadingSpinner";
 import { useNotificationContext } from "@/context/NotificationContext";
 
 type ProductForm = {
-  _id: string;
+  id: string;
   title: string;
   price: string;
   imageSrc: string | File | null;
@@ -21,35 +21,71 @@ type ProductForm = {
 };
 
 export default function EditItemPage() {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const [formData, setFormData] = useState<ProductForm | null>(null);
   const [loading, setLoading] = useState(false);
   const API = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
   const { addNotification } = useNotificationContext();
 
-  useEffect(() => {
-    if (!id) return;
+  useEffect(() => {    
+    // Pastikan id ada dan bukan string kosong
+    if (!id || id.trim() === '') {
+      console.error("ID produk tidak valid:", id);
+      addNotification({
+        variant: "error",
+        title: "Error!",
+        message: "ID produk tidak ditemukan atau tidak valid",
+        duration: 5000,
+      });
+      navigate("/admin/item");
+      return;
+    }
+
+    let isMounted = true;
+    
     setLoading(true);
+    
     fetch(`${API}/products/${id}`)
       .then((res) => {
-        if (!res.ok) throw new Error("Gagal fetch produk");
+        if (!res.ok) throw new Error(`HTTP ${res.status}: Gagal fetch produk`);
         return res.json();
       })
       .then((data) => {
-        setFormData({
-          _id: data._id,
-          title: data.title || "",
-          price: data.price || "",
-          imageSrc: data.imageSrc || null,
-          description: data.description || "",
-          info: data.info || "",
-          whatsappNumber: data.whatsappNumber || "",
-        });
+        if (isMounted) {
+          setFormData({
+            id: data.id,
+            title: data.title || "",
+            price: data.price || "",
+            imageSrc: data.imageSrc || null,
+            description: data.description || "",
+            info: data.info || "",
+            whatsappNumber: data.whatsappNumber || "",
+          });
+        }
       })
-      .catch((err) => console.error("Gagal memuat produk:", err))
-      .finally(() => setLoading(false));
-  }, [id]);
+      .catch((err) => {
+        console.error("Gagal memuat produk:", err);
+        if (isMounted) {
+          addNotification({
+            variant: "error",
+            title: "Error!",
+            message: `Gagal memuat data produk: ${err.message}`,
+            duration: 5000,
+          });
+          navigate("/admin/item");
+        }
+      })
+      .finally(() => {
+        if (isMounted) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [id, API, navigate, addNotification]);
 
   const handleChange = (
     field: keyof ProductForm,
@@ -60,7 +96,16 @@ export default function EditItemPage() {
 
   // ✅ Submit update data
   const handleSubmit = async () => {
-    if (!formData) return;
+    if (!formData || !id) {
+      addNotification({
+        variant: "error",
+        title: "Error!",
+        message: "Data tidak valid",
+        duration: 5000,
+      });
+      return;
+    }
+    
     try {
       const form = new FormData();
       form.append("title", formData.title);

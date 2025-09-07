@@ -177,11 +177,11 @@ export default function ProductDetail() {
             {/* Kolom kiri: Gambar + Deskripsi */}
             <div>
               <img
-                src={product.imageSrc?.startsWith('/uploads') ? `${import.meta.env.VITE_API_URL.replace('/api', '')}${product.imageSrc}` : product.imageSrc}
+                src={`${import.meta.env.VITE_API_URL_IMAGE}${product.imageSrc}`}
                 alt={product.title}
                 className="w-full h-auto rounded-lg shadow-md"
                 onError={(e) => {
-                  e.currentTarget.src = '/images/product-placeholder-5.jpg';
+                  e.currentTarget.src = "/images/product-placeholder-5.jpg";
                 }}
               />
               <div className="mt-6 text-black">
