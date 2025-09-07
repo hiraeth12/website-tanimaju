@@ -1,5 +1,5 @@
 # **TaniMaju**
----
+
 
 <div align="center">
   
@@ -15,7 +15,7 @@
   
 </div>
 
----
+
 ## **Website Manajemen Hasil Panen Desa**
 <div align ="justify">
 
@@ -23,7 +23,6 @@ TaniMaju is a web-based platform designed to help village communities manage and
 
 </div>
 
----
 
 ## **Features**
  - Manajemen Panen: Tambah, edit, dan hapus data hasil panen desa.
@@ -32,14 +31,14 @@ TaniMaju is a web-based platform designed to help village communities manage and
  - Peran Pengguna: Dukungan untuk admin dan pengguna biasa dengan izin yang disesuaikan.
  - Desain Responsif: Dioptimalkan untuk perangkat desktop dan seluler.
 
----
+
 
 ## Usage
 - Masuk atau Daftar sebagai pengguna.
 - Menambah record panen di halaman dasboard.
 - Create read delete update untuk panen, item , tanaman .
 - Mendapatkan report dalam bentuk csv.
----
+
 
 
 ## **Tutorial Instalasi**
