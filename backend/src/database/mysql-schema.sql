@@ -1,5 +1,3 @@
--- MySQL Schema untuk Website Tanimaju
--- Migrasi dari MongoDB ke MySQL
 
 -- Database creation
 CREATE DATABASE IF NOT EXISTS website_tanijuu_mysql;
@@ -88,9 +86,6 @@ CREATE TABLE tanaman (
     id INT AUTO_INCREMENT PRIMARY KEY,
     namaTanaman VARCHAR(255) NOT NULL,
     pupuk VARCHAR(255),
-    musim_tanam VARCHAR(100),
-    waktu_panen VARCHAR(100),
-    deskripsi TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_nama_tanaman (namaTanaman)
@@ -117,4 +112,20 @@ CREATE TABLE panen (
     INDEX idx_tanaman_id (tanaman_id),
     INDEX idx_bibit_id (bibit_id),
     INDEX idx_tanggal_panen (tanggalPanen)
+);
+
+-- Users Table
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('admin', 'user') DEFAULT 'user',
+    status ENUM('pending', 'approved', 'rejected') DEFAULT 'approved',
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    INDEX idx_email (email),
+    INDEX idx_username (username)
 );

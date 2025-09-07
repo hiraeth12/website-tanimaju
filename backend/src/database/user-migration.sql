@@ -27,6 +27,3 @@ ON DUPLICATE KEY UPDATE
     username = VALUES(username),
     password = VALUES(password),
     role = VALUES(role);
-
--- Jika ingin mengubah password admin, jalankan query ini (ganti dengan hash baru):
--- UPDATE users SET password = '$2b$10$new_hash_here' WHERE email = 'admin@tanimaju.com';

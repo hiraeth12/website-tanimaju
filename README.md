@@ -1,12 +1,54 @@
-# Website TaniMaju
+# **TaniMaju**
+---
 
-**Tutorial Instalasi**
+<div align="center">
+  
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" width="60"/>
+  &nbsp&nbsp
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vitejs/vitejs-original.svg" width="60" />
+  &nbsp&nbsp
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/express/express-original.svg" width="60">
+  &nbsp&nbsp       
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg" width="60"/>
+  &nbsp&nbsp   
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original-wordmark.svg" width="60"/>
+  
+</div>
+
+---
+## **Website Manajemen Hasil Panen Desa**
+<div align ="justify">
+
+TaniMaju is a web-based platform designed to help village communities manage and showcase the results of their agricultural harvests. Built using *React* and *Vite*, this system streamlines the process of recording, displaying, and reporting village produce, enabling transparency and ease of access for both community members and buyers.
+
+</div>
+
+---
+
+## **Features**
+ - Manajemen Panen: Tambah, edit, dan hapus data hasil panen desa.
+ - Etalase Produk: Tampilkan hasil panen dengan gambar dan deskripsi.
+ - Pelaporan: Hasilkan laporan mengenai jumlah panen dan penjualan.
+ - Peran Pengguna: Dukungan untuk admin dan pengguna biasa dengan izin yang disesuaikan.
+ - Desain Responsif: Dioptimalkan untuk perangkat desktop dan seluler.
+
+---
+
+## Usage
+- Masuk atau Daftar sebagai pengguna.
+- Menambah record panen di halaman dasboard.
+- Create read delete update untuk panen, item , tanaman .
+- Mendapatkan report dalam bentuk csv.
+---
+
+
+## **Tutorial Instalasi**
+
 
 - Pastikan Git sudah terinstall di PC (buka cmd lalu ketikkan)
 ```bash
 git --version
 ```
-
 - Pastikan NodeJs(NPM) sudah terinstall di PC (buka cmd lalu ketik)
 ```bash
 node -v
@@ -28,63 +70,40 @@ cd website-tanimaju
 npm install
 ```
 
-- Jalankan local server vite react
+- Jalankan local server vite react (frontend)
 ```bash
 npm run dev
 ```
 
-
-## React + TypeScript + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+- Pindah ke folder backend 
+```bash
+cd backend
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+- Jalankan local server express (backend)
+```bash
+npm run dev
 ```
+- Copy isi dari .env.example frontend & backend
+
+
+---
+
+## Import MySQL Schema
+
+1. Pastikan MySQL & Apache/Nginx sudah terinstall dan berjalan.
+2. Buka MySQL client (MySQL Workbench, phpMyAdmin, atau command line).
+3. Import schema dari file `backend/src/database/mysql-schema.sql`:
+
+
+```bash
+mysql -u <your_username> -p <your_database> < backend/src/database/mysql-schema.sql
+```
+
+Atau, copy-paste isi file tersebut ke MySQL client Anda.
+
+Ini akan membuat skema database dan tabel yang diperlukan untuk aplikasi.
+
+---
+
+**TaniMaju** - Empowering Villages, Connecting Communities
