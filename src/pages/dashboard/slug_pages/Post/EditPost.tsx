@@ -102,7 +102,7 @@ export default function EditPostsPage() {
         variant: "error",
         title: "Error!",
         message: "Terjadi kesalahan saat update post",
-        duration: 5000,
+        duration: 4000,
       });
     }
   };

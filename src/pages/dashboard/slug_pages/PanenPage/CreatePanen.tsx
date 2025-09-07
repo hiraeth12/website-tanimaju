@@ -164,7 +164,7 @@ export default function CreatePanenPage() {
               value={formData.petani}
               placeholder="Pilih petani"
               options={petanis.map((p) => ({
-                value: p.nama, // ⚡ ambil nama langsung
+                value: p.id ? p.id.toString() : p.nama, // Use ID as value to avoid duplicates
                 label: p.nama,
               }))}
               onChange={(val) => handleChange("petani", val)}
@@ -192,7 +192,7 @@ export default function CreatePanenPage() {
               value={formData.bibit}
               placeholder="Pilih penyedia bibit"
               options={penyediaBibit.map((pb) => ({
-                value: pb.namaPenyedia, // ⚡ ambil nama langsung
+                value: pb.id ? pb.id.toString() : pb.namaPenyedia, // Use ID as value to avoid duplicates
                 label: pb.namaPenyedia,
               }))}
               onChange={(val) => handleChange("bibit", val)}
@@ -208,7 +208,7 @@ export default function CreatePanenPage() {
               value={formData.tanaman}
               placeholder="Pilih tanaman"
               options={tanamans.map((t) => ({
-                value: t.namaTanaman, // ⚡ ambil nama langsung
+                value: t.id ? t.id.toString() : t.namaTanaman, // Use ID as value to avoid duplicates
                 label: t.namaTanaman,
               }))}
               onChange={(val) => handleChange("tanaman", val)}

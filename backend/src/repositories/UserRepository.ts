@@ -5,7 +5,7 @@ import { User } from '../models/mysql/User.js';
 export class UserRepository {
   
   static async findByEmail(email: string): Promise<User | null> {
-    const query = 'SELECT * FROM users WHERE email = ? AND is_active = true';
+    const query = 'SELECT * FROM users WHERE email = ? AND is_active = true AND (status = "approved" OR status IS NULL)';
     const rows = await executeQuery<User>(query, [email]);
     return rows.length > 0 ? rows[0] : null;
   }
@@ -18,8 +18,8 @@ export class UserRepository {
 
   static async create(userData: Omit<User, 'id' | 'created_at' | 'updated_at'>): Promise<number> {
     const query = `
-      INSERT INTO users (username, email, password, role, is_active)
-      VALUES (?, ?, ?, ?, ?)
+      INSERT INTO users (username, email, password, role, status, is_active)
+      VALUES (?, ?, ?, ?, ?, ?)
     `;
     
     const result = await executeModifyQuery(query, [
@@ -27,6 +27,7 @@ export class UserRepository {
       userData.email,
       userData.password,
       userData.role,
+      userData.status || 'pending',
       userData.is_active
     ]);
     
@@ -46,7 +47,19 @@ export class UserRepository {
   }
 
   static async findAll(): Promise<User[]> {
-    const query = 'SELECT id, username, email, role, is_active, created_at, updated_at FROM users ORDER BY created_at DESC';
+    const query = 'SELECT id, username, email, role, status, is_active, created_at, updated_at FROM users ORDER BY created_at DESC';
     return await executeQuery<User>(query);
+  }
+
+  static async findByStatus(statuses: string[]): Promise<User[]> {
+    const placeholders = statuses.map(() => '?').join(',');
+    const query = `SELECT id, username, email, role, status, is_active, created_at, updated_at FROM users WHERE status IN (${placeholders}) ORDER BY created_at DESC`;
+    return await executeQuery<User>(query, statuses);
+  }
+
+  static async updateStatus(id: number, status: 'approved' | 'rejected'): Promise<boolean> {
+    const query = 'UPDATE users SET status = ?, updated_at = NOW() WHERE id = ?';
+    const result = await executeModifyQuery(query, [status, id]);
+    return result.affectedRows > 0;
   }
 }

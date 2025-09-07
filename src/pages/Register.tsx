@@ -5,44 +5,43 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Alert } from "@/components/Alert";
-import { useAuth } from "@/context/AuthContext";
 
-interface LoginForm {
+interface RegisterForm {
+  namaLengkap: string;
   email: string;
   password: string;
-  remember: boolean;
 }
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [formData, setFormData] = useState<LoginForm>({
+  const [formData, setFormData] = useState<RegisterForm>({
+    namaLengkap: "",
     email: "",
     password: "",
-    remember: false,
   });
   const [alert, setAlert] = useState<{
     variant: "success" | "error";
     title: string;
     message: string;
   } | null>(null);
+  const [loading, setLoading] = useState(false);
   
   const navigate = useNavigate();
-  const { login, loading } = useAuth();
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleInputChange = (field: keyof LoginForm, value: string | boolean) => {
+  const handleInputChange = (field: keyof RegisterForm, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.email || !formData.password) {
+    if (!formData.namaLengkap || !formData.email || !formData.password) {
       setAlert({
         variant: "error",
         title: "Error",
@@ -51,36 +50,59 @@ export default function LoginPage() {
       return;
     }
 
+    if (formData.password.length < 6) {
+      setAlert({
+        variant: "error",
+        title: "Error",
+        message: "Password must be at least 6 characters long",
+      });
+      return;
+    }
+
     setAlert(null);
+    setLoading(true);
 
     try {
-      const success = await login(formData.email, formData.password, formData.remember);
+      const response = await fetch(`${API_URL}/auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nama: formData.namaLengkap,
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
 
-      if (success) {
+      if (response.ok) {
         setAlert({
           variant: "success",
           title: "Success",
-          message: "Login successful! Redirecting...",
+          message: "Registration successful! Please wait for admin approval. Redirecting to login...",
         });
 
-        // Redirect to dashboard after 1 second
+        // Redirect to login after 3 seconds
         setTimeout(() => {
-          navigate("/admin");
-        }, 1000);
+          navigate("/login");
+        }, 3000);
       } else {
+        const errorData = await response.json();
         setAlert({
           variant: "error",
-          title: "Login Failed",
-          message: "Invalid email or password. Please try again.",
+          title: "Registration Failed",
+          message: errorData.error || "Something went wrong. Please try again.",
         });
       }
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("Registration error:", error);
       setAlert({
         variant: "error",
         title: "Error",
         message: "Something went wrong. Please try again.",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -96,10 +118,10 @@ export default function LoginPage() {
           {/* Header Text */}
           <div className="text-center space-y-2">
             <h1 className="text-2xl font-semibold text-gray-900 font-cascadia">
-              Selamat Datang !
+              Buat Akun
             </h1>
             <p className="text-gray-600 text-sm font-body">
-              Masuk ke akun Anda untuk melanjutkan !
+              Daftar untuk akun baru
             </p>
           </div>
         </CardHeader>
@@ -109,7 +131,7 @@ export default function LoginPage() {
             <Alert
               variant={alert.variant}
               title={alert.title}
-              duration={5000}
+              duration={alert.variant === "success" ? 10000 : 5000}
               onClose={() => setAlert(null)}
             >
               {alert.message}
@@ -117,13 +139,32 @@ export default function LoginPage() {
           )}
 
           <form className="space-y-4" onSubmit={handleSubmit}>
+            {/* Nama Lengkap Input */}
+            <div className="space-y-2">
+              <Label
+                htmlFor="namaLengkap"
+                className="text-sm font-medium text-gray-700"
+              >
+                Nama Lengkap
+              </Label>
+              <Input
+                id="namaLengkap"
+                type="text"
+                placeholder="Masukkan nama username Anda"
+                className="h-11 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500"
+                value={formData.namaLengkap}
+                onChange={(e) => handleInputChange("namaLengkap", e.target.value)}
+                required
+              />
+            </div>
+
             {/* Email Input */}
             <div className="space-y-2">
               <Label
                 htmlFor="email"
                 className="text-sm font-medium text-gray-700"
               >
-                Email address
+                Alamat Email
               </Label>
               <Input
                 id="email"
@@ -153,6 +194,7 @@ export default function LoginPage() {
                   value={formData.password}
                   onChange={(e) => handleInputChange("password", e.target.value)}
                   required
+                  minLength={6}
                 />
                 <Button
                   type="button"
@@ -171,23 +213,7 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {/* Remember Me Checkbox */}
-            <div className="flex items-center space-x-2 pt-2">
-              <Checkbox
-                id="remember"
-                className="border-gray-300 data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
-                checked={formData.remember}
-                onCheckedChange={(checked) => handleInputChange("remember", checked as boolean)}
-              />
-              <Label
-                htmlFor="remember"
-                className="text-sm text-gray-600 font-normal cursor-pointer"
-              >
-                Remember me
-              </Label>
-            </div>
-
-            {/* Sign In Button */}
+            {/* Register Button */}
             <Button
               type="submit"
               disabled={loading}
@@ -196,10 +222,10 @@ export default function LoginPage() {
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Signing in...
+                  Creating account...
                 </>
               ) : (
-                "Sign in"
+                "Register"
               )}
             </Button>
           </form>
@@ -210,9 +236,9 @@ export default function LoginPage() {
               type="button"
               variant="outline"
               className="w-full h-11 border-gray-300 text-gray-700 hover:bg-gray-50 font-medium transition-all duration-200"
-              onClick={() => navigate("/register")}
+              onClick={() => navigate("/login")}
             >
-              Tidak punya akun? Daftar !
+              Sudah punya akun? Masuk
             </Button>
           </div>
 

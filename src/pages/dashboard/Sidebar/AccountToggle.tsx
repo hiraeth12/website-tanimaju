@@ -15,7 +15,7 @@ export const AccountToggle = () => {
         />
         <div className="text-start">
           <span className="text-sm font-bold block">
-            {user?.username ? `${user.username} (${user.role})` : "Loading..."}
+            {user?.username ? `${user.username}` : "Loading..."}
           </span>
           <span className="text-xs block text-stone-500">
             {user?.email || "Loading..."}

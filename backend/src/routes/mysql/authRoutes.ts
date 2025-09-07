@@ -8,6 +8,129 @@ import { LoginRequest, LoginResponse } from '../../models/mysql/User.js';
 
 const router = express.Router();
 
+// POST /auth/register
+router.post('/register', async (req, res) => {
+  try {
+    const { nama, email, password } = req.body;
+
+    // Validasi input
+    if (!nama || !email || !password) {
+      return res.status(400).json({
+        success: false,
+        error: 'Nama, email, and password are required'
+      });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({
+        success: false,
+        error: 'Password must be at least 6 characters long'
+      });
+    }
+
+    // Check if user already exists
+    const existingUser = await UserRepository.findByEmail(email);
+    if (existingUser) {
+      return res.status(400).json({
+        success: false,
+        error: 'User with this email already exists'
+      });
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    // Create user with pending status
+    const userId = await UserRepository.create({
+      username: nama,
+      email,
+      password: hashedPassword,
+      role: 'user',
+      status: 'pending',
+      is_active: true
+    });
+
+    console.log(`✅ New user registered: ${email} (ID: ${userId})`);
+    res.status(201).json({
+      success: true,
+      message: 'Registration successful. Please wait for admin approval.',
+      userId
+    });
+
+  } catch (error) {
+    console.error('❌ Registration error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Internal server error'
+    });
+  }
+});
+
+// GET /auth/pending-users - Get all pending users (Admin only)
+router.get('/pending-users', authenticateToken, async (req, res) => {
+  try {
+    if (req.user?.role !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        error: 'Access denied. Admin role required.'
+      });
+    }
+
+    const users = await UserRepository.findByStatus(['pending', 'approved', 'rejected']);
+    res.json(users);
+
+  } catch (error) {
+    console.error('❌ Get pending users error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Internal server error'
+    });
+  }
+});
+
+// PUT /auth/update-user-status - Update user status (Admin only)
+router.put('/update-user-status', authenticateToken, async (req, res) => {
+  try {
+    if (req.user?.role !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        error: 'Access denied. Admin role required.'
+      });
+    }
+
+    const { userId, status } = req.body;
+
+    if (!userId || !status) {
+      return res.status(400).json({
+        success: false,
+        error: 'User ID and status are required'
+      });
+    }
+
+    if (!['approved', 'rejected'].includes(status)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Status must be either "approved" or "rejected"'
+      });
+    }
+
+    await UserRepository.updateStatus(userId, status);
+
+    console.log(`✅ User status updated: ID ${userId} -> ${status}`);
+    res.json({
+      success: true,
+      message: `User status updated to ${status}`
+    });
+
+  } catch (error) {
+    console.error('❌ Update user status error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Internal server error'
+    });
+  }
+});
+
 // POST /auth/login
 router.post('/login', async (req, res) => {
   try {

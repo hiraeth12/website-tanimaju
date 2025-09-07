@@ -9,13 +9,16 @@ import {
   Leaf,
   Bean,
   FileUp,
+  UserCheck,
 } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 interface RouteItem {
   title: string;
   icon: LucideIcon;
   to?: string;
   group?: string;
+  adminOnly?: boolean; // Add this property
 }
 
 export const routes: RouteItem[]  = [
@@ -36,20 +39,32 @@ export const routes: RouteItem[]  = [
   },
   { title: "Bibit", icon: Bean, to: "/admin/bibit", group: "Data Umum" },
   { title: "Tanaman", icon: Leaf, to: "/admin/tanaman", group: "Data Umum" },
-
   {
     title: "Posts",
     icon: FileUp,
     to: "/admin/posts",
     group: "Blog",
   },
+  {
+    title: "User Approval",
+    icon: UserCheck,
+    to: "/admin/user-approval",
+    group: "Manajemen",
+    adminOnly: true,
+  },
 ];
 
 export const RouteSelect = () => {
   const location = useLocation();
+  const { isAdmin } = useAuth();
 
-  const mainRoutes = routes.filter((r) => !r.group);
-  const groupedRoutes = routes
+  // Filter routes based on user role
+  const filteredRoutes = routes.filter(route => 
+    !route.adminOnly || (route.adminOnly && isAdmin)
+  );
+
+  const mainRoutes = filteredRoutes.filter((r) => !r.group);
+  const groupedRoutes = filteredRoutes
     .filter((r) => r.group)
     .reduce((acc: Record<string, RouteItem[]>, route) => {
       if (!acc[route.group!]) acc[route.group!] = [];

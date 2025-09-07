@@ -61,6 +61,8 @@ const EditPosts = lazy(
   () => import("@/pages/dashboard/slug_pages/Post/EditPost")
 );
 const Login = lazy(() => import("@/pages/Login"));
+const Register = lazy(() => import("@/pages/Register"));
+const UserApproval = lazy(() => import("@/pages/dashboard/UserApproval"));
 
 function App() {
   return (
@@ -77,12 +79,21 @@ function App() {
               <Route path="/blog/:slug" element={<BlogPost />} />
 
               <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
 
               <Route
                 path="/admin"
                 element={
                   <ProtectedRoute>
                     <Admin />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/user-approval"
+                element={
+                  <ProtectedRoute>
+                    <UserApproval />
                   </ProtectedRoute>
                 }
               />

@@ -16,14 +16,14 @@ interface Product {
   whatsappNumber: string;
 }
 
-const PRODUCTS_PER_PAGE = 4; 
+const PRODUCTS_PER_PAGE = 4;
 
 const Order = () => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
   const [visibleProducts, setVisibleProducts] = useState(PRODUCTS_PER_PAGE);
 
-  const API_URL = import.meta.env.VITE_API_URL; 
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     fetch(`${API_URL}/products`)
@@ -66,7 +66,7 @@ const Order = () => {
             </h2>
             <div className="w-12 h-0.5 bg-[#3a4a3c] mx-auto mt-3"></div>
             <p className="mt-3 font-body text-md max-w-xl mx-auto">
-              Fresh Produce Delivered Weekly
+              Panen Terbaik dari Pertanian Kami
             </p>
           </div>
 

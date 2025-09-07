@@ -41,7 +41,7 @@ const Blog = () => {
           </h2>
           <div className="w-12 h-0.5 bg-[#3a4a3c] mx-auto mt-3"></div>
           <p className="mt-3 font-body text-md max-w-xl mx-auto">
-            Lorem ipsum dolor sit amet.
+            Temukan beragam cerita seputar pertanian kami.
           </p>
         </div>
 

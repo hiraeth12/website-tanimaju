@@ -1,12 +1,13 @@
 // File: src/pages/dashboard/slug_pages/Produk/EditPetaniPage.tsx
 
 import { useEffect, useState } from "react";
-import { useParams , useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { DashboardLayout } from "@/components/Layout/DashboardLayout";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { InputField } from "@/components/InputField";
 import ImageUpload from "@/components/ImageUpload";
 import { FormActions } from "@/components/FormActions";
+import { useNotificationContext } from "@/context/NotificationContext";
 
 type PetaniForm = {
   _id: string;
@@ -22,6 +23,7 @@ export default function EditPetaniPage() {
   const API = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const { addNotification } = useNotificationContext();
 
   useEffect(() => {
     if (!id) return;
@@ -37,7 +39,7 @@ export default function EditPetaniPage() {
           nama: data.nama || "",
           alamat: data.alamat || "",
           nomorKontak: data.nomorKontak || "",
-          foto: data.foto || null, 
+          foto: data.foto || null,
         });
       })
       .catch((err) => console.error("Gagal memuat produk:", err))
@@ -51,8 +53,6 @@ export default function EditPetaniPage() {
       form.append("nama", formData.nama);
       form.append("alamat", formData.alamat);
       form.append("nomorKontak", formData.nomorKontak);
-
-      
       if (formData.foto instanceof File) {
         form.append("foto", formData.foto);
       }
@@ -63,12 +63,21 @@ export default function EditPetaniPage() {
       });
 
       if (!res.ok) throw new Error("Gagal update petani");
-
-      alert("Petani berhasil diperbarui!");
+      addNotification({
+        variant: "success",
+        title: "Berhasil!",
+        message: "Data petani berhasil diperbarui!",
+        duration: 4000,
+      });
       navigate("/admin/petani");
     } catch (err) {
       console.error(err);
-      alert("Terjadi kesalahan saat update petani");
+      addNotification({
+        variant: "error",
+        title: "Gagal!",
+        message: "Terjadi kesalahan saat update data petani!",
+        duration: 4000,
+      });
     }
   };
 
@@ -134,7 +143,7 @@ export default function EditPetaniPage() {
             <ImageUpload
               _id="foto"
               label="Foto Petani"
-              value={formData.foto} 
+              value={formData.foto}
               onChange={(file) => handleChange("foto", file)}
             />
           </div>

@@ -5,6 +5,7 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { InputField } from "@/components/InputField";
 import { FormActions } from "@/components/FormActions";
 import { LoadingScreen } from "@/components/LoadingSpinner";
+import { useNotificationContext } from "@/context/NotificationContext";
 
 type BibitForm = {
   id: string;
@@ -20,6 +21,7 @@ export default function EditBibitPage() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const API = import.meta.env.VITE_API_URL;
+  const { addNotification } = useNotificationContext();
 
   useEffect(() => {
     if (!id) return;
@@ -64,11 +66,21 @@ export default function EditBibitPage() {
 
       if (!res.ok) throw new Error("Gagal update bibit");
 
-      alert("Data bibit berhasil diperbarui!");
+      addNotification({
+        variant: "success",
+        title: "Berhasil!",
+        message: "Data bibit berhasil diperbarui!",
+        duration: 4000,
+      });
       navigate("/admin/bibit");
     } catch (err) {
       console.error(err);
-      alert("Terjadi kesalahan saat update bibit");
+      addNotification({
+        variant: "error",
+        title: "Gagal!",
+        message: "Terjadi kesalahan saat update data bibit!",
+        duration: 4000,
+      });
     }
   };
 

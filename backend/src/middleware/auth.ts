@@ -27,6 +27,13 @@ export const authenticateToken = async (req: Request, res: Response, next: NextF
       token = req.cookies.authToken;
     }
     
+    console.log('🔍 Auth Debug:', {
+      hasAuthHeader: !!authHeader,
+      hasCookie: !!req.cookies?.authToken,
+      tokenLength: token?.length,
+      tokenPreview: token?.substring(0, 20) + '...'
+    });
+    
     if (!token) {
       res.status(401).json({ 
         success: false, 

@@ -6,6 +6,7 @@ import { InputField } from "@/components/InputField";
 import { SelectField } from "@/components/SelectField";
 import { FormActions } from "@/components/FormActions";
 import { LoadingScreen } from "@/components/LoadingSpinner";
+import { useNotificationContext } from "@/context/NotificationContext";
 
 interface HarvestItem {
   _id: string;
@@ -29,13 +30,14 @@ export default function EditPanenPage() {
   const [petaniList, setPetaniList] = useState<any[]>([]);
   const [bibitList, setBibitList] = useState<any[]>([]);
   const [tanamanList, setTanamanList] = useState<any[]>([]);
+  const { addNotification } = useNotificationContext();
   const mapApiData = (item: any): HarvestItem => ({
     _id: item.id.toString(),
     date: item.tanggalPanen,
-    farmer: item.petani_nama || "",
+    farmer: item.petani_id ? item.petani_id.toString() : (item.petani_nama || ""),
     field: item.lahan,
-    seedProvider: item.bibit_nama_penyedia || "",
-    plant: item.tanaman_nama || "",
+    seedProvider: item.bibit_id ? item.bibit_id.toString() : (item.bibit_nama_penyedia || ""),
+    plant: item.tanaman_id ? item.tanaman_id.toString() : (item.tanaman_nama || ""),
     fertilizer: item.pupuk,
     amount: item.jumlahHasilPanen ?? 0,
     salesStatus: item.statusPenjualan,
@@ -75,13 +77,15 @@ export default function EditPanenPage() {
     if (!data) return;
     try {
       // Format tanggal ke YYYY-MM-DD
-      const formattedDate = data.date ? new Date(data.date).toISOString().split('T')[0] : '';
-      
+      const formattedDate = data.date
+        ? new Date(data.date).toISOString().split("T")[0]
+        : "";
+
       const payload = {
         tanggalPanen: formattedDate,
         petani: data.farmer,
         lahan: data.field,
-        bibit: data.seedProvider,
+        bibit: data.seedProvider, // This will now be ID or name, backend handles both
         tanaman: data.plant,
         pupuk: data.fertilizer,
         jumlahHasilPanen: Number(data.amount),
@@ -99,11 +103,21 @@ export default function EditPanenPage() {
 
       if (!res.ok) throw new Error("Gagal update panen");
 
-      alert("Data panen berhasil diperbarui!");
+      addNotification({
+        variant: "success",
+        title: "Berhasil!",
+        message: "Data panen berhasil diperbarui!",
+        duration: 4000,
+      });
       navigate("/admin/panen");
     } catch (err) {
       console.error(err);
-      alert("Terjadi kesalahan saat update panen");
+      addNotification({
+        variant: "error",
+        title: "Gagal!",
+        message: "Terjadi kesalahan saat update data panen!",
+        duration: 4000,
+      });
     }
   };
 
@@ -144,7 +158,10 @@ export default function EditPanenPage() {
               label="Petani"
               value={data.farmer}
               onChange={(v) => handleChange("farmer", v)}
-              options={petaniList.map((p) => ({ label: p.nama, value: p.nama }))}
+              options={petaniList.map((p) => ({
+                label: p.nama,
+                value: p.id ? p.id.toString() : p.nama,
+              }))}
               placeholder="Pilih petani"
             />
 
@@ -158,6 +175,8 @@ export default function EditPanenPage() {
                 { label: "Sukapura", value: "Sukapura" },
                 { label: "Cikoneng", value: "Cikoneng" },
                 { label: "Cibiru", value: "Cibiru" },
+                { label: "Sukamaju", value: "Sukamaju" },
+                { label: "Majalaya", value: "Majalaya" },
               ]}
               placeholder="Pilih lahan"
             />
@@ -168,7 +187,7 @@ export default function EditPanenPage() {
               value={data.seedProvider}
               onChange={(v) => handleChange("seedProvider", v)}
               options={bibitList.map((b) => ({
-                value: b.namaPenyedia,
+                value: b.id ? b.id.toString() : b.namaPenyedia,
                 label: b.namaPenyedia,
               }))}
               placeholder="Pilih bibit"
@@ -183,7 +202,7 @@ export default function EditPanenPage() {
               value={data.plant}
               onChange={(v) => handleChange("plant", v)}
               options={tanamanList.map((t) => ({
-                value: t.namaTanaman,
+                value: t.id ? t.id.toString() : t.namaTanaman,
                 label: t.namaTanaman,
               }))}
               placeholder="Pilih tanaman"

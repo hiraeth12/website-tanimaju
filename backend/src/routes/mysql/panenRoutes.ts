@@ -75,27 +75,45 @@ router.post("/", async (req, res) => {
     let tanaman_id = null;
     let bibit_id = null;
 
-    // Get petani ID by name
+    // Get petani ID by name or use ID directly
     if (petani) {
-      const [petaniRows] = await mysqlPool.execute("SELECT id FROM petani WHERE nama = ?", [petani]);
-      if ((petaniRows as any[]).length > 0) {
-        petani_id = (petaniRows as any[])[0].id;
+      // Check if petani is already an ID (numeric)
+      if (!isNaN(Number(petani))) {
+        petani_id = Number(petani);
+      } else {
+        // If it's a name, look up the ID
+        const [petaniRows] = await mysqlPool.execute("SELECT id FROM petani WHERE nama = ?", [petani]);
+        if ((petaniRows as any[]).length > 0) {
+          petani_id = (petaniRows as any[])[0].id;
+        }
       }
     }
 
-    // Get tanaman ID by name
+    // Get tanaman ID by name or use ID directly
     if (tanaman) {
-      const [tanamanRows] = await mysqlPool.execute("SELECT id FROM tanaman WHERE namaTanaman = ?", [tanaman]);
-      if ((tanamanRows as any[]).length > 0) {
-        tanaman_id = (tanamanRows as any[])[0].id;
+      // Check if tanaman is already an ID (numeric)
+      if (!isNaN(Number(tanaman))) {
+        tanaman_id = Number(tanaman);
+      } else {
+        // If it's a name, look up the ID
+        const [tanamanRows] = await mysqlPool.execute("SELECT id FROM tanaman WHERE namaTanaman = ?", [tanaman]);
+        if ((tanamanRows as any[]).length > 0) {
+          tanaman_id = (tanamanRows as any[])[0].id;
+        }
       }
     }
 
-    // Get bibit ID by namaPenyedia
+    // Get bibit ID by namaPenyedia or use ID directly
     if (bibit) {
-      const [bibitRows] = await mysqlPool.execute("SELECT id FROM bibit WHERE namaPenyedia = ?", [bibit]);
-      if ((bibitRows as any[]).length > 0) {
-        bibit_id = (bibitRows as any[])[0].id;
+      // Check if bibit is already an ID (numeric)
+      if (!isNaN(Number(bibit))) {
+        bibit_id = Number(bibit);
+      } else {
+        // If it's a name, look up the ID
+        const [bibitRows] = await mysqlPool.execute("SELECT id FROM bibit WHERE namaPenyedia = ?", [bibit]);
+        if ((bibitRows as any[]).length > 0) {
+          bibit_id = (bibitRows as any[])[0].id;
+        }
       }
     }
 
@@ -168,27 +186,45 @@ router.put("/:id", async (req, res) => {
     let tanaman_id = null;
     let bibit_id = null;
 
-    // Get petani ID by name
+    // Get petani ID by name or use ID directly
     if (petani) {
-      const [petaniRows] = await mysqlPool.execute("SELECT id FROM petani WHERE nama = ?", [petani]);
-      if ((petaniRows as any[]).length > 0) {
-        petani_id = (petaniRows as any[])[0].id;
+      // Check if petani is already an ID (numeric)
+      if (!isNaN(Number(petani))) {
+        petani_id = Number(petani);
+      } else {
+        // If it's a name, look up the ID
+        const [petaniRows] = await mysqlPool.execute("SELECT id FROM petani WHERE nama = ?", [petani]);
+        if ((petaniRows as any[]).length > 0) {
+          petani_id = (petaniRows as any[])[0].id;
+        }
       }
     }
 
-    // Get tanaman ID by name
+    // Get tanaman ID by name or use ID directly
     if (tanaman) {
-      const [tanamanRows] = await mysqlPool.execute("SELECT id FROM tanaman WHERE namaTanaman = ?", [tanaman]);
-      if ((tanamanRows as any[]).length > 0) {
-        tanaman_id = (tanamanRows as any[])[0].id;
+      // Check if tanaman is already an ID (numeric)
+      if (!isNaN(Number(tanaman))) {
+        tanaman_id = Number(tanaman);
+      } else {
+        // If it's a name, look up the ID
+        const [tanamanRows] = await mysqlPool.execute("SELECT id FROM tanaman WHERE namaTanaman = ?", [tanaman]);
+        if ((tanamanRows as any[]).length > 0) {
+          tanaman_id = (tanamanRows as any[])[0].id;
+        }
       }
     }
 
-    // Get bibit ID by namaPenyedia
+    // Get bibit ID by namaPenyedia or use ID directly
     if (bibit) {
-      const [bibitRows] = await mysqlPool.execute("SELECT id FROM bibit WHERE namaPenyedia = ?", [bibit]);
-      if ((bibitRows as any[]).length > 0) {
-        bibit_id = (bibitRows as any[])[0].id;
+      // Check if bibit is already an ID (numeric)
+      if (!isNaN(Number(bibit))) {
+        bibit_id = Number(bibit);
+      } else {
+        // If it's a name, look up the ID
+        const [bibitRows] = await mysqlPool.execute("SELECT id FROM bibit WHERE namaPenyedia = ?", [bibit]);
+        if ((bibitRows as any[]).length > 0) {
+          bibit_id = (bibitRows as any[])[0].id;
+        }
       }
     }
 

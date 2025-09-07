@@ -7,6 +7,7 @@ import {
 } from "react";
 import { useNavigate } from "react-router-dom";
 import { routes } from "./Routeselect"; // pastikan path ini sesuai
+import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 
 export const CommandMenu = ({
   open,
@@ -54,6 +55,11 @@ export const CommandMenu = ({
         onClick={(e) => e.stopPropagation()}
         className="bg-white rounded-lg shadow-xl border border-stone-300 overflow-hidden w-full max-w-lg mx-auto mt-12 font-body"
       >
+        <VisuallyHidden.Root>
+          <h2>Command Menu</h2>
+          <p>Search and navigate to different pages</p>
+        </VisuallyHidden.Root>
+        
         <Command.Input
           value={value}
           onValueChange={setValue}

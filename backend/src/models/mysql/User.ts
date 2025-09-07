@@ -5,6 +5,7 @@ export interface User {
   email: string;
   password: string;
   role: 'admin' | 'user';
+  status?: 'pending' | 'approved' | 'rejected';
   is_active: boolean;
   created_at: Date;
   updated_at: Date;

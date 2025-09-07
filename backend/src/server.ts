@@ -11,13 +11,13 @@ const allowedOrigins = (process.env.CLIENT_URL || "").split(",");
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
-app.use(cookieParser()); // Add cookie parser middleware
+app.use(cookieParser()); 
 app.use(
   cors({
     origin: allowedOrigins,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true, // Enable credentials for cookies
+    credentials: true,
   })
 );
 
