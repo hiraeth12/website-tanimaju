@@ -2,6 +2,8 @@
 
 
 <div align="center">
+  <br>
+  <br>
   
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" width="60"/>
   &nbsp&nbsp
@@ -14,6 +16,19 @@
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original-wordmark.svg" width="60"/>
   
 </div>
+
+
+<div align= "center" >
+
+  <br>
+  
+  ![Visitors](https://visitor-badge.laobi.icu/badge?page_id=hiraeth12.website-tanimaju)
+  ![Stars](https://img.shields.io/github/stars/hiraeth12/website-tanimaju)
+  ![Typescript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
+
+  <br>
+</div>
+
 
 
 ## **Website Manajemen Hasil Panen Desa**
