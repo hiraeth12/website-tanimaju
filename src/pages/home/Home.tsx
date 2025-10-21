@@ -7,6 +7,7 @@ import BlogSection from "./BlogSection";
 import Footer from "@/components/Footer";
 import CoolButton from "@/components/ShopButton";
 import LoadMoreButton from "@/components/LoadButton";
+import { imagePreloader } from "@/utils/imagePreloader";
 
 const images = [
   "/images/home/placeholder-1.jpg",
@@ -17,6 +18,23 @@ const images = [
 
 const Home = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Set document title
+  useEffect(() => {
+    document.title = "Beranda - TaniMaju";
+  }, []);
+
+  // Preload images
+  useEffect(() => {
+    const additionalImages = ["../images/home/placeholder-hero.png"];
+    const allImages = [...images, ...additionalImages];
+    
+    imagePreloader
+      .preloadImages(allImages)
+      .catch((error) => {
+        console.error("Error preloading images:", error);
+      });
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {

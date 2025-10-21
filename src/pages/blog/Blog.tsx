@@ -16,6 +16,11 @@ const Blog = () => {
   const [query, setQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All Posts");
 
+  // Set document title
+  useEffect(() => {
+    document.title = "Blog - TaniMaju";
+  }, []);
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);

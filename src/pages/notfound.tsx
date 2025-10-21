@@ -1,9 +1,15 @@
 // File: src/pages/NotFound.tsx
 
+import { useEffect } from "react";
 import { Link } from "react-router-dom"
 import { Home } from "lucide-react"
 
 export default function NotFound() {
+  // Set document title
+  useEffect(() => {
+    document.title = "404 Not Found - TaniMaju";
+  }, []);
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0891b2] to-[#059669] px-4 relative">
       <div className="text-center space-y-8 max-w-md mx-auto z-10">

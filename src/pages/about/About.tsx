@@ -5,11 +5,25 @@ import { useInView } from "../../hooks/useInView";
 import { useEffect } from "react";
 import MeetOurTeam from "./MeetOurTeam";
 import MapSection from "./MapSection";
+import { imagePreloader } from "@/utils/imagePreloader";
 
 const About = () => {
   const textInView = useInView();
   const imageInView = useInView();
   const mapTextInView = useInView();
+
+  // Set document title
+  useEffect(() => {
+    document.title = "Tentang Kami - TaniMaju";
+  }, []);
+
+  // Preload images
+  useEffect(() => {
+    const images = ["/images/about/about-placeholder-2.png"];
+    imagePreloader.preloadImages(images).catch((error) => {
+      console.error("Error preloading images:", error);
+    });
+  }, []);
 
   useEffect(() => {
     window.scrollTo(0, 0);

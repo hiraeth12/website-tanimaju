@@ -1,13 +1,14 @@
 // File: src/pages/order/ProductDetail.tsx
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Forward } from "lucide-react";
 
 import Navbar from "@/components/NavBar";
 import Footer from "@/components/Footer";
 import ProductInfo from "@/pages/order/ProductInfo";
 import ReturnPolicy from "@/pages/order/ReturnPolicy";
 import ShippingInfo from "@/pages/order/ShippingInfo";
+import { ShareDialog } from "@/pages/order/ShareDialog";
 import { generateSlug, formatPrice } from "@/lib/utils";
 
 // Definisikan tipe Product di sini
@@ -191,9 +192,19 @@ export default function ProductDetail() {
 
             {/* Kolom kanan: Detail produk */}
             <div>
-              <h1 className="text-3xl font-medium text-black mb-1 font-cascadia">
-                {product.title}
-              </h1>
+              <div className="flex items-start justify-between gap-4 mb-1">
+                <h1 className="text-3xl font-medium text-black font-cascadia flex-1">
+                  {product.title}
+                </h1>
+                <ShareDialog slug={slug || ""} productTitle={product.title}>
+                  <button
+                    className="p-2 rounded-full hover:bg-gray-100 transition-colors flex-shrink-0"
+                    aria-label="Share Product"
+                  >
+                    <Forward className="w-5 h-5 text-gray-500" />
+                  </button>
+                </ShareDialog>
+              </div>
               <p className="text-2xl text-black font-bold mb-6">
                 {formatPrice(product.price)}
               </p>

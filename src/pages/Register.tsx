@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -29,6 +29,11 @@ export default function RegisterPage() {
 
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL;
+
+  // Set document title
+  useEffect(() => {
+    document.title = "Register - TaniMaju";
+  }, []);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);

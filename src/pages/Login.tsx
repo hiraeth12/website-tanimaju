@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -30,6 +30,11 @@ export default function LoginPage() {
   
   const navigate = useNavigate();
   const { login, loading } = useAuth();
+
+  // Set document title
+  useEffect(() => {
+    document.title = "Login - TaniMaju";
+  }, []);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);

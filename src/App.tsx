@@ -4,6 +4,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import { LoadingScreen } from "@/components/LoadingSpinner";
 import { AuthProvider } from "@/context/AuthContext";
 import { NotificationProvider } from "@/context/NotificationContext";
+import { useAppPreload } from "@/hooks/useAppPreload";
 
 // Lazy load all the page components
 const Home = lazy(() => import("./pages/home/Home"));
@@ -64,187 +65,196 @@ const Login = lazy(() => import("@/pages/Login"));
 const Register = lazy(() => import("@/pages/Register"));
 const UserApproval = lazy(() => import("@/pages/dashboard/UserApproval"));
 
+function AppContent() {
+  // Preload critical images on app startup
+  useAppPreload();
+
+  return (
+    <Suspense fallback={<LoadingScreen />}>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/order" element={<Order />} />
+        <Route path="/order/:slug" element={<ProductDetail />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:slug" element={<BlogPost />} />
+
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <Admin />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/user-approval"
+          element={
+            <ProtectedRoute>
+              <UserApproval />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/panen"
+          element={
+            <ProtectedRoute>
+              <Panen />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/panen/create"
+          element={
+            <ProtectedRoute>
+              <CreatePanen />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/panen/edit/:id"
+          element={
+            <ProtectedRoute>
+              <EditPanen />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/item"
+          element={
+            <ProtectedRoute>
+              <Item />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/item/create"
+          element={
+            <ProtectedRoute>
+              <CreateItem />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/item/edit/:id"
+          element={
+            <ProtectedRoute>
+              <EditItem />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/petani"
+          element={
+            <ProtectedRoute>
+              <Petani />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/petani/create"
+          element={
+            <ProtectedRoute>
+              <CreatePetani />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/petani/edit/:id"
+          element={
+            <ProtectedRoute>
+              <EditPetani />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/bibit"
+          element={
+            <ProtectedRoute>
+              <Bibit />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/bibit/create"
+          element={
+            <ProtectedRoute>
+              <CreateBibit />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/bibit/edit/:id"
+          element={
+            <ProtectedRoute>
+              <EditBibit />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/tanaman"
+          element={
+            <ProtectedRoute>
+              <Tanaman />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/tanaman/create"
+          element={
+            <ProtectedRoute>
+              <CreateTanaman />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/tanaman/edit/:id"
+          element={
+            <ProtectedRoute>
+              <EditTanaman />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/posts"
+          element={
+            <ProtectedRoute>
+              <Posts />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/posts/create"
+          element={
+            <ProtectedRoute>
+              <CreatePosts />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/posts/edit/:id"
+          element={
+            <ProtectedRoute>
+              <EditPosts />
+            </ProtectedRoute>
+          }
+        />
+        {/* Catch-all route for 404 Not Found */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Suspense>
+  );
+}
+
 function App() {
   return (
     <AuthProvider>
       <NotificationProvider>
         <Router>
-          <Suspense fallback={<LoadingScreen />}>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/order" element={<Order />} />
-              <Route path="/order/:slug" element={<ProductDetail />} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/blog/:slug" element={<BlogPost />} />
-
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-
-              <Route
-                path="/admin"
-                element={
-                  <ProtectedRoute>
-                    <Admin />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/user-approval"
-                element={
-                  <ProtectedRoute>
-                    <UserApproval />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/panen"
-                element={
-                  <ProtectedRoute>
-                    <Panen />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/panen/create"
-                element={
-                  <ProtectedRoute>
-                    <CreatePanen />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/panen/edit/:id"
-                element={
-                  <ProtectedRoute>
-                    <EditPanen />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/item"
-                element={
-                  <ProtectedRoute>
-                    <Item />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/item/create"
-                element={
-                  <ProtectedRoute>
-                    <CreateItem />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/item/edit/:id"
-                element={
-                  <ProtectedRoute>
-                    <EditItem />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/petani"
-                element={
-                  <ProtectedRoute>
-                    <Petani />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/petani/create"
-                element={
-                  <ProtectedRoute>
-                    <CreatePetani />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/petani/edit/:id"
-                element={
-                  <ProtectedRoute>
-                    <EditPetani />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/bibit"
-                element={
-                  <ProtectedRoute>
-                    <Bibit />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/bibit/create"
-                element={
-                  <ProtectedRoute>
-                    <CreateBibit />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/bibit/edit/:id"
-                element={
-                  <ProtectedRoute>
-                    <EditBibit />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/tanaman"
-                element={
-                  <ProtectedRoute>
-                    <Tanaman />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/tanaman/create"
-                element={
-                  <ProtectedRoute>
-                    <CreateTanaman />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/tanaman/edit/:id"
-                element={
-                  <ProtectedRoute>
-                    <EditTanaman />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/posts"
-                element={
-                  <ProtectedRoute>
-                    <Posts />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/posts/create"
-                element={
-                  <ProtectedRoute>
-                    <CreatePosts />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/posts/edit/:id"
-                element={
-                  <ProtectedRoute>
-                    <EditPosts />
-                  </ProtectedRoute>
-                }
-              />
-              {/* Catch-all route for 404 Not Found */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
+          <AppContent />
         </Router>
       </NotificationProvider>
     </AuthProvider>

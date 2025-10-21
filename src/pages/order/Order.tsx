@@ -25,6 +25,11 @@ const Order = () => {
 
   const API_URL = import.meta.env.VITE_API_URL;
 
+  // Set document title
+  useEffect(() => {
+    document.title = "Order Online - TaniMaju";
+  }, []);
+
   useEffect(() => {
     fetch(`${API_URL}/products`)
       .then((res) => res.json())

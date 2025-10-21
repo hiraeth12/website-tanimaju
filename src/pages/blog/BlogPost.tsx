@@ -47,6 +47,15 @@ const BlogPost: React.FC = () => {
       });
   }, [slug]);
 
+  // Set document title based on post
+  useEffect(() => {
+    if (post) {
+      document.title = `${post.title} – TaniMaju`;
+    } else {
+      document.title = "Blog – TaniMaju";
+    }
+  }, [post]);
+
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
@@ -94,7 +103,11 @@ const BlogPost: React.FC = () => {
                         {post.author}
                       </h3>
                       <p className="text-sm text-gray-600 font-body">
-                        {post.date}
+                        {new Date(post.date).toLocaleDateString("id-ID", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        })}
                       </p>
                     </div>
 
