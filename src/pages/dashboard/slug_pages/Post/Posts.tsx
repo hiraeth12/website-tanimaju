@@ -32,8 +32,8 @@ export default function PostsPage() {
   const [confirmId, setConfirmId] = useState<string | null>(null);
 
   const fetchBlogData = async () => {
-    setLoading(true);
     try {
+      setLoading(true);
       const res = await fetch(`${API_URL}/posts`);
       const data = await res.json();
       setBlogData(data);

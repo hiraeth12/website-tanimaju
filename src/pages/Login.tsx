@@ -29,7 +29,14 @@ export default function LoginPage() {
   } | null>(null);
   
   const navigate = useNavigate();
-  const { login, loading } = useAuth();
+  const { login, loading, isAuthenticated } = useAuth();
+
+  // Redirect to dashboard if already logged in
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/admin", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   // Set document title
   useEffect(() => {

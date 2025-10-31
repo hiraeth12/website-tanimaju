@@ -17,6 +17,8 @@ interface ProductItem {
   description: string;
   info: string;
   whatsappNumber: string;
+  average_rating?: number;
+  total_ratings?: number;
 }
 
 export default function ItemPage() {
@@ -34,8 +36,8 @@ export default function ItemPage() {
   const [confirmId, setConfirmId] = useState<string | null>(null);
 
   const fetchItemData = async () => {
-    setLoading(true);
     try {
+      setLoading(true);
       const res = await fetch(`${API_URL}/products`);
       const data = await res.json();
       setProductData(data);
@@ -111,6 +113,36 @@ export default function ItemPage() {
     }
   };
 
+  const handleRatingUpdate = async (id: string, rating: number) => {
+    try {
+      const res = await fetch(`${API_URL}/products/${id}/rating`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ rating }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Gagal mengupdate rating");
+      }
+
+      setAlert({
+        variant: "success",
+        title: "Berhasil",
+        message: "Rating produk berhasil diperbarui!",
+      });
+      fetchItemData();
+    } catch (err: any) {
+      setAlert({
+        variant: "error",
+        title: "Gagal",
+        message: err.message || "Terjadi kesalahan saat mengupdate rating",
+      });
+    }
+  };
+
   return (
     <DashboardLayout>
       <div className="px-4 sm:px-6 py-4">
@@ -162,7 +194,8 @@ export default function ItemPage() {
           handleSelectAll={handleSelectAll}
           handleSelectRow={handleSelectRow}
           formatRupiah={formatRupiah}
-          onDelete={handleDelete} // 🔥 tambahan
+          onDelete={handleDelete}
+          onRatingUpdate={handleRatingUpdate}
         />
 
         <TableFooter

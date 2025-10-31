@@ -10,6 +10,8 @@ import {
   Bean,
   FileUp,
   UserCheck,
+  KeyRound,
+  Star,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 
@@ -18,18 +20,20 @@ interface RouteItem {
   icon: LucideIcon;
   to?: string;
   group?: string;
-  adminOnly?: boolean; // Add this property
+  adminOnly?: boolean;
+  userOnly?: boolean; // Add this property for regular users
 }
 
 export const routes: RouteItem[]  = [
   { title: "Dashboard", icon: Home, to: "/admin" },
   { title: "Halaman Utama", icon: Globe, to: "/" },
-  { title: "Panen", icon: Sprout, to: "/admin/panen", group: "Pencatatan" },
+  { title: "Panen", icon: Sprout, to: "/admin/panen", group: "Pencatatan", adminOnly: true },
   {
     title: "Item",
     icon: Database,
     to: "/admin/item",
     group: "Produk",
+    adminOnly: true,
   },
   {
     title: "Petani",
@@ -37,13 +41,20 @@ export const routes: RouteItem[]  = [
     to: "/admin/petani",
     group: "Data Umum",
   },
-  { title: "Bibit", icon: Bean, to: "/admin/bibit", group: "Data Umum" },
-  { title: "Tanaman", icon: Leaf, to: "/admin/tanaman", group: "Data Umum" },
+  { title: "Bibit", icon: Bean, to: "/admin/bibit", group: "Data Umum", adminOnly: true },
+  { title: "Tanaman", icon: Leaf, to: "/admin/tanaman", group: "Data Umum", adminOnly: true },
   {
     title: "Posts",
     icon: FileUp,
     to: "/admin/posts",
     group: "Blog",
+  },
+  {
+    title: "Rating Saya",
+    icon: Star,
+    to: "/admin/my-ratings",
+    group: "Personal",
+    userOnly: true,
   },
   {
     title: "User Approval",
@@ -52,16 +63,32 @@ export const routes: RouteItem[]  = [
     group: "Manajemen",
     adminOnly: true,
   },
+  {
+    title: "Reset Password",
+    icon: KeyRound,
+    to: "/admin/reset-password",
+    group: "Manajemen",
+    adminOnly: true,
+  },
 ];
 
 export const RouteSelect = () => {
   const location = useLocation();
-  const { isAdmin } = useAuth();
+  const { isAdmin, isAuthenticated } = useAuth();
 
   // Filter routes based on user role
-  const filteredRoutes = routes.filter(route => 
-    !route.adminOnly || (route.adminOnly && isAdmin)
-  );
+  const filteredRoutes = routes.filter(route => {
+    // Admin-only routes: only show to admins
+    if (route.adminOnly) {
+      return isAdmin;
+    }
+    // User-only routes: show to all authenticated users
+    if (route.userOnly) {
+      return isAuthenticated;
+    }
+    // Default routes: show to everyone
+    return true;
+  });
 
   const mainRoutes = filteredRoutes.filter((r) => !r.group);
   const groupedRoutes = filteredRoutes
@@ -75,9 +102,9 @@ export const RouteSelect = () => {
   const isRouteActive = (route: RouteItem) => {
     if (!route.to) return false;
 
-    // Khusus dashboard, hanya aktif di path "/admin" saja
-    if (route.to === "/admin") {
-      return location.pathname === "/admin";
+    // Khusus dashboard dan home, hanya aktif di path exact
+    if (route.to === "/admin" || route.to === "/") {
+      return location.pathname === route.to;
     }
 
     // Selain itu, boleh aktif di path langsung atau subpath-nya
@@ -149,14 +176,6 @@ const Route = ({ Icon, title, to, isActive = false }: RouteProps) => {
       <span>{title}</span>
     </div>
   );
-
-  if (to === "/") {
-    return (
-      <a href={to} target="_blank" rel="noopener noreferrer">
-        {content}
-      </a>
-    );
-  }
 
   return to ? <Link to={to}>{content}</Link> : content;
 };

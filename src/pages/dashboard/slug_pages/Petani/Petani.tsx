@@ -32,8 +32,8 @@ export default function PetaniPage() {
   const [confirmId, setConfirmId] = useState<string | null>(null);
 
   const fetchPetaniData = async () => {
-    setLoading(true);
     try {
+      setLoading(true);
       const res = await fetch(`${API_URL}/petani`);
       const data = await res.json();
       setPetaniData(data);

@@ -63,7 +63,12 @@ const EditPosts = lazy(
 );
 const Login = lazy(() => import("@/pages/Login"));
 const Register = lazy(() => import("@/pages/Register"));
+const Unauthorized = lazy(() => import("@/pages/Unauthorized"));
 const UserApproval = lazy(() => import("@/pages/dashboard/UserApproval"));
+const ResetPassword = lazy(() => import("@/pages/dashboard/ResetPassword"));
+const MyRatings = lazy(
+  () => import("@/pages/dashboard/slug_pages/MyRatings/MyRatings")
+);
 
 function AppContent() {
   // Preload critical images on app startup
@@ -81,6 +86,7 @@ function AppContent() {
 
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/unauthorized" element={<Unauthorized />} />
 
         <Route
           path="/admin"
@@ -99,9 +105,25 @@ function AppContent() {
           }
         />
         <Route
-          path="/admin/panen"
+          path="/admin/reset-password"
           element={
             <ProtectedRoute>
+              <ResetPassword />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/my-ratings"
+          element={
+            <ProtectedRoute>
+              <MyRatings />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/panen"
+          element={
+            <ProtectedRoute requireAdmin={true}>
               <Panen />
             </ProtectedRoute>
           }
@@ -109,7 +131,7 @@ function AppContent() {
         <Route
           path="/admin/panen/create"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute requireAdmin={true}>
               <CreatePanen />
             </ProtectedRoute>
           }
@@ -117,7 +139,7 @@ function AppContent() {
         <Route
           path="/admin/panen/edit/:id"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute requireAdmin={true}>
               <EditPanen />
             </ProtectedRoute>
           }
@@ -125,7 +147,7 @@ function AppContent() {
         <Route
           path="/admin/item"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute requireAdmin={true}>
               <Item />
             </ProtectedRoute>
           }
@@ -133,7 +155,7 @@ function AppContent() {
         <Route
           path="/admin/item/create"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute requireAdmin={true}>
               <CreateItem />
             </ProtectedRoute>
           }
@@ -141,7 +163,7 @@ function AppContent() {
         <Route
           path="/admin/item/edit/:id"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute requireAdmin={true}>
               <EditItem />
             </ProtectedRoute>
           }
@@ -173,7 +195,7 @@ function AppContent() {
         <Route
           path="/admin/bibit"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute requireAdmin={true}>
               <Bibit />
             </ProtectedRoute>
           }
@@ -181,7 +203,7 @@ function AppContent() {
         <Route
           path="/admin/bibit/create"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute requireAdmin={true}>
               <CreateBibit />
             </ProtectedRoute>
           }
@@ -189,7 +211,7 @@ function AppContent() {
         <Route
           path="/admin/bibit/edit/:id"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute requireAdmin={true}>
               <EditBibit />
             </ProtectedRoute>
           }
@@ -197,7 +219,7 @@ function AppContent() {
         <Route
           path="/admin/tanaman"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute requireAdmin={true}>
               <Tanaman />
             </ProtectedRoute>
           }
@@ -205,7 +227,7 @@ function AppContent() {
         <Route
           path="/admin/tanaman/create"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute requireAdmin={true}>
               <CreateTanaman />
             </ProtectedRoute>
           }
@@ -213,7 +235,7 @@ function AppContent() {
         <Route
           path="/admin/tanaman/edit/:id"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute requireAdmin={true}>
               <EditTanaman />
             </ProtectedRoute>
           }

@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/dialog";
 import CoolButton from "../../components/ShopButton";
 import { generateSlug } from "@/lib/utils";
+import { Star } from "lucide-react";
 
 interface ProductDialogProps {
   open: boolean;
@@ -14,6 +15,8 @@ interface ProductDialogProps {
   price: number;
   imageSrc: string;
   description: string;
+  averageRating?: number;
+  totalRatings?: number;
 }
 
 export function ProductDialog({
@@ -23,7 +26,8 @@ export function ProductDialog({
   price,
   imageSrc,
   description,
-
+  averageRating = 0,
+  totalRatings = 0,
 }: ProductDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -47,6 +51,46 @@ export function ProductDialog({
                   {title}
                 </h2>
               </DialogTitle>
+
+              {/* Average Rating Display */}
+              <div className="mt-3 mb-2">
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center">
+                    {[...Array(5)].map((_, index) => {
+                      const rating = averageRating || 0;
+                      const fullStars = Math.floor(rating);
+                      const hasHalfStar = rating % 1 >= 0.5;
+                      
+                      if (index < fullStars) {
+                        return <Star key={index} className="w-4 h-4 fill-yellow-400 text-yellow-400" />;
+                      } else if (index === fullStars && hasHalfStar) {
+                        return (
+                          <div key={index} className="relative w-4 h-4">
+                            <Star className="w-4 h-4 text-gray-300 absolute" />
+                            <div className="overflow-hidden absolute w-2">
+                              <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                            </div>
+                          </div>
+                        );
+                      } else {
+                        return <Star key={index} className="w-4 h-4 text-gray-300" />;
+                      }
+                    })}
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <span className="text-sm font-bold text-gray-800">
+                      {(averageRating || 0).toFixed(1)}
+                    </span>
+                    <span className="text-xs text-gray-500">/ 5.0</span>
+                  </div>
+                  {totalRatings > 0 && (
+                    <span className="text-xs text-gray-500">
+                      ({totalRatings} rating{totalRatings !== 1 ? 's' : ''})
+                    </span>
+                  )}
+                </div>
+              </div>
+
               <p className="text-xl font-semibold mt-2">
                 Rp {price.toLocaleString("id-ID")}
               </p>

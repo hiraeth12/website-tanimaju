@@ -15,12 +15,16 @@ export function Konfirmasi({
   onCancel,
 }: ConfirmAlertProps) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm font-cascadia">
+    <div 
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm font-cascadia"
+      style={{ pointerEvents: 'auto' }}
+    >
       <div
         className={cn(
           "relative flex flex-col gap-3 p-6 rounded-xl shadow-xl w-full max-w-sm",
           "bg-gradient-to-r from-emerald-500 to-cyan-600 text-white"
         )}
+        style={{ pointerEvents: 'auto' }}
       >
         {/* Header */}
         <div className="flex items-center gap-2">
@@ -34,14 +38,26 @@ export function Konfirmasi({
         {/* Actions */}
         <div className="flex justify-end gap-3 mt-4">
           <button
-            onClick={onCancel}
-            className="px-4 py-2 text-sm rounded-md bg-white/20 hover:bg-white/30 transition"
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onCancel();
+            }}
+            className="px-4 py-2 text-sm rounded-md bg-white/20 hover:bg-white/30 transition cursor-pointer"
+            style={{ pointerEvents: 'auto' }}
           >
             Tolak
           </button>
           <button
-            onClick={onConfirm}
-            className="px-4 py-2 text-sm rounded-md bg-white hover:bg-white/90 text-slate-600 font-medium transition"
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onConfirm();
+            }}
+            className="px-4 py-2 text-sm rounded-md bg-white hover:bg-white/90 text-slate-600 font-medium transition cursor-pointer"
+            style={{ pointerEvents: 'auto' }}
           >
             Setuju
           </button>
@@ -49,8 +65,14 @@ export function Konfirmasi({
 
         {/* Close (optional) */}
         <button
-          onClick={onCancel}
-          className="absolute top-3 right-3 p-1 rounded-md hover:bg-white/10 transition"
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onCancel();
+          }}
+          className="absolute top-3 right-3 p-1 rounded-md hover:bg-white/10 transition cursor-pointer"
+          style={{ pointerEvents: 'auto' }}
         >
           <X className="h-4 w-4" />
         </button>

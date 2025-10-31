@@ -3,7 +3,9 @@ import express from "express";
 import multer from "multer";
 import path from "path";
 import { ProductRepository } from "../../repositories/ProductRepository.js";
+import { ProductRatingRepository } from "../../repositories/ProductRatingRepository.js";
 import type { Product } from "../../models/mysql/interfaces.js";
+import crypto from "crypto";
 
 
 
@@ -179,6 +181,166 @@ router.get("/search/:term", async (req, res) => {
   } catch (error) {
     console.error("❌ Error searching products:", error);
     res.status(500).json({ error: "Failed to search products" });
+  }
+});
+
+// PUT update product rating (Multi-user support)
+router.put("/:id/rating", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id, 10);
+    if (isNaN(id)) {
+      return res.status(400).json({ error: "Invalid product ID" });
+    }
+
+    const { rating, userIdentifier } = req.body;
+
+    // Validate rating
+    if (rating === undefined || rating === null) {
+      return res.status(400).json({ error: "Rating is required" });
+    }
+
+    const ratingNumber = parseFloat(rating);
+    if (isNaN(ratingNumber)) {
+      return res.status(400).json({ error: "Rating must be a number" });
+    }
+
+    if (ratingNumber < 0 || ratingNumber > 5) {
+      return res.status(400).json({ error: "Rating must be between 0 and 5" });
+    }
+
+    // Check if product exists
+    const product = await ProductRepository.findById(id);
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    // Generate user identifier from IP and user agent if not provided
+    const identifier = userIdentifier || 
+      crypto.createHash('md5')
+        .update(`${req.ip}-${req.get('user-agent')}`)
+        .digest('hex');
+
+    // Upsert rating (insert or update if exists)
+    const updated = await ProductRatingRepository.upsertRating(id, identifier, ratingNumber);
+    if (!updated) {
+      return res.status(400).json({ error: "Failed to update rating" });
+    }
+
+    // Get updated statistics
+    const stats = await ProductRatingRepository.getAverageRating(id);
+
+    console.log(`✅ Product rating updated: ID ${id}, User: ${identifier.substring(0, 8)}..., Rating: ${ratingNumber}`);
+    console.log(`   New average: ${stats.average.toFixed(2)} from ${stats.count} ratings`);
+    
+    res.json({ 
+      success: true,
+      message: "Rating submitted successfully", 
+      id, 
+      userRating: ratingNumber,
+      averageRating: stats.average,
+      totalRatings: stats.count
+    });
+  } catch (error) {
+    console.error("❌ Error updating product rating:", error);
+    res.status(500).json({ error: "Failed to update product rating" });
+  }
+});
+
+// GET product rating statistics
+router.get("/:id/ratings", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id, 10);
+    if (isNaN(id)) {
+      return res.status(400).json({ error: "Invalid product ID" });
+    }
+
+    // Check if product exists
+    const product = await ProductRepository.findById(id);
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    // Get all ratings and statistics
+    const ratingData = await ProductRatingRepository.getAllRatingsForProduct(id);
+
+    res.json({
+      success: true,
+      productId: id,
+      average: ratingData.average,
+      total: ratingData.total,
+      distribution: ratingData.distribution,
+      ratings: ratingData.ratings.map(r => ({
+        rating: r.rating,
+        createdAt: r.created_at
+      }))
+    });
+  } catch (error) {
+    console.error("❌ Error fetching product ratings:", error);
+    res.status(500).json({ error: "Failed to fetch product ratings" });
+  }
+});
+
+// GET user's rating for a product
+router.get("/:id/rating/user/:userIdentifier", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id, 10);
+    if (isNaN(id)) {
+      return res.status(400).json({ error: "Invalid product ID" });
+    }
+
+    const { userIdentifier } = req.params;
+
+    const userRating = await ProductRatingRepository.findByUserAndProduct(id, userIdentifier);
+
+    if (!userRating) {
+      return res.json({
+        success: true,
+        hasRated: false,
+        rating: null
+      });
+    }
+
+    res.json({
+      success: true,
+      hasRated: true,
+      rating: userRating.rating,
+      createdAt: userRating.created_at,
+      updatedAt: userRating.updated_at
+    });
+  } catch (error) {
+    console.error("❌ Error fetching user rating:", error);
+    res.status(500).json({ error: "Failed to fetch user rating" });
+  }
+});
+
+// GET all ratings by a specific user
+router.get("/user-ratings/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    if (!userId) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+
+    const userRatings = await ProductRatingRepository.findByUserId(userId);
+
+    res.json({
+      success: true,
+      total: userRatings.length,
+      ratings: userRatings.map(r => ({
+        id: r.id,
+        productId: r.product_id,
+        productTitle: r.product_title,
+        productImage: r.product_image,
+        productPrice: r.product_price,
+        rating: r.rating,
+        createdAt: r.created_at,
+        updatedAt: r.updated_at
+      }))
+    });
+  } catch (error) {
+    console.error("❌ Error fetching user ratings:", error);
+    res.status(500).json({ error: "Failed to fetch user ratings" });
   }
 });
 

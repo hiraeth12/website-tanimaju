@@ -1,5 +1,5 @@
 // src/components/admin/ItemTable.tsx
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -10,7 +10,16 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ChevronDown, Copy } from "lucide-react";
+import { ChevronDown, Copy, Star } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 type Item = {
   id: string;
@@ -19,6 +28,8 @@ type Item = {
   price: number;
   description: string;
   whatsappNumber: string;
+  average_rating?: number;
+  total_ratings?: number;
 };
 
 type ItemTableProps = {
@@ -28,9 +39,48 @@ type ItemTableProps = {
   handleSelectAll: (checked: boolean) => void;
   handleSelectRow: (id: string, checked: boolean) => void;
   formatRupiah: (value: number) => string;
-  onDelete: (id: string) => void; // 🔥 tambahan
+  onDelete: (id: string) => void;
+  onRatingUpdate?: (id: string, rating: number) => void;
 };
 
+// Rating Stars Component
+const RatingStars: React.FC<{ 
+  rating: number; 
+  totalRatings?: number;
+  onEdit?: () => void;
+}> = ({ rating, totalRatings }) => {
+  const fullStars = Math.floor(rating);
+  const hasHalfStar = rating % 1 >= 0.5;
+  
+  return (
+    <div className="flex items-center gap-1">
+      <div className="flex items-center">
+        {[...Array(5)].map((_, index) => {
+          if (index < fullStars) {
+            return <Star key={index} className="w-4 h-4 fill-yellow-400 text-yellow-400" />;
+          } else if (index === fullStars && hasHalfStar) {
+            return (
+              <div key={index} className="relative w-4 h-4">
+                <Star className="w-4 h-4 text-gray-300 absolute" />
+                <div className="overflow-hidden absolute w-2">
+                  <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                </div>
+              </div>
+            );
+          } else {
+            return <Star key={index} className="w-4 h-4 text-gray-300" />;
+          }
+        })}
+      </div>
+      <div className="flex flex-col ml-1">
+        <span className="text-sm text-gray-800 font-medium">{rating.toFixed(1)}</span>
+        {totalRatings !== undefined && totalRatings > 0 && (
+          <span className="text-xs text-gray-500">({totalRatings})</span>
+        )}
+      </div>
+    </div>
+  );
+};
 
 const ItemTable: React.FC<ItemTableProps> = ({
   productData,
@@ -41,6 +91,17 @@ const ItemTable: React.FC<ItemTableProps> = ({
   formatRupiah,
   onDelete,
 }) => {
+  const [editRatingDialog, setEditRatingDialog] = useState<{
+    productId: string;
+    currentRating: number;
+  } | null>(null);
+  const [newRating, setNewRating] = useState<string>("");
+
+  const handleOpenEditRating = (productId: string, currentRating: number) => {
+    setEditRatingDialog({ productId, currentRating });
+    setNewRating(currentRating.toString());
+  };
+
   return (
     <div className="bg-white border border-gray-200 rounded-lg shadow-sm mb-6 overflow-auto">
       <Table>
@@ -61,6 +122,7 @@ const ItemTable: React.FC<ItemTableProps> = ({
               "Gambar",
               "Nama Produk",
               "Harga",
+              "Rating",
               "Deskripsi",
               "WhatsApp",
               "Aksi",
@@ -96,6 +158,13 @@ const ItemTable: React.FC<ItemTableProps> = ({
                 {item.title}
               </TableCell>
               <TableCell>{formatRupiah(item.price)}</TableCell>
+              <TableCell>
+                <RatingStars 
+                  rating={item.average_rating || 0}
+                  totalRatings={item.total_ratings}
+                  onEdit={() => handleOpenEditRating(item.id, item.average_rating || 0)}
+                />
+              </TableCell>
               <TableCell className="max-w-xs truncate text-sm text-gray-600">
                 {item.description}
               </TableCell>
@@ -139,6 +208,41 @@ const ItemTable: React.FC<ItemTableProps> = ({
           ))}
         </TableBody>
       </Table>
+
+      {/* Rating Edit Dialog */}
+      <Dialog open={!!editRatingDialog} onOpenChange={(open) => !open && setEditRatingDialog(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Edit Rating Produk</DialogTitle>
+            <DialogDescription>
+              Masukkan rating baru untuk produk ini (0-5)
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="rating">Rating</Label>
+              <Input
+                id="rating"
+                type="number"
+                step="0.1"
+                min="0"
+                max="5"
+                placeholder="0.0 - 5.0"
+                value={newRating}
+                onChange={(e) => setNewRating(e.target.value)}
+              />
+              <p className="text-xs text-gray-500">
+                Rating saat ini: {editRatingDialog?.currentRating.toFixed(1)}
+              </p>
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setEditRatingDialog(null)}>
+              Batal
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

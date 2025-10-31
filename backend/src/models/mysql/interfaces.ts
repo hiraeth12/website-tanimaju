@@ -8,6 +8,17 @@ export interface Product {
   description?: string | null;
   info?: string | null;
   whatsappNumber?: string | null;
+  average_rating?: number;
+  total_ratings?: number;
+  created_at?: Date;
+  updated_at?: Date;
+}
+
+export interface ProductRating {
+  id?: number;
+  product_id: number;
+  user_identifier: string;
+  rating: number;
   created_at?: Date;
   updated_at?: Date;
 }

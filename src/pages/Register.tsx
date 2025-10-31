@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert } from "@/components/Alert";
+import { useAuth } from "@/context/AuthContext";
 
 interface RegisterForm {
   namaLengkap: string;
@@ -28,7 +29,15 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const API_URL = import.meta.env.VITE_API_URL;
+
+  // Redirect to dashboard if already logged in
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/admin", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   // Set document title
   useEffect(() => {

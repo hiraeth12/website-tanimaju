@@ -219,7 +219,7 @@ export default function UserApprovalPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-12">#</TableHead>
+                <TableHead className="w-12">No</TableHead>
                 <TableHead>Nama Lengkap</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>Status</TableHead>

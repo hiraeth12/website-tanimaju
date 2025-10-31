@@ -29,8 +29,8 @@ export default function TanamanPage() {
   } | null>(null);
   const [confirmId, setConfirmId] = useState<string | null>(null);
   const fetchTanamanData = async () => {
-    setLoading(true);
     try {
+      setLoading(true);
       const res = await fetch(`${API_URL}/tanaman`);
       const data = await res.json();
       setTanamanData(data);

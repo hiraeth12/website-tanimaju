@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import path from "path";
 import cookieParser from "cookie-parser";
+import { startSessionCleanupJob } from "./utils/sessionCleanup.js";
 
 dotenv.config();
 const app = express();
@@ -62,6 +63,10 @@ const startServer = async () => {
     const connected = await testConnection();
     if (connected) {
       console.log("MySQL connected ✅");
+      
+      // Start session cleanup job
+      startSessionCleanupJob();
+      
       app.listen(PORT, () =>
         console.log(`🚀 Server running on http://localhost:${PORT}`)
       );

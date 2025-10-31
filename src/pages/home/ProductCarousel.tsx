@@ -16,6 +16,8 @@ interface Product {
   price: number;
   description: string;
   whatsappNumber: string;
+  average_rating?: number;
+  total_ratings?: number;
 }
 
 export function ProductCarousel() {
@@ -72,8 +74,9 @@ export function ProductCarousel() {
                   title={product.title}
                   price={product.price}
                   imageSrc={product.imageSrc}
-                  
                   description={product.description}
+                  averageRating={product.average_rating}
+                  totalRatings={product.total_ratings}
                 />
                 <Card
                   onClick={() => setOpenDialogId(product.id)}

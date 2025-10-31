@@ -30,8 +30,8 @@ export default function BibitPage() {
   const [confirmId, setConfirmId] = useState<string | null>(null);
 
   const fetchBibitData = async () => {
-    setLoading(true);
     try {
+      setLoading(true);
       const res = await fetch(`${API_URL}/bibit`);
       const data = await res.json();
       setBibitData(data);

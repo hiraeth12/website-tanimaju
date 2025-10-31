@@ -17,8 +17,8 @@ export class ProductRepository {
 
   static async create(productData: Omit<Product, 'id'>): Promise<number> {
     const query = `
-      INSERT INTO products (title, price, imageSrc, description, info, whatsappNumber)
-      VALUES (?, ?, ?, ?, ?, ?)
+      INSERT INTO products (title, price, imageSrc, description, info, whatsappNumber, average_rating, total_ratings)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `;
     
     const result = await executeModifyQuery(query, [
@@ -27,7 +27,9 @@ export class ProductRepository {
       productData.imageSrc,
       productData.description,
       productData.info,
-      productData.whatsappNumber
+      productData.whatsappNumber,
+      0, // average_rating
+      0  // total_ratings
     ]);
     
     return result.insertId;
